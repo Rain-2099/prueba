@@ -188,6 +188,37 @@
             alert("❌ Error de conexión con el servidor.");
         }
     }
+    function mostrarListaOtros(otros) {
+        const container = document.getElementById('other-profiles-container');
+        container.innerHTML = ''; // Limpiar antes de cargar
+
+        if (otros.length === 0) {
+            container.innerHTML = '<p style="color: white; text-align: center;">No hay otros aventureros en el reino.</p>';
+            return;
+        }
+
+        otros.forEach(u => {
+            const card = document.createElement('div');
+            card.className = 'profile-card';
+            // Al hacer clic en la tarjeta, cargamos su perfil en la parte principal
+            card.onclick = () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                mostrarPerfilPrincipal(u);
+            };
+
+            card.innerHTML = `
+                <div class="profile-card-info">
+                    <img src="${u.foto_perfil || 'https://via.placeholder.com/150'}" class="profile-card-avatar">
+                    <div class="profile-card-details">
+                        <h4>${u.nombre_usuario}</h4>
+                        <small>Publicaciones: ${Array.isArray(u.publicaciones) ? u.publicaciones.length : 0}</small>
+                    </div>
+                </div>
+                <button class="profile-card-btn">Ver Perfil</button>
+            `;
+            container.appendChild(card);
+        });
+    }
 
     // ... El resto de tus funciones (mostrarListaOtros, cerrarSesion, etc.) se mantienen igual ...
 
