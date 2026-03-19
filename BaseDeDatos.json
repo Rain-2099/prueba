@@ -130,6 +130,12 @@
       "cuentas_seguidas": 0,
       "publicaciones": [
         {
+          "id": 1773885516786,
+          "texto": "Hola",
+          "fecha": "18/3/2026, 7:58:36 p.m.",
+          "likes": 0
+        },
+        {
           "id": 1773885330627,
           "texto": "Por que ahora no se muestran las publicaciones",
           "fecha": "18/3/2026 19:55:30",
