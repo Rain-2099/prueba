@@ -1,0 +1,36 @@
+{
+  "personajes": [
+    {
+      "id": 1773881705761,
+      "usuario_owner": "Hola",
+      "datos": {
+        "nombre": "LUIS LEONEL ",
+        "clase": "E",
+        "raza": "l",
+        "nivel": 2,
+        "alineacion": "aeae",
+        "atributos": {
+          "fuerza": 2,
+          "destreza": 22,
+          "constitucion": 22,
+          "inteligencia": 22,
+          "sabiduria": 22,
+          "carisma": 22
+        },
+        "combate": {
+          "puntos_de_vida": 22,
+          "clase_armadura": 22,
+          "iniciativa": 22,
+          "velocidad": "1"
+        },
+        "habilidades": [
+          "ksklksdl"
+        ],
+        "equipo": [
+          "elkjsjef"
+        ],
+        "historia": "lkejlkje"
+      }
+    }
+  ]
+}
