@@ -187,6 +187,20 @@
         "esta_baneado": false,
         "razon": ""
       }
+    },
+    {
+      "id": 8,
+      "nombre_usuario": "Pepito",
+      "password": "123",
+      "foto_perfil": "https://via.placeholder.com/150",
+      "descripcion": "¡Nuevo en la red!",
+      "seguidores": 0,
+      "me_gustas_totales": 0,
+      "publicaciones": [],
+      "baneos": {
+        "esta_baneado": false,
+        "razon": ""
+      }
     }
   ]
 }
