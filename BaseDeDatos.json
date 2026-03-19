@@ -130,6 +130,12 @@
       "cuentas_seguidas": 0,
       "publicaciones": [
         {
+          "id": 1773936583174,
+          "texto": "plantascontrasombis",
+          "fecha": "19/3/2026, 10:09:43 a.m.",
+          "likes": 0
+        },
+        {
           "id": 1773936463135,
           "texto": "trucomoto",
           "fecha": "19/3/2026, 10:07:43 a.m.",
