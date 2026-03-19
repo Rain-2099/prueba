@@ -56,7 +56,7 @@
     </div>
 
 <script>
-    async function ejecutarRegistro() {
+async function ejecutarRegistro() {
     const user = document.getElementById('reg-username').value.trim();
     const pass = document.getElementById('reg-password').value.trim();
     const foto = document.getElementById('reg-photo').value.trim();
@@ -66,7 +66,6 @@
     const CONFIG_GH = JSON.parse(localStorage.getItem('gh_config'));
     if (!CONFIG_GH) return alert("Configura el Token y Repo primero.");
 
-    // Forzamos el nombre correcto del archivo
     const ARCHIVO = "BaseDeDatos.json";
     const url = `https://api.github.com/repos/${CONFIG_GH.repo}/contents/${ARCHIVO}`;
 
@@ -76,16 +75,17 @@
             cache: "no-store" 
         });
 
-        if (!resGet.ok) throw new Error("No se pudo acceder al archivo en GitHub. Revisa el nombre y el Token.");
+        if (!resGet.ok) throw new Error("No se encontró el archivo. Revisa el nombre en GitHub.");
 
         const fileData = await resGet.json();
-        const db = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
+        // Decodificación segura
+        const contenidoLimpio = decodeURIComponent(escape(atob(fileData.content.replace(/\s/g, ''))));
+        const db = JSON.parse(contenidoLimpio);
 
         if (db.usuarios.find(u => u.nombre_usuario === user)) {
             return alert("Usuario ya existe.");
         }
 
-        // Generar ID automático basado en el más alto
         const nuevoId = db.usuarios.length > 0 
             ? Math.max(...db.usuarios.map(u => u.id || 0)) + 1 
             : 1;
@@ -104,6 +104,10 @@
 
         db.usuarios.push(nuevoUsuario);
 
+        // Codificación segura para subir a GitHub
+        const nuevoContenidoJSON = JSON.stringify(db, null, 2);
+        const contenidoBase64 = btoa(unescape(encodeURIComponent(nuevoContenidoJSON)));
+
         const resPut = await fetch(url, {
             method: "PUT",
             headers: { 
@@ -112,17 +116,20 @@
             },
             body: JSON.stringify({
                 message: `Registro: ${user} (ID: ${nuevoId})`,
-                content: btoa(unescape(encodeURIComponent(JSON.stringify(db, null, 2)))),
+                content: contenidoBase64,
                 sha: fileData.sha
             })
         });
 
         if (resPut.ok) {
-            alert(`¡Éxito! Tu ID es ${nuevoId}. Inicia sesión ahora.`);
+            alert(`¡Éxito! Tu ID es ${nuevoId}.`);
             window.location.href = "Inicio.html";
+        } else {
+            const errorData = await resPut.json();
+            throw new Error(errorData.message);
         }
     } catch (e) {
-        alert("Error: " + e.message);
+        alert("Error crítico: " + e.message + ". Revisa que tu archivo JSON en GitHub no tenga errores de comas o llaves.");
     }
 }
 </script>
