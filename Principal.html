@@ -67,15 +67,16 @@
         <div class="feed" id="main-feed"></div>
     </div>
 
-    <script>
+<script>
     const feed = document.getElementById('main-feed');
     let usuariosGlobal = [];
-    // Usamos tu identificador de desarrollador por defecto si no hay sesión
     const MI_USUARIO = localStorage.getItem('usuarioSesion') || "dragon_slayer99"; 
     const CONFIG_GH = JSON.parse(localStorage.getItem('gh_config'));
 
+    // Función para abrir y cerrar la ventana de publicación
     function togglePublishBox() {
         const modal = document.getElementById('modal-overlay');
+        if (!modal) return;
         modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
     }
 
@@ -83,8 +84,10 @@
         try {
             feed.innerHTML = '<p style="text-align:center; color:white;">Cargando crónicas...</p>';
             
-            // APUNTA A: BaseDeDatos.json (Donde viven los usuarios y posts)
+            // FORZAMOS EL USO DE BaseDeDatos.json
             const respuesta = await fetch('BaseDeDatos.json', { cache: "no-store" });
+            if (!respuesta.ok) throw new Error("No se encontró BaseDeDatos.json");
+            
             const data = await respuesta.json();
             usuariosGlobal = data.usuarios;
             
@@ -101,12 +104,12 @@
                 }
             });
 
-            // Ordenar por ID (timestamp) para ver lo más nuevo arriba
+            // Ordenar: lo más nuevo primero
             todosLosPosts.sort((a, b) => b.id - a.id);
             feed.innerHTML = ''; 
 
             if(todosLosPosts.length === 0) {
-                feed.innerHTML = '<p style="text-align:center; color:white;">Aún no hay leyendas escritas...</p>';
+                feed.innerHTML = '<p style="text-align:center; color:white;">El reino está en silencio (sin publicaciones).</p>';
                 return;
             }
 
@@ -123,27 +126,24 @@
                         <div class="post-content">"${post.texto}"</div>
                         <div class="post-actions">
                             <button class="btn-action">❤️ Like (${post.likes || 0})</button>
-                            <button class="btn-action" onclick="alert('Usuario: ${post.autor}')">💬 Perfil</button>
                         </div>
                     </div>`;
             });
         } catch (error) {
             console.error(error);
-            feed.innerHTML = '<p style="color:white; text-align:center;">Error al conectar con BaseDeDatos.json</p>';
+            feed.innerHTML = '<p style="color:white; text-align:center;">Error al cargar BaseDeDatos.json. Verifica que el archivo exista en GitHub.</p>';
         }
     }
 
     async function publicarAhora() {
-        const texto = document.getElementById('post-text').value.trim();
-        if (!texto) return alert("¡Escribe algo antes de lanzar el pergamino!");
-        if (!CONFIG_GH) return alert("Falta configuración de GitHub.");
-
-        const btn = event.target;
-        btn.disabled = true;
-        btn.textContent = "Guardando en la DB...";
+        const textoArea = document.getElementById('post-text');
+        const texto = textoArea.value.trim();
+        
+        if (!texto) return alert("¡Escribe algo primero!");
+        if (!CONFIG_GH) return alert("Configura GitHub en el Registro primero.");
 
         try {
-            // URL específica para la base de datos de usuarios
+            // URL obligatoria a la base de datos de usuarios
             const url = `https://api.github.com/repos/${CONFIG_GH.repo}/contents/BaseDeDatos.json`;
             
             const resGet = await fetch(url, { 
@@ -151,55 +151,39 @@
                 cache: "no-store" 
             });
 
-            if (!resGet.ok) throw new Error("No se pudo acceder a BaseDeDatos.json en GitHub.");
-
             const fileData = await resGet.json();
-            // Decodificación segura para tildes y eñes
             const db = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
             
             const userIndex = db.usuarios.findIndex(u => u.nombre_usuario === MI_USUARIO);
-            if (userIndex === -1) throw new Error("Tu usuario no existe en la base de datos.");
+            if (userIndex === -1) throw new Error("Usuario no encontrado en la base de datos.");
 
             const nuevoPost = {
                 id: Date.now(),
                 texto: texto,
-                fecha: new Date().toLocaleDateString('es-ES') + " " + new Date().toLocaleTimeString('es-ES'),
+                fecha: new Date().toLocaleString(),
                 likes: 0
             };
 
-            // Insertar al inicio del array del usuario
             if (!db.usuarios[userIndex].publicaciones) db.usuarios[userIndex].publicaciones = [];
             db.usuarios[userIndex].publicaciones.unshift(nuevoPost);
-            
-            // Actualizar contador total opcional
-            db.usuarios[userIndex].total_publicaciones = db.usuarios[userIndex].publicaciones.length;
 
             const resPut = await fetch(url, {
                 method: "PUT",
-                headers: { 
-                    "Authorization": `token ${CONFIG_GH.token}`,
-                    "Content-Type": "application/json" 
-                },
+                headers: { "Authorization": `token ${CONFIG_GH.token}`, "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    message: `Nueva publicación de ${MI_USUARIO}`,
+                    message: "Nueva publicación",
                     content: btoa(unescape(encodeURIComponent(JSON.stringify(db, null, 2)))),
                     sha: fileData.sha
                 })
             });
 
             if (resPut.ok) {
-                alert("¡Publicación exitosa!");
-                document.getElementById('post-text').value = "";
+                textoArea.value = "";
                 togglePublishBox();
-                setTimeout(cargarFeed, 1500);
-            } else {
-                throw new Error("GitHub rechazó la actualización.");
+                setTimeout(cargarFeed, 1000);
             }
         } catch (e) {
-            alert("Error: " + e.message);
-        } finally {
-            btn.disabled = false;
-            btn.textContent = "Publicar ahora";
+            alert("Error al publicar: " + e.message);
         }
     }
 
