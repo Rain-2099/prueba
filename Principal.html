@@ -1,192 +1,38 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>Red Social - Feed Dinámico</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        /* Estilos base */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        .header { background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); padding: 15px 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 100; }
+        .search-bar { max-width: 600px; margin: 0 auto; }
+        .search-bar input { width: 100%; padding: 12px 20px; border: none; border-radius: 25px; font-size: 14px; background-color: rgba(255,255,255,0.95); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .container { display: flex; max-width: 1200px; margin: 20px auto; gap: 20px; padding: 0 20px; }
+        .sidebar { width: 250px; background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); height: fit-content; position: sticky; top: 80px; }
+        .sidebar h3 { color: #667eea; margin-bottom: 20px; font-size: 16px; text-transform: uppercase; }
         
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-        
-        .header {
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            padding: 15px 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        
-        .search-bar {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        .search-bar input {
-            width: 100%;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 25px;
-            font-size: 14px;
-            background-color: rgba(255,255,255,0.95);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        .container {
-            display: flex;
-            max-width: 1200px;
-            margin: 20px auto;
-            gap: 20px;
-            padding: 0 20px;
-        }
-        
-        .sidebar {
-            width: 250px;
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            height: fit-content;
-            position: sticky;
-            top: 80px;
-        }
-        
-        .sidebar h3 {
-            color: #667eea;
-            margin-bottom: 20px;
-            font-size: 16px;
-            text-transform: uppercase;
-        }
-        
-        .menu-item {
-            display: block;
-            width: 100%;
-            padding: 12px 15px;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: bold;
-            transition: transform 0.2s, box-shadow 0.2s;
-            text-align: left;
-        }
-        
-        .menu-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-        }
-        
-        .menu-item.logout {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-        
-        .feed {
-            flex: 1;
-            max-width: 600px;
-        }
-        
-        .post {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        
-        .post-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 10px;
-        }
-        
-        .avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            margin-right: 12px;
-            object-fit: cover;
-            background: #eee;
-        }
-        
-        .post-info h4 {
-            color: #333;
-            margin-bottom: 2px;
-        }
-        
-        .post-info small {
-            color: #888;
-            font-size: 0.8rem;
-        }
+        /* Botones y Menú */
+        .menu-item, .btn-crear { display: block; width: 100%; padding: 12px 15px; margin-bottom: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; font-size: 14px; font-weight: bold; transition: transform 0.2s; text-align: left; }
+        .btn-crear { background: #667eea; text-align: center; margin-top: 10px; }
+        .menu-item:hover, .btn-crear:hover { transform: translateX(5px); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); }
+        .menu-item.logout { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
 
-        .banned-badge {
-            background: #ff4d4d;
-            color: white;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 10px;
-            margin-left: 5px;
-        }
+        /* Feed y Posts */
+        .feed { flex: 1; max-width: 600px; }
+        .post { background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .post-header { display: flex; align-items: center; margin-bottom: 15px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; }
+        .avatar { width: 45px; height: 45px; border-radius: 50%; margin-right: 12px; object-fit: cover; background: #eee; }
+        .post-info h4 { color: #333; }
+        .post-content { color: #444; line-height: 1.5; margin-bottom: 15px; font-style: italic; }
+        .post-actions { display: flex; gap: 10px; padding-top: 10px; border-top: 1px solid #f0f0f0; }
+        .btn-action { flex: 1; padding: 8px; border: none; background: #f0f0f0; border-radius: 6px; cursor: pointer; color: #667eea; font-weight: bold; }
         
-        .post-content {
-            color: #444;
-            line-height: 1.5;
-            margin-bottom: 15px;
-            font-style: italic;
-        }
-
-        .stats {
-            display: flex;
-            gap: 15px;
-            font-size: 0.85rem;
-            color: #666;
-            margin-bottom: 15px;
-            background: #f9f9f9;
-            padding: 8px;
-            border-radius: 8px;
-        }
-        
-        .post-actions {
-            display: flex;
-            gap: 10px;
-            padding-top: 10px;
-            border-top: 1px solid #f0f0f0;
-        }
-        
-        .btn-action {
-            flex: 1;
-            padding: 8px;
-            border: none;
-            background: #f0f0f0;
-            border-radius: 6px;
-            cursor: pointer;
-            color: #667eea;
-            font-weight: bold;
-            transition: 0.2s;
-        }
-        
-        .btn-action:hover {
-            background: #667eea;
-            color: white;
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
-        ::-webkit-scrollbar-thumb { background: #764ba2; border-radius: 10px; }
+        /* Modal */
+        #modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
     </style>
 </head>
 <body>
@@ -201,49 +47,47 @@
         <div class="sidebar">
             <h3>Menú</h3>
             <a class="menu-item" href="./Principal.html">📱 Principal</a>
-            <button onclick="togglePublishBox()" style="background: #667eea; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-bottom: 15px;">
-                    Crear nueva publicación
-            </button>
-            <a class='menu-item'href="./Usuario.html">👤 Usuario</a>
-            <a class='menu-item'href="">⚙️ Configuración</a>
+            <button class="btn-crear" onclick="togglePublishBox()">➕ Crear publicación</button>
+            <a class="menu-item" href="./Usuario.html">👤 Usuario</a>
+            <a class="menu-item" href="#">⚙️ Configuración</a>
             <button class="menu-item logout" onclick="cerrarSesion()">🚪 Salir</button>
         </div>
 
-                <div id="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center;">
-                    <div id="publish-box" style="background: white; padding: 25px; border-radius: 15px; width: 90%; max-width: 500px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 1px solid #764ba2; position: relative;">
-                        <h3 style="margin-top: 0; color: #764ba2;">Nueva Publicación</h3>
-                        <textarea id="post-text" placeholder="¿Qué aventuras compartirás hoy?" style="width: 100%; height: 120px; border: 1px solid #ddd; border-radius: 8px; padding: 12px; resize: none; font-family: inherit; font-size: 16px; margin-bottom: 15px; box-sizing: border-box;"></textarea>
-
-                        <div style="display: flex; gap: 10px;">
-                            <button onclick="publicarAhora()" style="flex: 2; background: #764ba2; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold;">Publicar ahora</button>
-                            <button onclick="togglePublishBox()" style="flex: 1; background: #f0f0f0; color: #444; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">Cancelar</button>
-                        </div>
-                    </div>
+        <div id="modal-overlay">
+            <div style="background: white; padding: 25px; border-radius: 15px; width: 90%; max-width: 500px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                <h3 style="color: #764ba2; margin-bottom: 15px;">Nueva Publicación</h3>
+                <textarea id="post-text" placeholder="¿Qué aventuras compartirás hoy?" style="width: 100%; height: 120px; border: 1px solid #ddd; border-radius: 8px; padding: 12px; resize: none; margin-bottom: 15px;"></textarea>
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="publicarAhora()" style="flex: 2; background: #764ba2; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold;">Publicar ahora</button>
+                    <button onclick="togglePublishBox()" style="flex: 1; background: #f0f0f0; color: #444; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">Cancelar</button>
                 </div>
-
-        <div class="feed" id="main-feed">
             </div>
+        </div>
+
+        <div class="feed" id="main-feed"></div>
     </div>
 
 <script>
     const feed = document.getElementById('main-feed');
     let usuariosGlobal = [];
-    const MI_USUARIO = localStorage.getItem('usuarioSesion') || "Invitado";
-    
-    // Recuperamos la configuración de GitHub guardada en la otra página
+    const MI_USUARIO = localStorage.getItem('usuarioSesion') || "dragon_slayer99"; 
     const CONFIG_GH = JSON.parse(localStorage.getItem('gh_config'));
+
+    // --- FUNCIÓN PARA ABRIR/CERRAR MODAL ---
+    function togglePublishBox() {
+        const modal = document.getElementById('modal-overlay');
+        modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
+    }
 
     async function cargarFeed() {
         try {
             feed.innerHTML = '<p style="text-align:center; color:white;">Cargando aventuras...</p>';
-
-            // 1. Cargamos la DB directamente del servidor (con no-cache para ver cambios reales)
-            const respuesta = await fetch('BaseDeDatos.json', { cache: "no-store" });
+            
+            // Usamos personajes.json según tu captura de pantalla
+            const respuesta = await fetch('personajes.json', { cache: "no-store" });
             const data = await respuesta.json();
             usuariosGlobal = data.usuarios;
             
-            // 2. Cargamos las publicaciones del servidor (si tienes un array global de posts)
-            // O, si tus posts están dentro de cada usuario, los extraemos:
             let todosLosPosts = [];
             usuariosGlobal.forEach(u => {
                 if(Array.isArray(u.publicaciones)){
@@ -251,14 +95,11 @@
                 }
             });
 
-            // Ordenar por fecha (más recientes primero)
             todosLosPosts.sort((a, b) => b.id - a.id);
+            feed.innerHTML = ''; 
 
-            feed.innerHTML = ''; // Limpiar mensaje de carga
-
-            // 3. Renderizar
             todosLosPosts.forEach(post => {
-                const html = `
+                feed.innerHTML += `
                     <div class="post">
                         <div class="post-header">
                             <img src="${post.foto || 'https://via.placeholder.com/150'}" class="avatar">
@@ -268,108 +109,65 @@
                             </div>
                         </div>
                         <div class="post-content">"${post.texto}"</div>
-                        <div class="stats">
-                            <span>❤️ <b class="likes-count">${post.likes || 0}</b> Likes</span>
-                        </div>
                         <div class="post-actions">
-                            <button class="btn-action" onclick="alert('Funcionalidad en desarrollo')">❤️ Like</button>
-                            <button class="btn-action" onclick="mostrarInfo('${post.autor}')">💬 Info</button>
+                            <button class="btn-action">❤️ Like (${post.likes || 0})</button>
+                            <button class="btn-action" onclick="alert('Usuario: ${post.autor}')">💬 Info</button>
                         </div>
-                    </div>
-                `;
-                feed.innerHTML += html;
+                    </div>`;
+            });
+        } catch (error) {
+            feed.innerHTML = '<p style="color:white;">Error al cargar el archivo personajes.json</p>';
+        }
+    }
+
+    async function publicarAhora() {
+        const texto = document.getElementById('post-text').value.trim();
+        if (!texto) return alert("¡El mensaje está vacío!");
+        if (!CONFIG_GH) return alert("Configura GitHub en la página de Registro/Ficha.");
+
+        try {
+            // Ajustamos la URL para usar personajes.json
+            const url = `https://api.github.com/repos/${CONFIG_GH.repo}/contents/personajes.json`;
+            const resGet = await fetch(url, { 
+                headers: { "Authorization": `token ${CONFIG_GH.token}` },
+                cache: "no-store" 
             });
 
-        } catch (error) {
-            console.error("Error cargando el feed:", error);
-            feed.innerHTML = '<p style="color:white;">Error al conectar con el servidor.</p>';
+            const fileData = await resGet.json();
+            const db = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
+            const userIndex = db.usuarios.findIndex(u => u.nombre_usuario === MI_USUARIO);
+            
+            if (userIndex === -1) throw new Error("Usuario no encontrado en el JSON.");
+
+            const nuevoPost = {
+                id: Date.now(),
+                texto: texto,
+                fecha: new Date().toLocaleString(),
+                likes: 0
+            };
+
+            if (!db.usuarios[userIndex].publicaciones) db.usuarios[userIndex].publicaciones = [];
+            db.usuarios[userIndex].publicaciones.unshift(nuevoPost);
+
+            const resPut = await fetch(url, {
+                method: "PUT",
+                headers: { "Authorization": `token ${CONFIG_GH.token}`, "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    message: "Nueva publicación",
+                    content: btoa(unescape(encodeURIComponent(JSON.stringify(db, null, 2)))),
+                    sha: fileData.sha
+                })
+            });
+
+            if (resPut.ok) {
+                alert("¡Publicado!");
+                document.getElementById('post-text').value = "";
+                togglePublishBox();
+                setTimeout(cargarFeed, 1000);
+            }
+        } catch (e) {
+            alert("Error: " + e.message);
         }
-    }
-
-async function publicarAhora() {
-    const texto = document.getElementById('post-text').value.trim();
-    if (!texto) return alert("¡El mensaje está vacío!");
-    if (!CONFIG_GH) return alert("Configura tu Token y Repo en la Ficha primero.");
-
-    const btn = event.target;
-    btn.disabled = true;
-    btn.textContent = "Conectando con el Reino...";
-
-    try {
-        // 1. Obtener la base de datos y el SHA más reciente (CRÍTICO)
-        const url = `https://api.github.com/repos/${CONFIG_GH.repo}/contents/BaseDeDatos.json`;
-        const resGet = await fetch(url, { 
-            headers: { "Authorization": `token ${CONFIG_GH.token}` },
-            cache: "no-store" // Obliga a GitHub a darte lo más nuevo
-        });
-
-        if (!resGet.ok) throw new Error("No se pudo obtener la DB del servidor.");
-        
-        const fileData = await resGet.json();
-        const shaActual = fileData.sha; // Este es el sello de seguridad
-        
-        // Decodificar el contenido (Maneja caracteres especiales como eñes o tildes)
-        const db = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
-
-        // 2. Buscar al usuario
-        const userIndex = db.usuarios.findIndex(u => u.nombre_usuario === MI_USUARIO);
-        
-        if (userIndex === -1) {
-            throw new Error("Tu usuario no existe en el archivo JSON.");
-        }
-
-        // Crear el nuevo post
-        const nuevaPublicacion = {
-            id: Date.now(),
-            texto: texto,
-            fecha: new Date().toLocaleString('es-ES'),
-            likes: 0
-        };
-
-        // Asegurar que el array de publicaciones existe
-        if (!Array.isArray(db.usuarios[userIndex].publicaciones)) {
-            db.usuarios[userIndex].publicaciones = [];
-        }
-        
-        db.usuarios[userIndex].publicaciones.unshift(nuevaPublicacion);
-
-        // 3. Enviar de vuelta a GitHub usando el SHA que acabamos de obtener
-        const resPut = await fetch(url, {
-            method: "PUT",
-            headers: { 
-                "Authorization": `token ${CONFIG_GH.token}`,
-                "Content-Type": "application/json" 
-            },
-            body: JSON.stringify({
-                message: `Nueva aventura de ${MI_USUARIO}`,
-                content: btoa(unescape(encodeURIComponent(JSON.stringify(db, null, 2)))),
-                sha: shaActual // Enviamos el sello actualizado
-            })
-        });
-
-        if (resPut.ok) {
-            alert("¡Publicación grabada en los anales de la historia!");
-            togglePublishBox();
-            setTimeout(() => { cargarFeed(); }, 1500); // Esperamos un poco a que GitHub procese
-        } else {
-            const errorDetalle = await resPut.json();
-            console.error("Detalle del error:", errorDetalle);
-            throw new Error("GitHub rechazó la actualización. Revisa los permisos del Token.");
-        }
-
-    } catch (e) {
-        console.error("Error completo:", e);
-        alert("Error: " + e.message);
-    } finally {
-        btn.disabled = false;
-        btn.textContent = "Publicar ahora";
-    }
-}
-
-    // Funciones auxiliares
-    function mostrarInfo(username) {
-        const usuario = usuariosGlobal.find(u => u.nombre_usuario === username);
-        if (usuario) alert(`Usuario: ${usuario.nombre_usuario}\nDescripción: ${usuario.descripcion || "Aventurero"}`);
     }
 
     function cerrarSesion() {
@@ -379,6 +177,5 @@ async function publicarAhora() {
 
     cargarFeed();
 </script>
-
 </body>
 </html>
