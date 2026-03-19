@@ -286,64 +286,85 @@
         }
     }
 
-    async function publicarAhora() {
-        const texto = document.getElementById('post-text').value.trim();
-        if (!texto) return alert("¡No puedes publicar un mensaje vacío!");
-        if (!CONFIG_GH) return alert("Configura primero tu GitHub en la página de Ficha.");
+async function publicarAhora() {
+    const texto = document.getElementById('post-text').value.trim();
+    if (!texto) return alert("¡El mensaje está vacío!");
+    if (!CONFIG_GH) return alert("Configura tu Token y Repo en la Ficha primero.");
 
-        const btn = event.target;
-        btn.disabled = true;
-        btn.textContent = "Subiendo al Reino...";
+    const btn = event.target;
+    btn.disabled = true;
+    btn.textContent = "Conectando con el Reino...";
 
-        try {
-            // 1. Obtener la DB actual del servidor
-            const url = `https://api.github.com/repos/${CONFIG_GH.repo}/contents/BaseDeDatos.json`;
-            const resGet = await fetch(url, { headers: { "Authorization": `token ${CONFIG_GH.token}` } });
-            const fileData = await resGet.json();
-            const db = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
+    try {
+        // 1. Obtener la base de datos y el SHA más reciente (CRÍTICO)
+        const url = `https://api.github.com/repos/${CONFIG_GH.repo}/contents/BaseDeDatos.json`;
+        const resGet = await fetch(url, { 
+            headers: { "Authorization": `token ${CONFIG_GH.token}` },
+            cache: "no-store" // Obliga a GitHub a darte lo más nuevo
+        });
 
-            // 2. Buscar al usuario logueado en la DB para añadirle la publicación
-            const userIndex = db.usuarios.findIndex(u => u.nombre_usuario === MI_USUARIO);
-            
-            if (userIndex === -1) {
-                alert("Usuario no encontrado en la base de datos.");
-            } else {
-                const nuevaPublicacion = {
-                    id: Date.now(),
-                    texto: texto,
-                    fecha: new Date().toLocaleDateString(),
-                    likes: 0
-                };
+        if (!resGet.ok) throw new Error("No se pudo obtener la DB del servidor.");
+        
+        const fileData = await resGet.json();
+        const shaActual = fileData.sha; // Este es el sello de seguridad
+        
+        // Decodificar el contenido (Maneja caracteres especiales como eñes o tildes)
+        const db = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
 
-                // Inicializar array si no existe
-                if(!Array.isArray(db.usuarios[userIndex].publicaciones)) db.usuarios[userIndex].publicaciones = [];
-                
-                db.usuarios[userIndex].publicaciones.unshift(nuevaPublicacion);
-
-                // 3. Guardar cambios en GitHub
-                const resPut = await fetch(url, {
-                    method: "PUT",
-                    headers: { "Authorization": `token ${CONFIG_GH.token}`, "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        message: `Nueva publicación de ${MI_USUARIO}`,
-                        content: btoa(unescape(encodeURIComponent(JSON.stringify(db, null, 2)))),
-                        sha: fileData.sha
-                    })
-                });
-
-                if (resPut.ok) {
-                    alert("¡Publicado en el servidor!");
-                    togglePublishBox();
-                    cargarFeed();
-                }
-            }
-        } catch (e) {
-            alert("Error al conectar con GitHub.");
-        } finally {
-            btn.disabled = false;
-            btn.textContent = "Publicar ahora";
+        // 2. Buscar al usuario
+        const userIndex = db.usuarios.findIndex(u => u.nombre_usuario === MI_USUARIO);
+        
+        if (userIndex === -1) {
+            throw new Error("Tu usuario no existe en el archivo JSON.");
         }
+
+        // Crear el nuevo post
+        const nuevaPublicacion = {
+            id: Date.now(),
+            texto: texto,
+            fecha: new Date().toLocaleString('es-ES'),
+            likes: 0
+        };
+
+        // Asegurar que el array de publicaciones existe
+        if (!Array.isArray(db.usuarios[userIndex].publicaciones)) {
+            db.usuarios[userIndex].publicaciones = [];
+        }
+        
+        db.usuarios[userIndex].publicaciones.unshift(nuevaPublicacion);
+
+        // 3. Enviar de vuelta a GitHub usando el SHA que acabamos de obtener
+        const resPut = await fetch(url, {
+            method: "PUT",
+            headers: { 
+                "Authorization": `token ${CONFIG_GH.token}`,
+                "Content-Type": "application/json" 
+            },
+            body: JSON.stringify({
+                message: `Nueva aventura de ${MI_USUARIO}`,
+                content: btoa(unescape(encodeURIComponent(JSON.stringify(db, null, 2)))),
+                sha: shaActual // Enviamos el sello actualizado
+            })
+        });
+
+        if (resPut.ok) {
+            alert("¡Publicación grabada en los anales de la historia!");
+            togglePublishBox();
+            setTimeout(() => { cargarFeed(); }, 1500); // Esperamos un poco a que GitHub procese
+        } else {
+            const errorDetalle = await resPut.json();
+            console.error("Detalle del error:", errorDetalle);
+            throw new Error("GitHub rechazó la actualización. Revisa los permisos del Token.");
+        }
+
+    } catch (e) {
+        console.error("Error completo:", e);
+        alert("Error: " + e.message);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = "Publicar ahora";
     }
+}
 
     // Funciones auxiliares
     function mostrarInfo(username) {
