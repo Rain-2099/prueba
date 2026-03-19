@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Red Social - Perfil de Usuario</title>
+    <style>
+        /* ... Tu CSS se mantiene igual ... */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        .header { background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); padding: 15px 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
+        .header a { color: white; text-decoration: none; font-weight: bold; }
+        .container { display: flex; max-width: 1200px; margin: 20px auto; gap: 20px; padding: 0 20px; }
+        .sidebar { width: 250px; background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); height: fit-content; position: sticky; top: 80px; }
+        .sidebar h3 { color: #667eea; margin-bottom: 20px; font-size: 16px; text-transform: uppercase; }
+        .menu-item { display: block; width: 100%; padding: 12px 15px; margin-bottom: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; font-size: 14px; font-weight: bold; transition: transform 0.2s, box-shadow 0.2s; text-align: left; }
+        .menu-item:hover { transform: translateX(5px); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); }
+        .menu-item.logout { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .main-content { flex: 1; max-width: 600px; }
+        .profile-header { background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 20px; text-align: center; }
+        .profile-banner { width: 100%; height: 150px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; margin-bottom: -50px; position: relative; }
+        .profile-avatar { width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; margin: 0 auto 15px; object-fit: cover; position: relative; background: #eee; }
+        .profile-name { color: #333; font-size: 24px; margin-bottom: 5px; }
+        .profile-username { color: #888; font-size: 14px; margin-bottom: 15px; }
+        .banned-badge { background: #ff4d4d; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; display: inline-block; margin-bottom: 15px; }
+        .profile-description { color: #444; font-size: 14px; line-height: 1.6; margin-bottom: 20px; font-style: italic; }
+        .profile-stats { display: flex; justify-content: space-around; background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .stat-item { text-align: center; }
+        .stat-number { font-size: 20px; font-weight: bold; color: #667eea; }
+        .stat-label { font-size: 12px; color: #888; }
+        .profile-actions { display: flex; gap: 10px; }
+        .btn-action { flex: 1; padding: 12px; border: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .other-profiles h3 { color: white; margin-bottom: 15px; font-size: 18px; }
+        .profile-card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: 0.3s; }
+        .profile-card:hover { transform: translateX(5px); }
+        .profile-card-info { display: flex; align-items: center; flex: 1; }
+        .profile-card-avatar { width: 50px; height: 50px; border-radius: 50%; margin-right: 15px; object-fit: cover; background: #eee; }
+        .profile-card-details h4 { color: #333; margin-bottom: 5px; }
+        .profile-card-details small { color: #888; }
+        .profile-card-btn { padding: 8px 15px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div style="flex: 1;"></div>
+        <a href="./Principal.html">← Volver al Feed</a>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <h3>Menú</h3>
+            <a class="menu-item" href="./Principal.html">📱 Principal</a>
+            <a class="menu-item" href="#">⚙️ Configuración</a> 
+            <button class="menu-item logout" onclick="cerrarSesion()">🚪 Salir</button>
+        </div>
+
+        <div class="main-content">
+            <div id="main-profile">
+                <div class="profile-header">
+                    <div class="profile-banner"></div>
+                    <img src="" id="main-avatar" class="profile-avatar" alt="avatar">
+                    <h2 class="profile-name" id="main-name">Cargando...</h2>
+                    <p class="profile-username" id="main-username"></p>
+                    <div id="main-banned"></div>
+                    <p class="profile-description" id="main-description"></p>
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <div class="stat-number" id="main-followers">0</div>
+                            <div class="stat-label">Seguidores</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="main-posts">0</div>
+                            <div class="stat-label">Publicaciones</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="main-likes">0</div>
+                            <div class="stat-label">Likes</div>
+                        </div>
+                    </div>
+                        <div class="profile-actions" id="main-actions">
+                            <button class="btn-action">❤️ Seguir</button>
+                            <button class="btn-action">💬 Mensaje</button>
+                        </div>
+                </div>
+            </div>
+
+            <div class="other-profiles">
+                <h3>Otros Usuarios</h3>
+                <div id="other-profiles-container"></div>
+            </div>
+        </div>
+    </div>
+
+        <script>
+            let usuariosData = [];
+            const USUARIO_LOGUEADO_USERNAME = localStorage.getItem('usuarioSesion') || "dragon_slayer99"; 
+        
+            async function cargarUsuarios() {
+                try {
+                    const respuesta = await fetch('BaseDeDatos.json');
+                    const data = await respuesta.json();
+                    usuariosData = data.usuarios;
+                
+                    // Aplicar cambios guardados en localStorage (si existen)
+                    aplicarCambiosLocales();
+                
+                    const miUsuario = usuariosData.find(u => u.nombre_usuario === USUARIO_LOGUEADO_USERNAME);
+                    if (miUsuario) {
+                        mostrarPerfilPrincipal(miUsuario);
+                    }
+                
+                    const otros = usuariosData.filter(u => u.nombre_usuario !== USUARIO_LOGUEADO_USERNAME);
+                    mostrarListaOtros(otros);
+                
+                } catch (error) {
+                    console.error("Error cargando el JSON:", error);
+                }
+            }
+        
+            // Función para leer lo que el usuario guardó antes
+            function aplicarCambiosLocales() {
+                const cambios = JSON.parse(localStorage.getItem('misDatosPerfil'));
+                if (cambios) {
+                    const index = usuariosData.findIndex(u => u.nombre_usuario === USUARIO_LOGUEADO_USERNAME);
+                    if (index !== -1) {
+                        usuariosData[index].foto_perfil = cambios.foto;
+                        usuariosData[index].descripcion = cambios.desc;
+                    }
+                }
+            }
+        
+            function mostrarPerfilPrincipal(user) {
+                document.getElementById('main-avatar').src = user.foto_perfil || 'https://via.placeholder.com/150';
+                document.getElementById('main-name').textContent = user.nombre_usuario;
+                document.getElementById('main-username').textContent = '@' + user.nombre_usuario;
+                document.getElementById('main-description').textContent = user.descripcion ? `"${user.descripcion}"` : "Sin descripción.";
+
+                document.getElementById('main-followers').textContent = user.seguidores;
+                document.getElementById('main-posts').textContent = Array.isArray(user.publicaciones) ? user.publicaciones.length : user.publicaciones;
+                document.getElementById('main-likes').textContent = user.me_gustas_totales;
+            
+                const bannedDiv = document.getElementById('main-banned');
+                bannedDiv.innerHTML = user.baneos.esta_baneado ? '<div class="banned-badge">BANEADO</div>' : '';
+
+                // --- ESTO ES LO QUE CAMBIA ---
+    const actionsDiv = document.getElementById('main-actions');
+    
+    if (user.nombre_usuario === USUARIO_LOGUEADO_USERNAME) {
+        actionsDiv.innerHTML = `<button class="btn-action" onclick="editarPerfil()" style="background: #444;">⚙️ Editar mi perfil</button>`;
+    } else {
+        // Le pasamos el nombre_usuario a la función abrirChat
+        actionsDiv.innerHTML = `
+            <button class="btn-action">❤️ Seguir</button>
+            <button class="btn-action" onclick="abrirChat('${user.nombre_usuario}')">💬 Mensaje</button>
+        `;
+    }
+}
+        
+            // FUNCIÓN PARA EDITAR
+            function editarPerfil() {
+                const nuevaFoto = prompt("Pega la URL de tu nueva foto de perfil:", document.getElementById('main-avatar').src);
+                const nuevaDesc = prompt("Escribe tu nueva descripción:", document.getElementById('main-description').textContent.replace(/"/g, ''));
+            
+                if (nuevaFoto !== null && nuevaDesc !== null) {
+                    // Actualizar en memoria
+                    const miUsuario = usuariosData.find(u => u.nombre_usuario === USUARIO_LOGUEADO_USERNAME);
+                    miUsuario.foto_perfil = nuevaFoto;
+                    miUsuario.descripcion = nuevaDesc;
+                
+                    // Guardar en LocalStorage para que no se pierda al recargar
+                    localStorage.setItem('misDatosPerfil', JSON.stringify({
+                        foto: nuevaFoto,
+                        desc: nuevaDesc
+                    }));
+                
+                    // Refrescar vista
+                    mostrarPerfilPrincipal(miUsuario);
+                    alert("¡Perfil actualizado con éxito!");
+                }
+            }
+        
+            function mostrarListaOtros(lista) {
+                const container = document.getElementById('other-profiles-container');
+                container.innerHTML = '';
+                lista.forEach((user) => {
+                    const totalPubs = Array.isArray(user.publicaciones) ? user.publicaciones.length : user.publicaciones;
+                    const profileCard = `
+                        <div class="profile-card" onclick="verDetalle('${user.nombre_usuario}')">
+                            <div class="profile-card-info">
+                                <img src="${user.foto_perfil || 'https://via.placeholder.com/150'}" class="profile-card-avatar">
+                                <div class="profile-card-details">
+                                    <h4>@${user.nombre_usuario}</h4>
+                                    <small>${user.seguidores} seguidores • ${totalPubs} posts</small>
+                                </div>
+                            </div>
+                            <button class="profile-card-btn">Ver Perfil</button>
+                        </div>
+                    `;
+                    container.innerHTML += profileCard;
+                });
+            }
+        
+            function verDetalle(username) {
+                const user = usuariosData.find(u => u.nombre_usuario === username);
+                if (user) {
+                    mostrarPerfilPrincipal(user);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }
+        
+// 1. Reemplaza el bloque viejo que tenía 'index.html' por este:
+document.querySelector('.logout').addEventListener('click', cerrarSesion);
+
+// 2. Mantén tu función del final, pero asegúrate de que el nombre sea el correcto:
+function cerrarSesion() {
+    localStorage.removeItem('usuarioSesion');
+    // Si tu login se llama Inicio.html, déjalo así. 
+    // Si se llama IniciarSesion.html, corrígelo aquí:
+    window.location.href = "Inicio.html"; 
+}
+        
+            cargarUsuarios();
+
+            // Función para abrir la ventana de mensaje y enviarlo
+function abrirChat(nombreReceptor) {
+    const contenido = prompt(`Escribe tu mensaje para @${nombreReceptor}:`);
+    
+    if (contenido && contenido.trim() !== "") {
+        enviarMensaje(nombreReceptor, contenido);
+        alert("¡Mensaje enviado correctamente!");
+    }
+}
+
+// Lógica de guardado en LocalStorage
+function enviarMensaje(receptor, texto) {
+    const emisor = USUARIO_LOGUEADO_USERNAME;
+    
+    // Crear una ID de chat única (ejemplo: "hola_pixel_art_queen")
+    // Usamos sort para que el ID sea el mismo sin importar quién empiece el chat
+    const idChat = [emisor, receptor].sort().join('_');
+
+    // Obtener historial de mensajes previo
+    let chats = JSON.parse(localStorage.getItem('mensajesDND')) || {};
+
+    // Si no existe este chat, lo creamos
+    if (!chats[idChat]) {
+        chats[idChat] = [];
+    }
+
+    // Añadir el mensaje al array
+    const nuevoMensaje = {
+        remitente: emisor,
+        texto: texto,
+        fecha: new Date().toLocaleString()
+    };
+
+    chats[idChat].push(nuevoMensaje);
+
+    // Guardar en LocalStorage
+    localStorage.setItem('mensajesDND', JSON.stringify(chats));
+    
+    console.log("Chat guardado:", nuevoMensaje);
+}
+
+           function cerrarSesion() {
+            localStorage.removeItem('usuarioSesion');
+            window.location.href = "./Inicio.html";
+        }
+        </script>
+
+</body>
+</html>

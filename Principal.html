@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Red Social - Feed Dinámico</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .search-bar {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            background-color: rgba(255,255,255,0.95);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .container {
+            display: flex;
+            max-width: 1200px;
+            margin: 20px auto;
+            gap: 20px;
+            padding: 0 20px;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            height: fit-content;
+            position: sticky;
+            top: 80px;
+        }
+        
+        .sidebar h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 16px;
+            text-transform: uppercase;
+        }
+        
+        .menu-item {
+            display: block;
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-align: left;
+        }
+        
+        .menu-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .menu-item.logout {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .feed {
+            flex: 1;
+            max-width: 600px;
+        }
+        
+        .post {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+        
+        .avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            margin-right: 12px;
+            object-fit: cover;
+            background: #eee;
+        }
+        
+        .post-info h4 {
+            color: #333;
+            margin-bottom: 2px;
+        }
+        
+        .post-info small {
+            color: #888;
+            font-size: 0.8rem;
+        }
+
+        .banned-badge {
+            background: #ff4d4d;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            margin-left: 5px;
+        }
+        
+        .post-content {
+            color: #444;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        .stats {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 15px;
+            background: #f9f9f9;
+            padding: 8px;
+            border-radius: 8px;
+        }
+        
+        .post-actions {
+            display: flex;
+            gap: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .btn-action {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            background: #f0f0f0;
+            border-radius: 6px;
+            cursor: pointer;
+            color: #667eea;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        
+        .btn-action:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
+        ::-webkit-scrollbar-thumb { background: #764ba2; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="search-bar">
+            <input type="text" placeholder="🔍 Buscar usuarios, publicaciones...">
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <h3>Menú</h3>
+            <a class="menu-item" href="./Principal.html">📱 Principal</a>
+            <button onclick="togglePublishBox()" style="background: #667eea; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-bottom: 15px;">
+                    Crear nueva publicación
+            </button>
+            <a class='menu-item'href="./Usuario.html">👤 Usuario</a>
+            <a class='menu-item'href="">⚙️ Configuración</a>
+            <button class="menu-item logout" onclick="cerrarSesion()">🚪 Salir</button>
+        </div>
+
+                <div id="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center;">
+                    <div id="publish-box" style="background: white; padding: 25px; border-radius: 15px; width: 90%; max-width: 500px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 1px solid #764ba2; position: relative;">
+                        <h3 style="margin-top: 0; color: #764ba2;">Nueva Publicación</h3>
+                        <textarea id="post-text" placeholder="¿Qué aventuras compartirás hoy?" style="width: 100%; height: 120px; border: 1px solid #ddd; border-radius: 8px; padding: 12px; resize: none; font-family: inherit; font-size: 16px; margin-bottom: 15px; box-sizing: border-box;"></textarea>
+
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="publicarAhora()" style="flex: 2; background: #764ba2; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold;">Publicar ahora</button>
+                            <button onclick="togglePublishBox()" style="flex: 1; background: #f0f0f0; color: #444; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+
+        <div class="feed" id="main-feed">
+            </div>
+    </div>
+
+<script>
+    const feed = document.getElementById('main-feed');
+    let usuariosGlobal = [];
+    const MI_USUARIO = localStorage.getItem('usuarioSesion') || "Invitado";
+
+    function togglePublishBox() {
+        const modal = document.getElementById('modal-overlay');
+        if (modal.style.display === 'none' || modal.style.display === '') {
+            modal.style.display = 'flex';
+            document.getElementById('post-text').focus();
+        } else {
+            modal.style.display = 'none';
+            document.getElementById('post-text').value = "";
+        }
+    }
+
+    async function cargarFeed() {
+        try {
+            feed.innerHTML = '';
+
+            // 1. Cargamos los usuarios del JSON primero
+            const respuesta = await fetch('BaseDeDatos.json');
+            const data = await respuesta.json();
+            usuariosGlobal = data.usuarios;
+
+            // 2. !!! ACTUALIZACIÓN CRÍTICA !!! 
+            // Buscamos si hay cambios de perfil guardados en el LocalStorage
+            const misCambios = JSON.parse(localStorage.getItem('misDatosPerfil'));
+            if (misCambios) {
+                const index = usuariosGlobal.findIndex(u => u.nombre_usuario === MI_USUARIO);
+                if (index !== -1) {
+                    // Sobrescribimos los datos del JSON con tus nuevos datos de perfil
+                    usuariosGlobal[index].foto_perfil = misCambios.foto;
+                    usuariosGlobal[index].descripcion = misCambios.desc;
+                }
+            }
+
+            // 3. Cargamos publicaciones del LocalStorage
+            let publicacionesNuevas = JSON.parse(localStorage.getItem('muroDND')) || [];
+
+            // 4. Dibujamos los posts locales (los que tú escribes)
+            publicacionesNuevas.forEach(post => {
+                const datosAutor = usuariosGlobal.find(u => u.nombre_usuario === post.autor);
+                
+                // Ahora 'foto' siempre será la actualizada si el autor eres tú
+                const foto = datosAutor ? datosAutor.foto_perfil : 'https://via.placeholder.com/150';
+                const esBaneado = datosAutor ? datosAutor.baneos.esta_baneado : false;
+                const idUsuario = datosAutor ? datosAutor.id : post.id;
+
+                const html = `
+                    <div class="post" id="post-local-${post.id}">
+                        <div class="post-header">
+                            <img src="${foto}" class="avatar">
+                            <div class="post-info">
+                                <h4>@${post.autor} ${esBaneado ? '<span class="banned-badge" style="color:red; font-size:10px;">BANEADO</span>' : ''}</h4>
+                                <small>Publicado el ${post.fecha}</small>
+                            </div>
+                        </div>
+                        <div class="post-content">"${post.texto}"</div>
+                        <div class="stats">
+                            <span>👥 <b class="followers-count">${datosAutor ? datosAutor.seguidores : 0}</b> Seguidores</span>
+                            <span>❤️ <b class="likes-count">${post.likes || 0}</b> Likes</span>
+                        </div>
+                        <div class="post-actions">
+                            <button class="btn-action" onclick="darLikeLocal(${post.id})">❤️ Like</button>
+                            <button class="btn-action" onclick="mostrarInfo('${post.autor}')">💬 Info</button>
+                            ${post.autor !== MI_USUARIO ? `<button class="btn-action" onclick="seguirUsuario(${idUsuario})">➕ Seguir</button>` : ''}
+                        </div>
+                    </div>
+                `;
+                feed.innerHTML += html;
+            });
+
+            // 5. Dibujamos los posts del JSON
+            renderizarPosts(usuariosGlobal, publicacionesNuevas);
+
+        } catch (error) {
+            console.error("Error cargando el feed:", error);
+        }
+    }
+
+    function renderizarPosts(usuarios, publicacionesLocales) {
+        const yoYaPublique = publicacionesLocales.some(p => p.autor === MI_USUARIO);
+
+        usuarios.forEach(user => {
+            if (user.nombre_usuario === MI_USUARIO && !yoYaPublique) return;
+
+            let textoPublicacion = "";
+            if (Array.isArray(user.publicaciones)) {
+                textoPublicacion = user.publicaciones.length > 0 ? user.publicaciones[0].texto : "Sin descripción.";
+            } else {
+                textoPublicacion = user.publicaciones || "Sin descripción.";
+            }
+
+            const postHTML = `
+                <div class="post" id="post-${user.id}">
+                    <div class="post-header">
+                        <img src="${user.foto_perfil || 'https://via.placeholder.com/150'}" class="avatar">
+                        <div class="post-info">
+                            <h4>@${user.nombre_usuario} ${user.baneos.esta_baneado ? '<span class="banned-badge" style="color:red; font-size:10px;">BANEADO</span>' : ''}</h4>
+                            <small>${Array.isArray(user.publicaciones) ? user.publicaciones.length : (user.total_publicaciones || 0)} publicaciones</small>
+                        </div>
+                    </div>
+                    <div class="post-content">"${user.descripcion || textoPublicacion}"</div>
+                    <div class="stats">
+                        <span>👥 <b class="followers-count">${user.seguidores}</b> Seguidores</span>
+                        <span>❤️ <b class="likes-count">${user.me_gustas_totales}</b> Likes</span>
+                    </div>
+                    <div class="post-actions">
+                        <button class="btn-action" onclick="darLike(${user.id})">❤️ Like</button>
+                        <button class="btn-action" onclick="mostrarInfo('${user.nombre_usuario}')">💬 Info</button>
+                        ${user.nombre_usuario !== MI_USUARIO ? `<button class="btn-action" onclick="seguirUsuario(${user.id})">➕ Seguir</button>` : ''}
+                    </div>
+                </div>
+            `;
+            feed.innerHTML += postHTML;
+        });
+    }
+
+    function darLikeLocal(postId) {
+        let muro = JSON.parse(localStorage.getItem('muroDND')) || [];
+        const post = muro.find(p => p.id === postId);
+        if (post) {
+            post.likes = (post.likes || 0) + 1;
+            localStorage.setItem('muroDND', JSON.stringify(muro));
+            document.querySelector(`#post-local-${postId} .likes-count`).textContent = post.likes;
+        }
+    }
+
+    function publicarAhora() {
+        const texto = document.getElementById('post-text').value.trim();
+        if (!texto) return alert("¡No puedes publicar un mensaje vacío!");
+        
+        let muro = JSON.parse(localStorage.getItem('muroDND')) || [];
+        const nuevoPost = {
+            id: Date.now(),
+            autor: MI_USUARIO,
+            texto: texto,
+            fecha: new Date().toLocaleString(),
+            likes: 0
+        };
+
+        muro.unshift(nuevoPost);
+        localStorage.setItem('muroDND', JSON.stringify(muro));
+        
+        togglePublishBox();
+        cargarFeed();
+    }
+
+    function darLike(id) {
+        const usuario = usuariosGlobal.find(u => u.id === id);
+        if (usuario) {
+            usuario.me_gustas_totales++;
+            document.querySelector(`#post-${id} .likes-count`).textContent = usuario.me_gustas_totales;
+        }
+    }
+
+    function seguirUsuario(id) {
+        const usuario = usuariosGlobal.find(u => u.id === id);
+        if (usuario) {
+            usuario.seguidores++;
+            document.querySelector(`#post-${id} .followers-count`).textContent = usuario.seguidores;
+            alert(`Ahora sigues a @${usuario.nombre_usuario}`);
+        }
+    }
+
+    function mostrarInfo(username) {
+        const usuario = usuariosGlobal.find(u => u.nombre_usuario === username);
+        if (usuario) alert(`Usuario: ${usuario.nombre_usuario}\nDescripción: ${usuario.descripcion || "Aventurero sin descripción"}`);
+    }
+
+    cargarFeed();
+
+        function cerrarSesion() {
+            localStorage.removeItem('usuarioSesion');
+            window.location.href = "Inicio.html";
+        }
+</script>
+
+</body>
+</html>

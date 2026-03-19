@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>D&D - Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f1ea;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            max-width: 400px;
+            width: 100%;
+            background: white;
+            padding: 30px;
+            border: 2px solid #333;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 { text-align: center; margin-bottom: 20px; }
+        label { font-weight: bold; display: block; margin-top: 10px; }
+        
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box; /* Evita que el input se salga del contenedor */
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        button:hover { background-color: #555; }
+
+        .error-msg {
+            color: #d9534f;
+            text-align: center;
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: none; /* Oculto por defecto */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>DND</h1>
+
+    <div class="section">
+        <h2>Iniciar Sesión</h2>
+        <div id="mensaje-error" class="error-msg">Usuario o contraseña incorrectos</div>
+        
+        <label>Nombre de usuario:</label>
+        <input type="text" id="user-input" placeholder="Ej: dragon_slayer99">
+
+        <label>Contraseña:</label>
+        <input type="password" id="pass-input" placeholder="••••••••">
+
+        <button onclick="validarLogin()">Entrar</button>
+    </div>
+</div>
+
+<script>
+    async function validarLogin() {
+        // 1. Obtener los valores de los inputs
+        const userField = document.getElementById('user-input').value.trim();
+        const passField = document.getElementById('pass-input').value.trim();
+        const errorMsg = document.getElementById('mensaje-error');
+
+        try {
+            // 2. Cargar la base de datos (JSON externo)
+            const respuesta = await fetch('BaseDeDatos.json');
+            const data = await respuesta.json();
+            const usuarios = data.usuarios;
+
+            // 3. Buscar si existe el usuario y coincide la contraseña
+            // Nota: En un proyecto real, las contraseñas no se comparan en texto plano, 
+            // pero para este ejercicio local lo haremos así.
+            const usuarioEncontrado = usuarios.find(u => 
+                u.nombre_usuario === userField && u.contrasena === passField
+            );
+
+            if (usuarioEncontrado) {
+                // 4. GUARDAR SESIÓN: Guardamos el nombre de usuario en el localStorage
+                localStorage.setItem('usuarioSesion', usuarioEncontrado.nombre_usuario);
+                
+                // 5. REDIRIGIR: Si todo está bien, vamos a la página principal
+                window.location.href = "Principal.html";
+            } else {
+                // Mostrar error si no coinciden
+                errorMsg.style.display = "block";
+                errorMsg.textContent = "Usuario o contraseña incorrectos";
+            }
+
+        } catch (error) {
+            console.error("Error al acceder a la base de datos:", error);
+            errorMsg.style.display = "block";
+            errorMsg.textContent = "Error de conexión con el servidor";
+        }
+    }
+</script>
+
+</body>
+</html>

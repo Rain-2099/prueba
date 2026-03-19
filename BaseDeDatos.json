@@ -1,0 +1,117 @@
+{
+  "usuarios": [
+    {
+      "id": 1,
+      "nombre_usuario": "dragon_slayer99",
+      "contrasena": "$2b$12$Kj72mLp92...",
+      "foto_perfil": "https://i.pravatar.cc/150?u=ds99",
+      "descripcion": "Amante de los juegos de rol y la fantasía épica. Siempre en busca de una nueva aventura.",
+      "seguidores": 1250,
+      "cuentas_seguidas": 450,
+      "publicaciones": [
+        { "texto": "¡Hoy derrotamos al dragón de las cumbres!", "fecha": "2026-03-10", "likes": 150 },
+        { "texto": "¿Alguien para una partida de D&D esta noche?", "fecha": "2026-03-15", "likes": 45 }
+      ],
+      "total_publicaciones": 2,
+      "me_gustas_totales": 5600,
+      "baneos": {
+        "esta_baneado": false,
+        "historial_baneos": 0,
+        "motivo_ultimo": null
+      }
+    },
+    {
+      "id": 2,
+      "nombre_usuario": "pixel_art_queen",
+      "contrasena": "$2b$12$R92mLp72...",
+      "foto_perfil": "https://i.pravatar.cc/150?u=pixel",
+      "descripcion": "Dibujando el mundo pixel a pixel. Comisiones abiertas por DM.",
+      "seguidores": 15400,
+      "cuentas_seguidas": 120,
+      "publicaciones": [
+        { "texto": "Nuevo diseño de espada mágica terminado.", "fecha": "2026-03-16", "likes": 1200 }
+      ],
+      "total_publicaciones": 1,
+      "me_gustas_totales": 89200,
+      "baneos": {
+        "esta_baneado": false,
+        "historial_baneos": 0,
+        "motivo_ultimo": null
+      }
+    },
+    {
+      "id": 3,
+      "nombre_usuario": "troll_master_01",
+      "contrasena": "$2b$12$Xp11zQW9...",
+      "foto_perfil": "https://i.pravatar.cc/150?u=troll",
+      "descripcion": "Solo estoy aquí para decir la verdad que nadie quiere escuchar.",
+      "seguidores": 5,
+      "cuentas_seguidas": 2,
+      "publicaciones": [
+        { "texto": "Los elfos están sobrevalorados.", "fecha": "2026-01-01", "likes": 0 }
+      ],
+      "total_publicaciones": 1,
+      "me_gustas_totales": 2,
+      "baneos": {
+        "esta_baneado": true,
+        "historial_baneos": 3,
+        "motivo_ultimo": "Incumplimiento reiterado de las normas de convivencia."
+      }
+    },
+    {
+      "id": 4,
+      "nombre_usuario": "chef_nómada",
+      "contrasena": "$2b$12$Mv88oPq1...",
+      "foto_perfil": "https://i.pravatar.cc/150?u=chef",
+      "descripcion": "Cocinando en los rincones más remotos del planeta. 🌍🥘",
+      "seguidores": 890,
+      "cuentas_seguidas": 900,
+      "publicaciones": [
+        { "texto": "Cocinando estofado de jabalí en las montañas.", "fecha": "2026-03-05", "likes": 300 }
+      ],
+      "total_publicaciones": 1,
+      "me_gustas_totales": 1200,
+      "baneos": {
+        "esta_baneado": false,
+        "historial_baneos": 1,
+        "motivo_ultimo": "Spam accidental (cuenta recuperada)."
+      }
+    },
+    {
+      "id": 5,
+      "nombre_usuario": "tech_minimalist",
+      "contrasena": "$2b$12$Zz44xYt2...",
+      "foto_perfil": "https://i.pravatar.cc/150?u=tech",
+      "descripcion": "Menos es más. Hablo sobre código limpio y setups minimalistas.",
+      "seguidores": 3200,
+      "cuentas_seguidas": 50,
+      "publicaciones": [
+        { "texto": "Mi setup minimalista para 2026.", "fecha": "2026-02-28", "likes": 850 }
+      ],
+      "total_publicaciones": 1,
+      "me_gustas_totales": 15600,
+      "baneos": {
+        "esta_baneado": false,
+        "historial_baneos": 0,
+        "motivo_ultimo": null
+      }
+    },
+    {
+      "id": 6,
+      "nombre_usuario": "hola",
+      "contrasena": "123456",
+      "foto_perfil": "https://via.placeholder.com/150",
+      "descripcion": "Nuevo por aquí.",
+      "seguidores": 0,
+      "cuentas_seguidas": 0,
+      "publicaciones": [],
+      "total_publicaciones": 0,
+      "me_gustas_totales": 0,
+      "baneos": {
+        "esta_baneado": false,
+        "historial_baneos": 0,
+        "motivo_ultimo": null
+      }
+    }
+  ]
+}
