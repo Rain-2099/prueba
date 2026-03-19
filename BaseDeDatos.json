@@ -319,6 +319,20 @@
         "esta_baneado": false,
         "razon": ""
       }
+    },
+    {
+      "id": 11,
+      "nombre_usuario": "WolfStreet",
+      "contrasena": "2378",
+      "foto_perfil": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFmaW_QZoXI6ZhqKX_fJOhu1p02Psg0Q5IAoZmLvG0Bg&s",
+      "descripcion": "¡Nuevo en la red!",
+      "seguidores": 0,
+      "me_gustas_totales": 0,
+      "publicaciones": [],
+      "baneos": {
+        "esta_baneado": false,
+        "razon": ""
+      }
     }
   ]
 }
