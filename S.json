@@ -1,0 +1,53 @@
+{
+  "personajes": [
+    {
+      "id": 1,
+      "usuario_owner": "JuanPerez88",
+      "datos": {
+        "nombre": "Grog Strongjaw",
+        "clase": "Bárbaro",
+        "raza": "Goliath",
+        "nivel": 5,
+        "alineacion": "Caótico Neutral",
+        "atributos": {
+          "fuerza": 18,
+          "destreza": 12,
+          "constitucion": 16,
+          "inteligencia": 6,
+          "sabiduria": 10,
+          "carisma": 8
+        },
+        "combate": {
+          "puntos_de_vida": 55,
+          "clase_armadura": 14,
+          "iniciativa": 1,
+          "velocidad": "30 ft"
+        },
+        "habilidades": [
+          "Furia",
+          "Defensa sin armadura",
+          "Ataque temerario"
+        ],
+        "equipo": [
+          "Gran hacha",
+          "Jabalinas (4)",
+          "Mochila de explorador"
+        ],
+        "historia": "Exiliado de su manada por mostrar compasión..."
+      }
+    },
+    {
+      "id": 2,
+      "usuario_owner": "MariaRPG",
+      "datos": {
+        "nombre": "Keyleth",
+        "clase": "Druida",
+        "nivel": 5,
+        "atributos": {
+          "fuerza": 10,
+          "destreza": 15
+        }
+      }
+    }
+  ]
+}
