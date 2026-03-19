@@ -130,6 +130,12 @@
       "cuentas_seguidas": 0,
       "publicaciones": [
         {
+          "id": 1773885893521,
+          "texto": "Hola",
+          "fecha": "18/3/2026, 8:04:53 p.m.",
+          "likes": 0
+        },
+        {
           "id": 1773885533781,
           "texto": "Ahora si se muestra",
           "fecha": "18/3/2026, 7:58:53 p.m.",
