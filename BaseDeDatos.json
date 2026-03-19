@@ -388,6 +388,20 @@
         "esta_baneado": false,
         "razon": ""
       }
+    },
+    {
+      "id": 15,
+      "nombre_usuario": "Banquito",
+      "contrasena": "6767",
+      "foto_perfil": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSJvVSx5e0PLBfhBE-FNOzvuK-Glnr8ewe5w&s",
+      "descripcion": "¡Nuevo en la red!",
+      "seguidores": 0,
+      "me_gustas_totales": 0,
+      "publicaciones": [],
+      "baneos": {
+        "esta_baneado": false,
+        "razon": ""
+      }
     }
   ]
 }
