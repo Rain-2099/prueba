@@ -2,41 +2,17 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Ficha de Personaje - D&D</title>
+    <title>Ficha de Personaje - D&D (JSON Completo)</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f1ea;
-            margin: 20px;
-        }
-        .container {
-            max-width: 900px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border: 2px solid #333;
-            border-radius: 10px;
-        }
-        h1, h2 {
-            text-align: center;
-        }
-        .section {
-            margin-bottom: 20px;
-        }
-        label {
-            font-weight: bold;
-        }
-        input, textarea, select {
-            width: 100%;
-            padding: 5px;
-            margin-top: 5px;
-            margin-bottom: 10px;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
+        body { font-family: Arial, sans-serif; background-color: #f4f1ea; margin: 20px; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 20px; border: 2px solid #333; border-radius: 10px; }
+        .section { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #ccc; }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        label { font-weight: bold; display: block; margin-top: 10px; }
+        input, textarea { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        button { width: 100%; padding: 15px; background-color: #8b0000; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 20px; font-weight: bold; }
+        button:hover { background-color: #a00000; }
+        #consola-json { background: #272822; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; margin-top: 20px; font-family: monospace; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -45,85 +21,166 @@
     <h1>Ficha de Personaje</h1>
 
     <div class="section">
+        <label>ID de Usuario (usuario_owner):</label>
+        <input type="text" id="usuario_owner" placeholder="Ej: JuanPerez88">
+    </div>
+
+    <div class="section">
         <h2>Información Básica</h2>
-        <label>Nombre del personaje:</label>
-        <input type="text">
-
-        <label>Clase:</label>
-        <input type="text">
-
-        <label>Raza:</label>
-        <input type="text">
-
-        <label>Nivel:</label>
-        <input type="number">
-
-        <label>Alineación:</label>
-        <input type="text">
+        <div class="grid">
+            <div><label>Nombre</label><input type="text" id="nombre"></div>
+            <div><label>Clase</label><input type="text" id="clase"></div>
+            <div><label>Raza</label><input type="text" id="raza"></div>
+        </div>
+        <div class="grid">
+            <div><label>Nivel</label><input type="number" id="nivel"></div>
+            <div><label>Alineación</label><input type="text" id="alineacion"></div>
+        </div>
     </div>
 
     <div class="section">
         <h2>Atributos</h2>
         <div class="grid">
-            <div>
-                <label>Fuerza</label>
-                <input type="number">
-            </div>
-            <div>
-                <label>Destreza</label>
-                <input type="number">
-            </div>
-            <div>
-                <label>Constitución</label>
-                <input type="number">
-            </div>
-            <div>
-                <label>Inteligencia</label>
-                <input type="number">
-            </div>
-            <div>
-                <label>Sabiduría</label>
-                <input type="number">
-            </div>
-            <div>
-                <label>Carisma</label>
-                <input type="number">
-            </div>
+            <div><label>Fuerza</label><input type="number" id="fuerza"></div>
+            <div><label>Destreza</label><input type="number" id="destreza"></div>
+            <div><label>Constitución</label><input type="number" id="constitucion"></div>
+            <div><label>Inteligencia</label><input type="number" id="inteligencia"></div>
+            <div><label>Sabiduría</label><input type="number" id="sabiduria"></div>
+            <div><label>Carisma</label><input type="number" id="carisma"></div>
         </div>
     </div>
 
     <div class="section">
         <h2>Combate</h2>
-        <label>Puntos de Vida:</label>
-        <input type="number">
-
-        <label>Clase de Armadura:</label>
-        <input type="number">
-
-        <label>Iniciativa:</label>
-        <input type="number">
-
-        <label>Velocidad:</label>
-        <input type="text">
+        <div class="grid">
+            <div><label>Puntos de Vida</label><input type="number" id="hp"></div>
+            <div><label>Clase Armadura (CA)</label><input type="number" id="ca"></div>
+            <div><label>Iniciativa</label><input type="number" id="iniciativa"></div>
+        </div>
+        <label>Velocidad</label><input type="text" id="velocidad" placeholder="Ej: 30 ft">
     </div>
 
     <div class="section">
-        <h2>Habilidades</h2>
-        <textarea rows="5" placeholder="Escribe tus habilidades..."></textarea>
+        <label>Habilidades (una por línea):</label>
+        <textarea id="habilidades" rows="3"></textarea>
+        
+        <label>Equipo (uno por línea):</label>
+        <textarea id="equipo" rows="3"></textarea>
+        
+        <label>Historia:</label>
+        <textarea id="historia" rows="5"></textarea>
     </div>
 
-    <div class="section">
-        <h2>Equipo</h2>
-        <textarea rows="5" placeholder="Lista de objetos y armas..."></textarea>
-    </div>
+    <button onclick="guardarFicha()">ACTUALIZAR JSON LOCAL</button>
 
-    <div class="section">
-        <h2>Historia del Personaje</h2>
-        <textarea rows="6" placeholder="Describe la historia..."></textarea>
-    </div>
-
-    <button onclick="alert('Ficha guardada (simulación)')" href="#">Guardar</button>
+    <h3>Vista Previa del JSON:</h3>
+    <pre id="consola-json">Aquí aparecerá tu JSON actualizado...</pre>
 </div>
 
+<script>
+    // 1. Al cargar la página, intentamos recuperar la configuración guardada
+    window.onload = function() {
+        if (localStorage.getItem('gh_config')) {
+            const config = JSON.parse(localStorage.getItem('gh_config'));
+            document.getElementById('gh_token').value = config.token;
+            document.getElementById('gh_repo').value = config.repo;
+            document.getElementById('gh_path').value = config.path;
+            console.log("Configuración de GitHub cargada automáticamente.");
+        }
+    };
+
+    async function guardarFicha() {
+        // 2. Obtener los valores actuales de los inputs
+        const TOKEN = document.getElementById('gh_token').value;
+        const REPO = document.getElementById('gh_repo').value;
+        const PATH = document.getElementById('gh_path').value;
+
+        if (!TOKEN || !REPO) {
+            alert("Faltan datos de configuración de GitHub");
+            return;
+        }
+
+        // 3. GUARDAR la configuración para la próxima vez
+        const config = { token: TOKEN, repo: REPO, path: PATH };
+        localStorage.setItem('gh_config', JSON.stringify(config));
+
+        // --- AQUÍ EMPIEZA TU LÓGICA DE CAPTURA DE DATOS ---
+        const nuevoPersonaje = {
+            "id": Date.now(),
+            "usuario_owner": document.getElementById('usuario_owner').value || "Invitado",
+            "datos": {
+                "nombre": document.getElementById('nombre').value,
+                "clase": document.getElementById('clase').value,
+                "raza": document.getElementById('raza').value,
+                "nivel": parseInt(document.getElementById('nivel').value) || 0,
+                "alineacion": document.getElementById('alineacion').value,
+                "atributos": {
+                    "fuerza": parseInt(document.getElementById('fuerza').value) || 0,
+                    "destreza": parseInt(document.getElementById('destreza').value) || 0,
+                    "constitucion": parseInt(document.getElementById('constitucion').value) || 0,
+                    "inteligencia": parseInt(document.getElementById('inteligencia').value) || 0,
+                    "sabiduria": parseInt(document.getElementById('sabiduria').value) || 0,
+                    "carisma": parseInt(document.getElementById('carisma').value) || 0
+                },
+                "combate": {
+                    "puntos_de_vida": parseInt(document.getElementById('hp').value) || 0,
+                    "clase_armadura": parseInt(document.getElementById('ca').value) || 0,
+                    "iniciativa": parseInt(document.getElementById('iniciativa').value) || 0,
+                    "velocidad": document.getElementById('velocidad').value
+                },
+                "habilidades": document.getElementById('habilidades').value.split('\n').filter(h => h.trim() !== ""),
+                "equipo": document.getElementById('equipo').value.split('\n').filter(e => e.trim() !== ""),
+                "historia": document.getElementById('historia').value
+            }
+        };
+
+        try {
+            const url = `https://api.github.com/repos/${REPO}/contents/${PATH}`;
+            
+            // Obtener SHA para poder actualizar
+            const getRes = await fetch(url, {
+                headers: { "Authorization": `token ${TOKEN}` }
+            });
+
+            let currentContent = { personajes: [] };
+            let sha = "";
+
+            if (getRes.ok) {
+                const data = await getRes.json();
+                sha = data.sha;
+                currentContent = JSON.parse(decodeURIComponent(escape(atob(data.content))));
+            }
+
+            currentContent.personajes.push(nuevoPersonaje);
+            const nuevoJSON = JSON.stringify(currentContent, null, 2);
+
+            // Subir a GitHub
+            const putRes = await fetch(url, {
+                method: "PUT",
+                headers: {
+                    "Authorization": `token ${TOKEN}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    message: `Añadido: ${nuevoPersonaje.datos.nombre}`,
+                    content: btoa(unescape(encodeURIComponent(nuevoJSON))),
+                    sha: sha 
+                })
+            });
+
+            if (putRes.ok) {
+                alert("¡Ficha guardada en GitHub!");
+                document.getElementById('consola-json').textContent = nuevoJSON;
+            } else {
+                alert("Error al guardar. Revisa el Token o el Repositorio.");
+            }
+
+        } catch (error) {
+            console.error(error);
+            alert("Error de conexión.");
+        }
+    }
+</script>
+    
 </body>
 </html>
