@@ -78,7 +78,6 @@ async function ejecutarRegistro() {
         if (!resGet.ok) throw new Error("No se encontró el archivo. Revisa el nombre en GitHub.");
 
         const fileData = await resGet.json();
-        // Decodificación segura
         const contenidoLimpio = decodeURIComponent(escape(atob(fileData.content.replace(/\s/g, ''))));
         const db = JSON.parse(contenidoLimpio);
 
@@ -90,10 +89,11 @@ async function ejecutarRegistro() {
             ? Math.max(...db.usuarios.map(u => u.id || 0)) + 1 
             : 1;
 
+        // --- CAMBIO AQUÍ: 'contrasena' en lugar de 'password' ---
         const nuevoUsuario = {
             id: nuevoId,
             nombre_usuario: user,
-            password: pass,
+            contrasena: pass, 
             foto_perfil: foto || "https://via.placeholder.com/150",
             descripcion: "¡Nuevo en la red!",
             seguidores: 0,
@@ -104,7 +104,6 @@ async function ejecutarRegistro() {
 
         db.usuarios.push(nuevoUsuario);
 
-        // Codificación segura para subir a GitHub
         const nuevoContenidoJSON = JSON.stringify(db, null, 2);
         const contenidoBase64 = btoa(unescape(encodeURIComponent(nuevoContenidoJSON)));
 
@@ -129,7 +128,7 @@ async function ejecutarRegistro() {
             throw new Error(errorData.message);
         }
     } catch (e) {
-        alert("Error crítico: " + e.message + ". Revisa que tu archivo JSON en GitHub no tenga errores de comas o llaves.");
+        alert("Error crítico: " + e.message);
     }
 }
 </script>
