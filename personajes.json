@@ -31,6 +31,38 @@
         ],
         "historia": "lkejlkje"
       }
+    },
+    {
+      "id": 1773882086081,
+      "usuario_owner": "Hola",
+      "datos": {
+        "nombre": "LUIS LEONEL ",
+        "clase": "e",
+        "raza": "e",
+        "nivel": 87,
+        "alineacion": "jehioeoi",
+        "atributos": {
+          "fuerza": 897,
+          "destreza": 7,
+          "constitucion": 67,
+          "inteligencia": 75,
+          "sabiduria": 566,
+          "carisma": 765
+        },
+        "combate": {
+          "puntos_de_vida": 656,
+          "clase_armadura": 765,
+          "iniciativa": 764,
+          "velocidad": "865"
+        },
+        "habilidades": [
+          "jhjiooiae"
+        ],
+        "equipo": [
+          "uehifsjoi"
+        ],
+        "historia": "ksrhfhsrhf"
+      }
     }
   ]
 }
