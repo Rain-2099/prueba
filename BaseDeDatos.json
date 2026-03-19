@@ -173,20 +173,7 @@
         "historial_baneos": 0,
         "motivo_ultimo": null
       }
-    },
-    {
-      "id":7,
-      "nombre_usuario": "Juanito",
-      "password": "12",
-      "foto_perfil": "https://i.pinimg.com/736x/b4/21/0a/b4210adedd9eee45d8481e73b32d7f29.jpg",
-      "descripcion": "¡Nuevo en la red!",
-      "seguidores": 0,
-      "me_gustas_totales": 0,
-      "publicaciones": [],
-      "baneos": {
-        "esta_baneado": false,
-        "razon": ""
-      }
+    }
     }
   ]
 }
