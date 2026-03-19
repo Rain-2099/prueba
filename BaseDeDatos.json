@@ -130,6 +130,12 @@
       "cuentas_seguidas": 0,
       "publicaciones": [
         {
+          "id": 1773936438395,
+          "texto": "sexo",
+          "fecha": "19/3/2026, 10:07:18 a.m.",
+          "likes": 0
+        },
+        {
           "id": 1773936190248,
           "texto": "soy un simio muy ligero mira como me pajeo",
           "fecha": "19/3/2026, 10:03:10 a.m.",
