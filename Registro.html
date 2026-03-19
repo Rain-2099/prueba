@@ -63,14 +63,12 @@
         
         if (!user || !pass) return alert("Por favor, completa los campos obligatorios.");
 
-        // Recuperar config de GitHub
         const CONFIG_GH = JSON.parse(localStorage.getItem('gh_config'));
         if (!CONFIG_GH) return alert("⚠️ Error: Configura primero tu GitHub en la Ficha Técnica.");
 
         const url = `https://api.github.com/repos/${CONFIG_GH.repo}/contents/BaseDeDatos.json`;
 
         try {
-            // 1. Obtener base de datos actual
             const resGet = await fetch(url, { 
                 headers: { "Authorization": `token ${CONFIG_GH.token}` },
                 cache: "no-store" 
@@ -78,26 +76,31 @@
             const fileData = await resGet.json();
             const db = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
 
-            // 2. Validar si existe
             if (db.usuarios.find(u => u.nombre_usuario === user)) {
                 return alert("Ese nombre de usuario ya existe.");
             }
 
-            // 3. Crear estructura completa para que el usuario pueda postear
+            // --- LÓGICA DE ID AUTOMÁTICO ---
+            // Buscamos el ID más alto actual. Si no hay usuarios, empezamos en 0.
+            const ultimoId = db.usuarios.length > 0 
+                ? Math.max(...db.usuarios.map(u => u.id || 0)) 
+                : 0;
+            const nuevoId = ultimoId + 1;
+
             const nuevoUsuario = {
+                id: nuevoId, // Se asigna el ID único aquí
                 nombre_usuario: user,
                 password: pass,
                 foto_perfil: foto || "https://via.placeholder.com/150",
                 descripcion: "¡Nuevo en la red!",
                 seguidores: 0,
                 me_gustas_totales: 0,
-                publicaciones: [], // Esencial para que el feed no falle
+                publicaciones: [], 
                 baneos: { esta_baneado: false, razon: "" }
             };
 
             db.usuarios.push(nuevoUsuario);
 
-            // 4. Guardar en GitHub
             const resPut = await fetch(url, {
                 method: "PUT",
                 headers: { 
@@ -105,14 +108,14 @@
                     "Content-Type": "application/json" 
                 },
                 body: JSON.stringify({
-                    message: `Nuevo usuario registrado: ${user}`,
+                    message: `Registro: ${user} (ID: ${nuevoId})`,
                     content: btoa(unescape(encodeURIComponent(JSON.stringify(db, null, 2)))),
                     sha: fileData.sha
                 })
             });
 
             if (resPut.ok) {
-                alert("¡Registro exitoso! Ahora inicia sesión.");
+                alert(`¡Registro exitoso! Tu ID de aventurero es: ${nuevoId}`);
                 window.location.href = "Inicio.html";
             }
 
