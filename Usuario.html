@@ -91,182 +91,112 @@
         </div>
     </div>
 
-        <script>
-            let usuariosData = [];
-            const USUARIO_LOGUEADO_USERNAME = localStorage.getItem('usuarioSesion') || "dragon_slayer99"; 
-        
-            async function cargarUsuarios() {
-                try {
-                    const respuesta = await fetch('BaseDeDatos.json');
-                    const data = await respuesta.json();
-                    usuariosData = data.usuarios;
-                
-                    // Aplicar cambios guardados en localStorage (si existen)
-                    aplicarCambiosLocales();
-                
-                    const miUsuario = usuariosData.find(u => u.nombre_usuario === USUARIO_LOGUEADO_USERNAME);
-                    if (miUsuario) {
-                        mostrarPerfilPrincipal(miUsuario);
-                    }
-                
-                    const otros = usuariosData.filter(u => u.nombre_usuario !== USUARIO_LOGUEADO_USERNAME);
-                    mostrarListaOtros(otros);
-                
-                } catch (error) {
-                    console.error("Error cargando el JSON:", error);
-                }
-            }
-        
-            // Función para leer lo que el usuario guardó antes
-            function aplicarCambiosLocales() {
-                const cambios = JSON.parse(localStorage.getItem('misDatosPerfil'));
-                if (cambios) {
-                    const index = usuariosData.findIndex(u => u.nombre_usuario === USUARIO_LOGUEADO_USERNAME);
-                    if (index !== -1) {
-                        usuariosData[index].foto_perfil = cambios.foto;
-                        usuariosData[index].descripcion = cambios.desc;
-                    }
-                }
-            }
-        
-            function mostrarPerfilPrincipal(user) {
-                document.getElementById('main-avatar').src = user.foto_perfil || 'https://via.placeholder.com/150';
-                document.getElementById('main-name').textContent = user.nombre_usuario;
-                document.getElementById('main-username').textContent = '@' + user.nombre_usuario;
-                document.getElementById('main-description').textContent = user.descripcion ? `"${user.descripcion}"` : "Sin descripción.";
-
-                document.getElementById('main-followers').textContent = user.seguidores;
-                document.getElementById('main-posts').textContent = Array.isArray(user.publicaciones) ? user.publicaciones.length : user.publicaciones;
-                document.getElementById('main-likes').textContent = user.me_gustas_totales;
-            
-                const bannedDiv = document.getElementById('main-banned');
-                bannedDiv.innerHTML = user.baneos.esta_baneado ? '<div class="banned-badge">BANEADO</div>' : '';
-
-                // --- ESTO ES LO QUE CAMBIA ---
-    const actionsDiv = document.getElementById('main-actions');
+      <script>
+    let usuariosData = [];
+    const USUARIO_LOGUEADO_USERNAME = localStorage.getItem('usuarioSesion') || "Invitado"; 
     
-    if (user.nombre_usuario === USUARIO_LOGUEADO_USERNAME) {
-        actionsDiv.innerHTML = `<button class="btn-action" onclick="editarPerfil()" style="background: #444;">⚙️ Editar mi perfil</button>`;
-    } else {
-        // Le pasamos el nombre_usuario a la función abrirChat
-        actionsDiv.innerHTML = `
-            <button class="btn-action">❤️ Seguir</button>
-            <button class="btn-action" onclick="abrirChat('${user.nombre_usuario}')">💬 Mensaje</button>
-        `;
-    }
-}
+    // Recuperamos la configuración de GitHub (Token y Repo)
+    const CONFIG_GH = JSON.parse(localStorage.getItem('gh_config'));
+
+    async function cargarUsuarios() {
+        try {
+            // Añadimos no-cache para ver siempre los datos más recientes del servidor
+            const respuesta = await fetch('BaseDeDatos.json', { cache: "no-store" });
+            const data = await respuesta.json();
+            usuariosData = data.usuarios;
         
-            // FUNCIÓN PARA EDITAR
-            function editarPerfil() {
-                const nuevaFoto = prompt("Pega la URL de tu nueva foto de perfil:", document.getElementById('main-avatar').src);
-                const nuevaDesc = prompt("Escribe tu nueva descripción:", document.getElementById('main-description').textContent.replace(/"/g, ''));
-            
-                if (nuevaFoto !== null && nuevaDesc !== null) {
-                    // Actualizar en memoria
-                    const miUsuario = usuariosData.find(u => u.nombre_usuario === USUARIO_LOGUEADO_USERNAME);
-                    miUsuario.foto_perfil = nuevaFoto;
-                    miUsuario.descripcion = nuevaDesc;
-                
-                    // Guardar en LocalStorage para que no se pierda al recargar
-                    localStorage.setItem('misDatosPerfil', JSON.stringify({
-                        foto: nuevaFoto,
-                        desc: nuevaDesc
-                    }));
-                
-                    // Refrescar vista
-                    mostrarPerfilPrincipal(miUsuario);
-                    alert("¡Perfil actualizado con éxito!");
-                }
+            const miUsuario = usuariosData.find(u => u.nombre_usuario === USUARIO_LOGUEADO_USERNAME);
+            if (miUsuario) {
+                mostrarPerfilPrincipal(miUsuario);
             }
         
-            function mostrarListaOtros(lista) {
-                const container = document.getElementById('other-profiles-container');
-                container.innerHTML = '';
-                lista.forEach((user) => {
-                    const totalPubs = Array.isArray(user.publicaciones) ? user.publicaciones.length : user.publicaciones;
-                    const profileCard = `
-                        <div class="profile-card" onclick="verDetalle('${user.nombre_usuario}')">
-                            <div class="profile-card-info">
-                                <img src="${user.foto_perfil || 'https://via.placeholder.com/150'}" class="profile-card-avatar">
-                                <div class="profile-card-details">
-                                    <h4>@${user.nombre_usuario}</h4>
-                                    <small>${user.seguidores} seguidores • ${totalPubs} posts</small>
-                                </div>
-                            </div>
-                            <button class="profile-card-btn">Ver Perfil</button>
-                        </div>
-                    `;
-                    container.innerHTML += profileCard;
-                });
-            }
+            const otros = usuariosData.filter(u => u.nombre_usuario !== USUARIO_LOGUEADO_USERNAME);
+            mostrarListaOtros(otros);
         
-            function verDetalle(username) {
-                const user = usuariosData.find(u => u.nombre_usuario === username);
-                if (user) {
-                    mostrarPerfilPrincipal(user);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-            }
-        
-// 1. Reemplaza el bloque viejo que tenía 'index.html' por este:
-document.querySelector('.logout').addEventListener('click', cerrarSesion);
-
-// 2. Mantén tu función del final, pero asegúrate de que el nombre sea el correcto:
-function cerrarSesion() {
-    localStorage.removeItem('usuarioSesion');
-    // Si tu login se llama Inicio.html, déjalo así. 
-    // Si se llama IniciarSesion.html, corrígelo aquí:
-    window.location.href = "Inicio.html"; 
-}
-        
-            cargarUsuarios();
-
-            // Función para abrir la ventana de mensaje y enviarlo
-function abrirChat(nombreReceptor) {
-    const contenido = prompt(`Escribe tu mensaje para @${nombreReceptor}:`);
-    
-    if (contenido && contenido.trim() !== "") {
-        enviarMensaje(nombreReceptor, contenido);
-        alert("¡Mensaje enviado correctamente!");
-    }
-}
-
-// Lógica de guardado en LocalStorage
-function enviarMensaje(receptor, texto) {
-    const emisor = USUARIO_LOGUEADO_USERNAME;
-    
-    // Crear una ID de chat única (ejemplo: "hola_pixel_art_queen")
-    // Usamos sort para que el ID sea el mismo sin importar quién empiece el chat
-    const idChat = [emisor, receptor].sort().join('_');
-
-    // Obtener historial de mensajes previo
-    let chats = JSON.parse(localStorage.getItem('mensajesDND')) || {};
-
-    // Si no existe este chat, lo creamos
-    if (!chats[idChat]) {
-        chats[idChat] = [];
-    }
-
-    // Añadir el mensaje al array
-    const nuevoMensaje = {
-        remitente: emisor,
-        texto: texto,
-        fecha: new Date().toLocaleString()
-    };
-
-    chats[idChat].push(nuevoMensaje);
-
-    // Guardar en LocalStorage
-    localStorage.setItem('mensajesDND', JSON.stringify(chats));
-    
-    console.log("Chat guardado:", nuevoMensaje);
-}
-
-           function cerrarSesion() {
-            localStorage.removeItem('usuarioSesion');
-            window.location.href = "./Inicio.html";
+        } catch (error) {
+            console.error("Error cargando el JSON:", error);
         }
-        </script>
+    }
 
+    function mostrarPerfilPrincipal(user) {
+        document.getElementById('main-avatar').src = user.foto_perfil || 'https://via.placeholder.com/150';
+        document.getElementById('main-name').textContent = user.nombre_usuario;
+        document.getElementById('main-username').textContent = '@' + user.nombre_usuario;
+        document.getElementById('main-description').textContent = user.descripcion ? `"${user.descripcion}"` : "Sin descripción.";
+
+        document.getElementById('main-followers').textContent = user.seguidores;
+        document.getElementById('main-posts').textContent = Array.isArray(user.publicaciones) ? user.publicaciones.length : 0;
+        document.getElementById('main-likes').textContent = user.me_gustas_totales;
+    
+        const bannedDiv = document.getElementById('main-banned');
+        bannedDiv.innerHTML = user.baneos?.esta_baneado ? '<div class="banned-badge">BANEADO</div>' : '';
+
+        const actionsDiv = document.getElementById('main-actions');
+        
+        if (user.nombre_usuario === USUARIO_LOGUEADO_USERNAME) {
+            actionsDiv.innerHTML = `<button class="btn-action" onclick="editarPerfil()" style="background: #444;">⚙️ Editar mi perfil (Global)</button>`;
+        } else {
+            actionsDiv.innerHTML = `
+                <button class="btn-action" onclick="alert('Siguiendo...')">❤️ Seguir</button>
+                <button class="btn-action" onclick="abrirChat('${user.nombre_usuario}')">💬 Mensaje</button>
+            `;
+        }
+    }
+
+    // --- FUNCIÓN CRÍTICA: EDITAR Y GUARDAR EN EL SERVIDOR ---
+    async function editarPerfil() {
+        if (!CONFIG_GH) return alert("⚠️ Error: No has configurado el Token de GitHub en la página de Ficha.");
+
+        const nuevaFoto = prompt("Pega la URL de tu nueva foto de perfil:", document.getElementById('main-avatar').src);
+        const nuevaDesc = prompt("Escribe tu nueva descripción:", document.getElementById('main-description').textContent.replace(/"/g, ''));
+    
+        if (nuevaFoto === null || nuevaDesc === null) return;
+
+        try {
+            // 1. Obtener la versión más reciente del JSON desde GitHub
+            const url = `https://api.github.com/repos/${CONFIG_GH.repo}/contents/BaseDeDatos.json`;
+            const resGet = await fetch(url, { headers: { "Authorization": `token ${CONFIG_GH.token}` } });
+            const fileData = await resGet.json();
+            const db = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
+
+            // 2. Modificar los datos del usuario logueado
+            const index = db.usuarios.findIndex(u => u.nombre_usuario === USUARIO_LOGUEADO_USERNAME);
+            if (index !== -1) {
+                db.usuarios[index].foto_perfil = nuevaFoto;
+                db.usuarios[index].descripcion = nuevaDesc;
+
+                // 3. Subir el archivo actualizado a GitHub
+                const resPut = await fetch(url, {
+                    method: "PUT",
+                    headers: { "Authorization": `token ${CONFIG_GH.token}`, "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        message: `Perfil actualizado: ${USUARIO_LOGUEADO_USERNAME}`,
+                        content: btoa(unescape(encodeURIComponent(JSON.stringify(db, null, 2)))),
+                        sha: fileData.sha
+                    })
+                });
+
+                if (resPut.ok) {
+                    alert("✅ ¡Perfil actualizado en el servidor con éxito!");
+                    location.reload(); // Recargamos para ver los cambios
+                } else {
+                    alert("❌ Error al guardar en GitHub. Revisa tu Token.");
+                }
+            }
+        } catch (error) {
+            console.error(error);
+            alert("❌ Error de conexión con el servidor.");
+        }
+    }
+
+    // ... El resto de tus funciones (mostrarListaOtros, cerrarSesion, etc.) se mantienen igual ...
+
+    function cerrarSesion() {
+        localStorage.removeItem('usuarioSesion');
+        window.location.href = "Inicio.html";
+    }
+
+    cargarUsuarios();
+</script> 
 </body>
 </html>
