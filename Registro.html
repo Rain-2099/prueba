@@ -57,73 +57,74 @@
 
 <script>
     async function ejecutarRegistro() {
-        const user = document.getElementById('reg-username').value.trim();
-        const pass = document.getElementById('reg-password').value.trim();
-        const foto = document.getElementById('reg-photo').value.trim();
-        
-        if (!user || !pass) return alert("Por favor, completa los campos obligatorios.");
+    const user = document.getElementById('reg-username').value.trim();
+    const pass = document.getElementById('reg-password').value.trim();
+    const foto = document.getElementById('reg-photo').value.trim();
+    
+    if (!user || !pass) return alert("Completa los campos.");
 
-        const CONFIG_GH = JSON.parse(localStorage.getItem('gh_config'));
-        if (!CONFIG_GH) return alert("⚠️ Error: Configura primero tu GitHub en la Ficha Técnica.");
+    const CONFIG_GH = JSON.parse(localStorage.getItem('gh_config'));
+    if (!CONFIG_GH) return alert("Configura el Token y Repo primero.");
 
-        const url = `https://api.github.com/repos/${CONFIG_GH.repo}/contents/BaseDeDatos.json`;
+    // Forzamos el nombre correcto del archivo
+    const ARCHIVO = "BaseDeDatos.json";
+    const url = `https://api.github.com/repos/${CONFIG_GH.repo}/contents/${ARCHIVO}`;
 
-        try {
-            const resGet = await fetch(url, { 
-                headers: { "Authorization": `token ${CONFIG_GH.token}` },
-                cache: "no-store" 
-            });
-            const fileData = await resGet.json();
-            const db = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
+    try {
+        const resGet = await fetch(url, { 
+            headers: { "Authorization": `token ${CONFIG_GH.token}` },
+            cache: "no-store" 
+        });
 
-            if (db.usuarios.find(u => u.nombre_usuario === user)) {
-                return alert("Ese nombre de usuario ya existe.");
-            }
+        if (!resGet.ok) throw new Error("No se pudo acceder al archivo en GitHub. Revisa el nombre y el Token.");
 
-            // --- LÓGICA DE ID AUTOMÁTICO ---
-            // Buscamos el ID más alto actual. Si no hay usuarios, empezamos en 0.
-            const ultimoId = db.usuarios.length > 0 
-                ? Math.max(...db.usuarios.map(u => u.id || 0)) 
-                : 0;
-            const nuevoId = ultimoId + 1;
+        const fileData = await resGet.json();
+        const db = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
 
-            const nuevoUsuario = {
-                id: nuevoId, // Se asigna el ID único aquí
-                nombre_usuario: user,
-                password: pass,
-                foto_perfil: foto || "https://via.placeholder.com/150",
-                descripcion: "¡Nuevo en la red!",
-                seguidores: 0,
-                me_gustas_totales: 0,
-                publicaciones: [], 
-                baneos: { esta_baneado: false, razon: "" }
-            };
-
-            db.usuarios.push(nuevoUsuario);
-
-            const resPut = await fetch(url, {
-                method: "PUT",
-                headers: { 
-                    "Authorization": `token ${CONFIG_GH.token}`,
-                    "Content-Type": "application/json" 
-                },
-                body: JSON.stringify({
-                    message: `Registro: ${user} (ID: ${nuevoId})`,
-                    content: btoa(unescape(encodeURIComponent(JSON.stringify(db, null, 2)))),
-                    sha: fileData.sha
-                })
-            });
-
-            if (resPut.ok) {
-                alert(`¡Registro exitoso! Tu ID de aventurero es: ${nuevoId}`);
-                window.location.href = "Inicio.html";
-            }
-
-        } catch (e) {
-            console.error(e);
-            alert("Error de conexión con el servidor.");
+        if (db.usuarios.find(u => u.nombre_usuario === user)) {
+            return alert("Usuario ya existe.");
         }
+
+        // Generar ID automático basado en el más alto
+        const nuevoId = db.usuarios.length > 0 
+            ? Math.max(...db.usuarios.map(u => u.id || 0)) + 1 
+            : 1;
+
+        const nuevoUsuario = {
+            id: nuevoId,
+            nombre_usuario: user,
+            password: pass,
+            foto_perfil: foto || "https://via.placeholder.com/150",
+            descripcion: "¡Nuevo en la red!",
+            seguidores: 0,
+            me_gustas_totales: 0,
+            publicaciones: [], 
+            baneos: { esta_baneado: false, razon: "" }
+        };
+
+        db.usuarios.push(nuevoUsuario);
+
+        const resPut = await fetch(url, {
+            method: "PUT",
+            headers: { 
+                "Authorization": `token ${CONFIG_GH.token}`,
+                "Content-Type": "application/json" 
+            },
+            body: JSON.stringify({
+                message: `Registro: ${user} (ID: ${nuevoId})`,
+                content: btoa(unescape(encodeURIComponent(JSON.stringify(db, null, 2)))),
+                sha: fileData.sha
+            })
+        });
+
+        if (resPut.ok) {
+            alert(`¡Éxito! Tu ID es ${nuevoId}. Inicia sesión ahora.`);
+            window.location.href = "Inicio.html";
+        }
+    } catch (e) {
+        alert("Error: " + e.message);
     }
+}
 </script>
 
 </body>
