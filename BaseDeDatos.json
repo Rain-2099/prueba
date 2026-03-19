@@ -130,6 +130,12 @@
       "cuentas_seguidas": 0,
       "publicaciones": [
         {
+          "id": 1773936171068,
+          "texto": "hola pepito",
+          "fecha": "19/3/2026, 10:02:51 a.m.",
+          "likes": 0
+        },
+        {
           "id": 1773885917858,
           "texto": "vemjeijojvs",
           "fecha": "18/3/2026, 8:05:17 p.m.",
