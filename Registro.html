@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ficha de Personaje - D&D (JSON Completo)</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f1ea; margin: 20px; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 20px; border: 2px solid #333; border-radius: 10px; }
+        .section { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #ccc; }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        label { font-weight: bold; display: block; margin-top: 10px; }
+        input, textarea { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        button { width: 100%; padding: 15px; background-color: #8b0000; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 20px; font-weight: bold; }
+        button:hover { background-color: #a00000; }
+        #consola-json { background: #272822; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; margin-top: 20px; font-family: monospace; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Ficha de Personaje</h1>
+
+    <div class="section">
+        <label>ID de Usuario (usuario_owner):</label>
+        <input type="text" id="usuario_owner" placeholder="Ej: JuanPerez88">
+    </div>
+
+    <div class="section">
+        <h2>Información Básica</h2>
+        <div class="grid">
+            <div><label>Nombre</label><input type="text" id="nombre"></div>
+            <div><label>Clase</label><input type="text" id="clase"></div>
+            <div><label>Raza</label><input type="text" id="raza"></div>
+        </div>
+        <div class="grid">
+            <div><label>Nivel</label><input type="number" id="nivel"></div>
+            <div><label>Alineación</label><input type="text" id="alineacion"></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Atributos</h2>
+        <div class="grid">
+            <div><label>Fuerza</label><input type="number" id="fuerza"></div>
+            <div><label>Destreza</label><input type="number" id="destreza"></div>
+            <div><label>Constitución</label><input type="number" id="constitucion"></div>
+            <div><label>Inteligencia</label><input type="number" id="inteligencia"></div>
+            <div><label>Sabiduría</label><input type="number" id="sabiduria"></div>
+            <div><label>Carisma</label><input type="number" id="carisma"></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Combate</h2>
+        <div class="grid">
+            <div><label>Puntos de Vida</label><input type="number" id="hp"></div>
+            <div><label>Clase Armadura (CA)</label><input type="number" id="ca"></div>
+            <div><label>Iniciativa</label><input type="number" id="iniciativa"></div>
+        </div>
+        <label>Velocidad</label><input type="text" id="velocidad" placeholder="Ej: 30 ft">
+    </div>
+
+    <div class="section">
+        <label>Habilidades (una por línea):</label>
+        <textarea id="habilidades" rows="3"></textarea>
+        
+        <label>Equipo (uno por línea):</label>
+        <textarea id="equipo" rows="3"></textarea>
+        
+        <label>Historia:</label>
+        <textarea id="historia" rows="5"></textarea>
+    </div>
+
+    <button onclick="guardarFicha()">Guardar</button>
+
+    <h3>Vista Previa del JSON:</h3>
+    <pre id="consola-json">Aquí aparecerá tu JSON actualizado...</pre>
+</div>
+
+<div class="section" style="background: #f0f0f0; padding: 10px;">
+    <h3>Configuración GitHub</h3>
+    <input type="password" id="gh_token" placeholder="Tu GitHub Personal Access Token">
+    <input type="text" id="gh_repo" placeholder="usuario/nombre-repositorio">
+    <input type="text" id="gh_path" placeholder="nombre-archivo.json" value="personajes.json">
+</div>
+
+<button onclick="guardarFicha()">Guardar en GitHub</button>
+
+<script>
+    async function guardarFicha() {
+        const TOKEN = document.getElementById('gh_token').value;
+        const REPO = document.getElementById('gh_repo').value;
+        const PATH = document.getElementById('gh_path').value;
+
+        if (!TOKEN || !REPO) {
+            alert("Por favor, llena los datos de configuración de GitHub");
+            return;
+        }
+
+        // 1. Capturar datos del formulario (Estructura que pediste)
+        const nuevoPersonaje = {
+            "id": Date.now(), // Usamos timestamp para ID único
+            "usuario_owner": document.getElementById('usuario_owner').value || "Invitado",
+            "datos": {
+                "nombre": document.getElementById('nombre').value,
+                "clase": document.getElementById('clase').value,
+                "raza": document.getElementById('raza').value,
+                "nivel": parseInt(document.getElementById('nivel').value) || 0,
+                "alineacion": document.getElementById('alineacion').value,
+                "atributos": {
+                    "fuerza": parseInt(document.getElementById('fuerza').value) || 0,
+                    "destreza": parseInt(document.getElementById('destreza').value) || 0,
+                    "constitucion": parseInt(document.getElementById('constitucion').value) || 0,
+                    "inteligencia": parseInt(document.getElementById('inteligencia').value) || 0,
+                    "sabiduria": parseInt(document.getElementById('sabiduria').value) || 0,
+                    "carisma": parseInt(document.getElementById('carisma').value) || 0
+                },
+                "combate": {
+                    "puntos_de_vida": parseInt(document.getElementById('hp').value) || 0,
+                    "clase_armadura": parseInt(document.getElementById('ca').value) || 0,
+                    "iniciativa": parseInt(document.getElementById('iniciativa').value) || 0,
+                    "velocidad": document.getElementById('velocidad').value
+                },
+                "habilidades": document.getElementById('habilidades').value.split('\n').filter(h => h.trim() !== ""),
+                "equipo": document.getElementById('equipo').value.split('\n').filter(e => e.trim() !== ""),
+                "historia": document.getElementById('historia').value
+            }
+        };
+
+        try {
+            // 2. Obtener el archivo actual de GitHub para no borrar lo anterior
+            const url = `https://api.github.com/repos/${REPO}/contents/${PATH}`;
+            const getRes = await fetch(url, {
+                headers: { "Authorization": `token ${TOKEN}` }
+            });
+
+            let currentContent = { personajes: [] };
+            let sha = "";
+
+            if (getRes.ok) {
+                const data = await getRes.json();
+                sha = data.sha; // Necesario para actualizar
+                currentContent = JSON.parse(atob(data.content)); // Decodificar Base64
+            }
+
+            // 3. Añadir el nuevo personaje a la lista
+            currentContent.personajes.push(nuevoPersonaje);
+            const nuevoJSON = JSON.stringify(currentContent, null, 2);
+
+            // 4. Subir el archivo actualizado a GitHub
+            const putRes = await fetch(url, {
+                method: "PUT",
+                headers: {
+                    "Authorization": `token ${TOKEN}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    message: `Añadido personaje: ${nuevoPersonaje.datos.nombre}`,
+                    content: btoa(unescape(encodeURIComponent(nuevoJSON))), // Codificar a Base64
+                    sha: sha 
+                })
+            });
+
+            if (putRes.ok) {
+                alert("¡JSON actualizado en GitHub con éxito!");
+                document.getElementById('consola-json').textContent = nuevoJSON;
+            } else {
+                const errorData = await putRes.json();
+                alert("Error al subir: " + errorData.message);
+            }
+
+        } catch (error) {
+            console.error(error);
+            alert("Error de conexión. Revisa la consola.");
+        }
+    }
+</script>
+
+
+</body>
+</html>
