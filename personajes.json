@@ -63,6 +63,38 @@
         ],
         "historia": "ksrhfhsrhf"
       }
+    },
+    {
+      "id": 1773882250976,
+      "usuario_owner": "Hola",
+      "datos": {
+        "nombre": "jefoijel",
+        "clase": "ljdoe",
+        "raza": "leijfoijf",
+        "nivel": 87,
+        "alineacion": "srlfkjekj",
+        "atributos": {
+          "fuerza": 897,
+          "destreza": 976,
+          "constitucion": 8768,
+          "inteligencia": 786,
+          "sabiduria": 876,
+          "carisma": 76
+        },
+        "combate": {
+          "puntos_de_vida": 87687,
+          "clase_armadura": 876876,
+          "iniciativa": 786,
+          "velocidad": "876"
+        },
+        "habilidades": [
+          "eiufslijlsj"
+        ],
+        "equipo": [
+          "eijfisj"
+        ],
+        "historia": "iejsofjio"
+      }
     }
   ]
 }
