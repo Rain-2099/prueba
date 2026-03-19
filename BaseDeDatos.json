@@ -128,8 +128,15 @@
       "descripcion": "Nuevo por aquí.",
       "seguidores": 0,
       "cuentas_seguidas": 0,
-      "publicaciones": [],
-      "total_publicaciones": 0,
+      "publicaciones": [
+        {
+          "id": 1773885305577,
+          "texto": "hola",
+          "fecha": "18/3/2026 19:55:05",
+          "likes": 0
+        }
+      ],
+      "total_publicaciones": 1,
       "me_gustas_totales": 0,
       "baneos": {
         "esta_baneado": false,
