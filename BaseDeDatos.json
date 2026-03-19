@@ -177,7 +177,7 @@
     {
       "id": 7,
       "nombre_usuario": "Juanito",
-      "password": "12",
+      "contrasena": "12",
       "foto_perfil": "https://via.placeholder.com/150",
       "descripcion": "¡Nuevo en la red!",
       "seguidores": 0,
