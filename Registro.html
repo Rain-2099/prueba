@@ -87,19 +87,35 @@
 <button onclick="guardarFicha()">Guardar en GitHub</button>
 
 <script>
+    // 1. Al cargar la página, intentamos recuperar la configuración guardada
+    window.onload = function() {
+        if (localStorage.getItem('gh_config')) {
+            const config = JSON.parse(localStorage.getItem('gh_config'));
+            document.getElementById('gh_token').value = config.token;
+            document.getElementById('gh_repo').value = config.repo;
+            document.getElementById('gh_path').value = config.path;
+            console.log("Configuración de GitHub cargada automáticamente.");
+        }
+    };
+
     async function guardarFicha() {
+        // 2. Obtener los valores actuales de los inputs
         const TOKEN = document.getElementById('gh_token').value;
         const REPO = document.getElementById('gh_repo').value;
         const PATH = document.getElementById('gh_path').value;
 
         if (!TOKEN || !REPO) {
-            alert("Por favor, llena los datos de configuración de GitHub");
+            alert("Faltan datos de configuración de GitHub");
             return;
         }
 
-        // 1. Capturar datos del formulario (Estructura que pediste)
+        // 3. GUARDAR la configuración para la próxima vez
+        const config = { token: TOKEN, repo: REPO, path: PATH };
+        localStorage.setItem('gh_config', JSON.stringify(config));
+
+        // --- AQUÍ EMPIEZA TU LÓGICA DE CAPTURA DE DATOS ---
         const nuevoPersonaje = {
-            "id": Date.now(), // Usamos timestamp para ID único
+            "id": Date.now(),
             "usuario_owner": document.getElementById('usuario_owner').value || "Invitado",
             "datos": {
                 "nombre": document.getElementById('nombre').value,
@@ -128,8 +144,9 @@
         };
 
         try {
-            // 2. Obtener el archivo actual de GitHub para no borrar lo anterior
             const url = `https://api.github.com/repos/${REPO}/contents/${PATH}`;
+            
+            // Obtener SHA para poder actualizar
             const getRes = await fetch(url, {
                 headers: { "Authorization": `token ${TOKEN}` }
             });
@@ -139,15 +156,14 @@
 
             if (getRes.ok) {
                 const data = await getRes.json();
-                sha = data.sha; // Necesario para actualizar
-                currentContent = JSON.parse(atob(data.content)); // Decodificar Base64
+                sha = data.sha;
+                currentContent = JSON.parse(decodeURIComponent(escape(atob(data.content))));
             }
 
-            // 3. Añadir el nuevo personaje a la lista
             currentContent.personajes.push(nuevoPersonaje);
             const nuevoJSON = JSON.stringify(currentContent, null, 2);
 
-            // 4. Subir el archivo actualizado a GitHub
+            // Subir a GitHub
             const putRes = await fetch(url, {
                 method: "PUT",
                 headers: {
@@ -155,23 +171,22 @@
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    message: `Añadido personaje: ${nuevoPersonaje.datos.nombre}`,
-                    content: btoa(unescape(encodeURIComponent(nuevoJSON))), // Codificar a Base64
+                    message: `Añadido: ${nuevoPersonaje.datos.nombre}`,
+                    content: btoa(unescape(encodeURIComponent(nuevoJSON))),
                     sha: sha 
                 })
             });
 
             if (putRes.ok) {
-                alert("¡JSON actualizado en GitHub con éxito!");
+                alert("¡Ficha guardada en GitHub!");
                 document.getElementById('consola-json').textContent = nuevoJSON;
             } else {
-                const errorData = await putRes.json();
-                alert("Error al subir: " + errorData.message);
+                alert("Error al guardar. Revisa el Token o el Repositorio.");
             }
 
         } catch (error) {
             console.error(error);
-            alert("Error de conexión. Revisa la consola.");
+            alert("Error de conexión.");
         }
     }
 </script>
