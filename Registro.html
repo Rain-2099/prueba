@@ -2,27 +2,46 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Ficha de Personaje - D&D (JSON Completo)</title>
+    <title>Ficha de Personaje - D&D (Auto-Config)</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f1ea; margin: 20px; }
-        .container { max-width: 900px; margin: auto; background: white; padding: 20px; border: 2px solid #333; border-radius: 10px; }
-        .section { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #ccc; }
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        label { font-weight: bold; display: block; margin-top: 10px; }
-        input, textarea { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
-        button { width: 100%; padding: 15px; background-color: #8b0000; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 20px; font-weight: bold; }
-        button:hover { background-color: #a00000; }
-        #consola-json { background: #272822; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; margin-top: 20px; font-family: monospace; font-size: 12px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f1ea; margin: 20px; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 25px; border: 2px solid #333; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .section { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px dashed #ccc; }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        label { font-weight: bold; display: block; margin-top: 10px; color: #444; }
+        input, textarea { width: 100%; padding: 10px; margin-top: 5px; box-sizing: border-box; border: 1px solid #ddd; border-radius: 5px; }
+        
+        /* Botones */
+        .btn-guardar { width: 100%; padding: 15px; background-color: #8b0000; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 18px; font-weight: bold; transition: 0.3s; }
+        .btn-guardar:hover { background-color: #a00000; transform: translateY(-2px); }
+        
+        /* Sección de Configuración */
+        #config-panel { background: #f9f9f9; padding: 20px; border-radius: 8px; border: 1px solid #eee; margin-top: 20px; }
+        .hidden { display: none; }
+        .config-toggle { background: none; border: 1px solid #ccc; color: #666; padding: 5px 10px; cursor: pointer; font-size: 12px; margin-bottom: 10px; border-radius: 4px; }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <button class="config-toggle" onclick="toggleConfig()">⚙️ Mostrar/Ocultar Configuración</button>
+    
+    <div id="config-panel" class="section">
+        <h3>Configuración de GitHub</h3>
+        <p style="font-size: 0.8em; color: #666;">Los datos se guardan solo en tu navegador.</p>
+        <label>Personal Access Token:</label>
+        <input type="password" id="gh_token" placeholder="ghp_xxxxxxxxxxxx">
+        <label>Repositorio (usuario/repo):</label>
+        <input type="text" id="gh_repo" placeholder="rain-2099/prueba">
+        <label>Archivo JSON:</label>
+        <input type="text" id="gh_path" value="personajes.json">
+    </div>
+
     <h1>Ficha de Personaje</h1>
 
     <div class="section">
-        <label>ID de Usuario (usuario_owner):</label>
-        <input type="text" id="usuario_owner" placeholder="Ej: JuanPerez88">
+        <label>Dueño del Personaje (usuario_owner):</label>
+        <input type="text" id="usuario_owner" placeholder="Tu nombre de usuario">
     </div>
 
     <div class="section">
@@ -51,69 +70,57 @@
     </div>
 
     <div class="section">
-        <h2>Combate</h2>
+        <h2>Combate y Extras</h2>
         <div class="grid">
-            <div><label>Puntos de Vida</label><input type="number" id="hp"></div>
-            <div><label>Clase Armadura (CA)</label><input type="number" id="ca"></div>
+            <div><label>Vida (HP)</label><input type="number" id="hp"></div>
+            <div><label>Armadura (CA)</label><input type="number" id="ca"></div>
             <div><label>Iniciativa</label><input type="number" id="iniciativa"></div>
         </div>
-        <label>Velocidad</label><input type="text" id="velocidad" placeholder="Ej: 30 ft">
-    </div>
-
-    <div class="section">
-        <label>Habilidades (una por línea):</label>
+        <label>Habilidades (separadas por líneas):</label>
         <textarea id="habilidades" rows="3"></textarea>
-        
-        <label>Equipo (uno por línea):</label>
+        <label>Equipo:</label>
         <textarea id="equipo" rows="3"></textarea>
-        
         <label>Historia:</label>
-        <textarea id="historia" rows="5"></textarea>
+        <textarea id="historia" rows="4"></textarea>
     </div>
 
-    <button onclick="guardarFicha()">Guardar</button>
-
-    <h3>Vista Previa del JSON:</h3>
-    <pre id="consola-json">Aquí aparecerá tu JSON actualizado...</pre>
+    <button class="btn-guardar" onclick="guardarFicha()">ENVIAR A GITHUB</button>
 </div>
-
-<div class="section" style="background: #f0f0f0; padding: 10px;">
-    <h3>Configuración GitHub</h3>
-    <input type="password" id="gh_token" placeholder="Tu GitHub Personal Access Token">
-    <input type="text" id="gh_repo" placeholder="usuario/nombre-repositorio">
-    <input type="text" id="gh_path" placeholder="nombre-archivo.json" value="personajes.json">
-</div>
-
-<button onclick="guardarFicha()">Guardar en GitHub</button>
 
 <script>
-    // 1. Al cargar la página, intentamos recuperar la configuración guardada
+    // Al cargar la página
     window.onload = function() {
-        if (localStorage.getItem('gh_config')) {
-            const config = JSON.parse(localStorage.getItem('gh_config'));
+        const savedConfig = localStorage.getItem('gh_config');
+        if (savedConfig) {
+            const config = JSON.parse(savedConfig);
             document.getElementById('gh_token').value = config.token;
             document.getElementById('gh_repo').value = config.repo;
             document.getElementById('gh_path').value = config.path;
-            console.log("Configuración de GitHub cargada automáticamente.");
+            
+            // Si ya hay datos, ocultamos el panel automáticamente
+            document.getElementById('config-panel').classList.add('hidden');
         }
     };
 
+    function toggleConfig() {
+        const panel = document.getElementById('config-panel');
+        panel.classList.toggle('hidden');
+    }
+
     async function guardarFicha() {
-        // 2. Obtener los valores actuales de los inputs
         const TOKEN = document.getElementById('gh_token').value;
         const REPO = document.getElementById('gh_repo').value;
         const PATH = document.getElementById('gh_path').value;
 
         if (!TOKEN || !REPO) {
-            alert("Faltan datos de configuración de GitHub");
+            alert("⚠️ Por favor, configura tus datos de GitHub primero.");
+            document.getElementById('config-panel').classList.remove('hidden');
             return;
         }
 
-        // 3. GUARDAR la configuración para la próxima vez
-        const config = { token: TOKEN, repo: REPO, path: PATH };
-        localStorage.setItem('gh_config', JSON.stringify(config));
+        // Guardar configuración para siempre
+        localStorage.setItem('gh_config', JSON.stringify({ token: TOKEN, repo: REPO, path: PATH }));
 
-        // --- AQUÍ EMPIEZA TU LÓGICA DE CAPTURA DE DATOS ---
         const nuevoPersonaje = {
             "id": Date.now(),
             "usuario_owner": document.getElementById('usuario_owner').value || "Invitado",
@@ -135,7 +142,7 @@
                     "puntos_de_vida": parseInt(document.getElementById('hp').value) || 0,
                     "clase_armadura": parseInt(document.getElementById('ca').value) || 0,
                     "iniciativa": parseInt(document.getElementById('iniciativa').value) || 0,
-                    "velocidad": document.getElementById('velocidad').value
+                    "velocidad": "30 ft"
                 },
                 "habilidades": document.getElementById('habilidades').value.split('\n').filter(h => h.trim() !== ""),
                 "equipo": document.getElementById('equipo').value.split('\n').filter(e => e.trim() !== ""),
@@ -145,52 +152,40 @@
 
         try {
             const url = `https://api.github.com/repos/${REPO}/contents/${PATH}`;
-            
-            // Obtener SHA para poder actualizar
-            const getRes = await fetch(url, {
-                headers: { "Authorization": `token ${TOKEN}` }
-            });
+            const resGet = await fetch(url, { headers: { "Authorization": `token ${TOKEN}` } });
 
-            let currentContent = { personajes: [] };
+            let content = { personajes: [] };
             let sha = "";
 
-            if (getRes.ok) {
-                const data = await getRes.json();
+            if (resGet.ok) {
+                const data = await resGet.json();
                 sha = data.sha;
-                currentContent = JSON.parse(decodeURIComponent(escape(atob(data.content))));
+                content = JSON.parse(decodeURIComponent(escape(atob(data.content))));
             }
 
-            currentContent.personajes.push(nuevoPersonaje);
-            const nuevoJSON = JSON.stringify(currentContent, null, 2);
+            content.personajes.push(nuevoPersonaje);
+            const finalJSON = JSON.stringify(content, null, 2);
 
-            // Subir a GitHub
-            const putRes = await fetch(url, {
+            const resPut = await fetch(url, {
                 method: "PUT",
-                headers: {
-                    "Authorization": `token ${TOKEN}`,
-                    "Content-Type": "application/json"
-                },
+                headers: { "Authorization": `token ${TOKEN}`, "Content-Type": "application/json" },
                 body: JSON.stringify({
                     message: `Añadido: ${nuevoPersonaje.datos.nombre}`,
-                    content: btoa(unescape(encodeURIComponent(nuevoJSON))),
-                    sha: sha 
+                    content: btoa(unescape(encodeURIComponent(finalJSON))),
+                    sha: sha
                 })
             });
 
-            if (putRes.ok) {
-                alert("¡Ficha guardada en GitHub!");
-                document.getElementById('consola-json').textContent = nuevoJSON;
+            if (resPut.ok) {
+                alert("✅ ¡Personaje guardado con éxito!");
             } else {
-                alert("Error al guardar. Revisa el Token o el Repositorio.");
+                alert("❌ Error al subir. Verifica los permisos del Token.");
             }
-
-        } catch (error) {
-            console.error(error);
-            alert("Error de conexión.");
+        } catch (e) {
+            alert("❌ Error de red.");
         }
     }
 </script>
-
 
 </body>
 </html>
