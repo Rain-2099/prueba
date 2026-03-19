@@ -63,8 +63,11 @@ async function ejecutarRegistro() {
     
     if (!user || !pass) return alert("Completa los campos.");
 
-    const CONFIG_GH = JSON.parse(localStorage.getItem('gh_config'));
-    if (!CONFIG_GH) return alert("Configura el Token y Repo primero.");
+    // --- CONFIGURACIÓN FIJA (Ya no usa localStorage) ---
+    const CONFIG_GH = {
+        token: "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", // Pon tu token de GitHub aquí
+        repo: "rain-2099/prueba" // Ejemplo: "pepito/mi-juego-dd"
+    };
 
     const ARCHIVO = "BaseDeDatos.json";
     const url = `https://api.github.com/repos/${CONFIG_GH.repo}/contents/${ARCHIVO}`;
@@ -75,21 +78,20 @@ async function ejecutarRegistro() {
             cache: "no-store" 
         });
 
-        if (!resGet.ok) throw new Error("No se encontró el archivo. Revisa el nombre en GitHub.");
+        if (!resGet.ok) throw new Error("No se pudo acceder a la base de datos. Revisa el Token y el Repo.");
 
         const fileData = await resGet.json();
         const contenidoLimpio = decodeURIComponent(escape(atob(fileData.content.replace(/\s/g, ''))));
         const db = JSON.parse(contenidoLimpio);
 
         if (db.usuarios.find(u => u.nombre_usuario === user)) {
-            return alert("Usuario ya existe.");
+            return alert("Este aventurero ya existe en el reino.");
         }
 
         const nuevoId = db.usuarios.length > 0 
             ? Math.max(...db.usuarios.map(u => u.id || 0)) + 1 
             : 1;
 
-        // --- CAMBIO AQUÍ: 'contrasena' en lugar de 'password' ---
         const nuevoUsuario = {
             id: nuevoId,
             nombre_usuario: user,
@@ -114,21 +116,21 @@ async function ejecutarRegistro() {
                 "Content-Type": "application/json" 
             },
             body: JSON.stringify({
-                message: `Registro: ${user} (ID: ${nuevoId})`,
+                message: `Nuevo aventurero: ${user}`,
                 content: contenidoBase64,
                 sha: fileData.sha
             })
         });
 
         if (resPut.ok) {
-            alert(`¡Éxito! Tu ID es ${nuevoId}.`);
+            alert(`¡Bienvenido! Tu ID es ${nuevoId}.`);
             window.location.href = "Inicio.html";
         } else {
             const errorData = await resPut.json();
             throw new Error(errorData.message);
         }
     } catch (e) {
-        alert("Error crítico: " + e.message);
+        alert("Error en el registro: " + e.message);
     }
 }
 </script>
