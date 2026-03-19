@@ -360,6 +360,20 @@
         "esta_baneado": false,
         "razon": ""
       }
+    },
+    {
+      "id": 13,
+      "nombre_usuario": "Quite",
+      "contrasena": "12",
+      "foto_perfil": "https://via.placeholder.com/150",
+      "descripcion": "¡Nuevo en la red!",
+      "seguidores": 0,
+      "me_gustas_totales": 0,
+      "publicaciones": [],
+      "baneos": {
+        "esta_baneado": false,
+        "razon": ""
+      }
     }
   ]
 }
