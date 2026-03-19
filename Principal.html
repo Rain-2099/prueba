@@ -67,13 +67,13 @@
         <div class="feed" id="main-feed"></div>
     </div>
 
-<script>
+    <script>
     const feed = document.getElementById('main-feed');
     let usuariosGlobal = [];
+    // Usamos tu identificador de desarrollador por defecto si no hay sesión
     const MI_USUARIO = localStorage.getItem('usuarioSesion') || "dragon_slayer99"; 
     const CONFIG_GH = JSON.parse(localStorage.getItem('gh_config'));
 
-    // --- FUNCIÓN PARA ABRIR/CERRAR MODAL ---
     function togglePublishBox() {
         const modal = document.getElementById('modal-overlay');
         modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
@@ -81,22 +81,34 @@
 
     async function cargarFeed() {
         try {
-            feed.innerHTML = '<p style="text-align:center; color:white;">Cargando aventuras...</p>';
+            feed.innerHTML = '<p style="text-align:center; color:white;">Cargando crónicas...</p>';
             
-            // Usamos personajes.json según tu captura de pantalla
-            const respuesta = await fetch('personajes.json', { cache: "no-store" });
+            // APUNTA A: BaseDeDatos.json (Donde viven los usuarios y posts)
+            const respuesta = await fetch('BaseDeDatos.json', { cache: "no-store" });
             const data = await respuesta.json();
             usuariosGlobal = data.usuarios;
             
             let todosLosPosts = [];
             usuariosGlobal.forEach(u => {
                 if(Array.isArray(u.publicaciones)){
-                    u.publicaciones.forEach(p => todosLosPosts.push({...p, autor: u.nombre_usuario, foto: u.foto_perfil}));
+                    u.publicaciones.forEach(p => {
+                        todosLosPosts.push({
+                            ...p, 
+                            autor: u.nombre_usuario, 
+                            foto: u.foto_perfil 
+                        });
+                    });
                 }
             });
 
+            // Ordenar por ID (timestamp) para ver lo más nuevo arriba
             todosLosPosts.sort((a, b) => b.id - a.id);
             feed.innerHTML = ''; 
+
+            if(todosLosPosts.length === 0) {
+                feed.innerHTML = '<p style="text-align:center; color:white;">Aún no hay leyendas escritas...</p>';
+                return;
+            }
 
             todosLosPosts.forEach(post => {
                 feed.innerHTML += `
@@ -111,71 +123,88 @@
                         <div class="post-content">"${post.texto}"</div>
                         <div class="post-actions">
                             <button class="btn-action">❤️ Like (${post.likes || 0})</button>
-                            <button class="btn-action" onclick="alert('Usuario: ${post.autor}')">💬 Info</button>
+                            <button class="btn-action" onclick="alert('Usuario: ${post.autor}')">💬 Perfil</button>
                         </div>
                     </div>`;
             });
         } catch (error) {
-            feed.innerHTML = '<p style="color:white;">Error al cargar el archivo personajes.json</p>';
+            console.error(error);
+            feed.innerHTML = '<p style="color:white; text-align:center;">Error al conectar con BaseDeDatos.json</p>';
         }
     }
 
     async function publicarAhora() {
         const texto = document.getElementById('post-text').value.trim();
-        if (!texto) return alert("¡El mensaje está vacío!");
-        if (!CONFIG_GH) return alert("Configura GitHub en la página de Registro/Ficha.");
+        if (!texto) return alert("¡Escribe algo antes de lanzar el pergamino!");
+        if (!CONFIG_GH) return alert("Falta configuración de GitHub.");
+
+        const btn = event.target;
+        btn.disabled = true;
+        btn.textContent = "Guardando en la DB...";
 
         try {
-            // Ajustamos la URL para usar personajes.json
-            const url = `https://api.github.com/repos/${CONFIG_GH.repo}/contents/personajes.json`;
+            // URL específica para la base de datos de usuarios
+            const url = `https://api.github.com/repos/${CONFIG_GH.repo}/contents/BaseDeDatos.json`;
+            
             const resGet = await fetch(url, { 
                 headers: { "Authorization": `token ${CONFIG_GH.token}` },
                 cache: "no-store" 
             });
 
+            if (!resGet.ok) throw new Error("No se pudo acceder a BaseDeDatos.json en GitHub.");
+
             const fileData = await resGet.json();
+            // Decodificación segura para tildes y eñes
             const db = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
-            const userIndex = db.usuarios.findIndex(u => u.nombre_usuario === MI_USUARIO);
             
-            if (userIndex === -1) throw new Error("Usuario no encontrado en el JSON.");
+            const userIndex = db.usuarios.findIndex(u => u.nombre_usuario === MI_USUARIO);
+            if (userIndex === -1) throw new Error("Tu usuario no existe en la base de datos.");
 
             const nuevoPost = {
                 id: Date.now(),
                 texto: texto,
-                fecha: new Date().toLocaleString(),
+                fecha: new Date().toLocaleDateString('es-ES') + " " + new Date().toLocaleTimeString('es-ES'),
                 likes: 0
             };
 
+            // Insertar al inicio del array del usuario
             if (!db.usuarios[userIndex].publicaciones) db.usuarios[userIndex].publicaciones = [];
             db.usuarios[userIndex].publicaciones.unshift(nuevoPost);
+            
+            // Actualizar contador total opcional
+            db.usuarios[userIndex].total_publicaciones = db.usuarios[userIndex].publicaciones.length;
 
             const resPut = await fetch(url, {
                 method: "PUT",
-                headers: { "Authorization": `token ${CONFIG_GH.token}`, "Content-Type": "application/json" },
+                headers: { 
+                    "Authorization": `token ${CONFIG_GH.token}`,
+                    "Content-Type": "application/json" 
+                },
                 body: JSON.stringify({
-                    message: "Nueva publicación",
+                    message: `Nueva publicación de ${MI_USUARIO}`,
                     content: btoa(unescape(encodeURIComponent(JSON.stringify(db, null, 2)))),
                     sha: fileData.sha
                 })
             });
 
             if (resPut.ok) {
-                alert("¡Publicado!");
+                alert("¡Publicación exitosa!");
                 document.getElementById('post-text').value = "";
                 togglePublishBox();
-                setTimeout(cargarFeed, 1000);
+                setTimeout(cargarFeed, 1500);
+            } else {
+                throw new Error("GitHub rechazó la actualización.");
             }
         } catch (e) {
             alert("Error: " + e.message);
+        } finally {
+            btn.disabled = false;
+            btn.textContent = "Publicar ahora";
         }
-    }
-
-    function cerrarSesion() {
-        localStorage.removeItem('usuarioSesion');
-        window.location.href = "Inicio.html";
     }
 
     cargarFeed();
 </script>
+    
 </body>
 </html>
