@@ -80,12 +80,15 @@
         modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
     }
 
-    async function cargarFeed() {
+async function cargarFeed() {
         try {
-            feed.innerHTML = '<p style="text-align:center; color:white;">Cargando crónicas...</p>';
+            // Mostramos un mensaje de carga limpio
+            feed.innerHTML = '<p style="text-align:center; color:white;">Actualizando pergaminos...</p>';
             
-            // FORZAMOS EL USO DE BaseDeDatos.json
-            const respuesta = await fetch('BaseDeDatos.json', { cache: "no-store" });
+            // BYPASS DE CACHÉ: Añadimos un timestamp (?t=...) para que no lea la versión vieja
+            const urlConCacheBuster = `BaseDeDatos.json?t=${Date.now()}`;
+            const respuesta = await fetch(urlConCacheBuster, { cache: "no-store" });
+            
             if (!respuesta.ok) throw new Error("No se encontró BaseDeDatos.json");
             
             const data = await respuesta.json();
@@ -109,7 +112,7 @@
             feed.innerHTML = ''; 
 
             if(todosLosPosts.length === 0) {
-                feed.innerHTML = '<p style="text-align:center; color:white;">El reino está en silencio (sin publicaciones).</p>';
+                feed.innerHTML = '<p style="text-align:center; color:white;">El reino está en silencio...</p>';
                 return;
             }
 
@@ -131,7 +134,7 @@
             });
         } catch (error) {
             console.error(error);
-            feed.innerHTML = '<p style="color:white; text-align:center;">Error al cargar BaseDeDatos.json. Verifica que el archivo exista en GitHub.</p>';
+            feed.innerHTML = '<p style="color:white; text-align:center;">Error al sincronizar con la base de datos.</p>';
         }
     }
 
