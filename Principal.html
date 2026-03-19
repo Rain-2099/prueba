@@ -68,10 +68,17 @@
     </div>
 
 <script>
-    const feed = document.getElementById('main-feed');
+const feed = document.getElementById('main-feed');
     let usuariosGlobal = [];
-    const MI_USUARIO = localStorage.getItem('usuarioSesion') || "dragon_slayer99"; 
-    const CONFIG_GH = JSON.parse(localStorage.getItem('gh_config'));
+    
+    // Obtenemos el nombre del usuario que inició sesión
+    const MI_USUARIO = localStorage.getItem('usuarioSesion') || "Invitado"; 
+
+    // --- CONFIGURACIÓN FIJA (Igual que en el Registro) ---
+    const CONFIG_GH = {
+        token: "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", // Tu token real
+        repo: "Rain-2099/prueba" // Tu repositorio real
+    };
 
     // Función para abrir y cerrar la ventana de publicación
     function togglePublishBox() {
@@ -80,12 +87,11 @@
         modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
     }
 
-async function cargarFeed() {
+    async function cargarFeed() {
         try {
-            // Mostramos un mensaje de carga limpio
             feed.innerHTML = '<p style="text-align:center; color:white;">Actualizando pergaminos...</p>';
             
-            // BYPASS DE CACHÉ: Añadimos un timestamp (?t=...) para que no lea la versión vieja
+            // Bypass de caché para ver publicaciones nuevas al instante
             const urlConCacheBuster = `BaseDeDatos.json?t=${Date.now()}`;
             const respuesta = await fetch(urlConCacheBuster, { cache: "no-store" });
             
@@ -143,10 +149,9 @@ async function cargarFeed() {
         const texto = textoArea.value.trim();
         
         if (!texto) return alert("¡Escribe algo primero!");
-        if (!CONFIG_GH) return alert("Configura GitHub en el Registro primero.");
 
         try {
-            // URL obligatoria a la base de datos de usuarios
+            // Usamos la CONFIG_GH fija para conectar con GitHub
             const url = `https://api.github.com/repos/${CONFIG_GH.repo}/contents/BaseDeDatos.json`;
             
             const resGet = await fetch(url, { 
@@ -154,11 +159,15 @@ async function cargarFeed() {
                 cache: "no-store" 
             });
 
+            if (!resGet.ok) throw new Error("No se pudo conectar con GitHub. Revisa el Token.");
+
             const fileData = await resGet.json();
-            const db = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
+            const contenidoLimpio = decodeURIComponent(escape(atob(fileData.content.replace(/\s/g, ''))));
+            const db = JSON.parse(contenidoLimpio);
             
+            // Buscamos al usuario actual para añadirle la publicación
             const userIndex = db.usuarios.findIndex(u => u.nombre_usuario === MI_USUARIO);
-            if (userIndex === -1) throw new Error("Usuario no encontrado en la base de datos.");
+            if (userIndex === -1) throw new Error("Inicia sesión para poder publicar.");
 
             const nuevoPost = {
                 id: Date.now(),
@@ -172,9 +181,12 @@ async function cargarFeed() {
 
             const resPut = await fetch(url, {
                 method: "PUT",
-                headers: { "Authorization": `token ${CONFIG_GH.token}`, "Content-Type": "application/json" },
+                headers: { 
+                    "Authorization": `token ${CONFIG_GH.token}`, 
+                    "Content-Type": "application/json" 
+                },
                 body: JSON.stringify({
-                    message: "Nueva publicación",
+                    message: `Publicación de ${MI_USUARIO}`,
                     content: btoa(unescape(encodeURIComponent(JSON.stringify(db, null, 2)))),
                     sha: fileData.sha
                 })
@@ -183,11 +195,20 @@ async function cargarFeed() {
             if (resPut.ok) {
                 textoArea.value = "";
                 togglePublishBox();
-                setTimeout(cargarFeed, 1000);
+                // Recargamos el feed después de 1.5 segundos para dar tiempo a GitHub a actualizar
+                setTimeout(cargarFeed, 1500);
+            } else {
+                const errorInfo = await resPut.json();
+                throw new Error(errorInfo.message);
             }
         } catch (e) {
             alert("Error al publicar: " + e.message);
         }
+    }
+
+    function cerrarSesion() {
+        localStorage.removeItem('usuarioSesion');
+        window.location.href = "Inicio.html";
     }
 
     cargarFeed();
