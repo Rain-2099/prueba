@@ -130,6 +130,12 @@
       "cuentas_seguidas": 0,
       "publicaciones": [
         {
+          "id": 1773936903231,
+          "texto": "un fulvito?",
+          "fecha": "19/3/2026, 10:15:03 a.m.",
+          "likes": 0
+        },
+        {
           "id": 1773936889598,
           "texto": "ponganme 10",
           "fecha": "19/3/2026, 10:14:49 a.m.",
