@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,24 +10,25 @@
             font-family: 'Segoe UI', Arial, sans-serif; 
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
             display: flex; justify-content: center; align-items: center; 
-            height: 100vh; color: #333;
+            min-height: 100vh; color: #333; padding: 20px;
         }
         .register-card { 
-            background: white; padding: 40px; border-radius: 15px; 
+            background: white; padding: 30px; border-radius: 15px; 
             box-shadow: 0 10px 25px rgba(0,0,0,0.2); width: 100%; max-width: 400px; 
         }
-        .register-card h2 { color: #764ba2; margin-bottom: 25px; text-align: center; }
-        .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; }
+        .register-card h2 { color: #764ba2; margin-bottom: 20px; text-align: center; }
+        .input-group { margin-bottom: 12px; }
+        .input-group label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 13px; color: #555; }
         .input-group input { 
-            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; 
-            outline: none; transition: 0.3s; 
+            width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; 
+            outline: none; transition: 0.3s; font-size: 14px;
         }
         .input-group input:focus { border-color: #667eea; box-shadow: 0 0 8px rgba(102,126,234,0.3); }
+        .token-info { font-size: 11px; color: #888; margin-top: 4px; line-height: 1.2; }
         .btn-register { 
-            width: 100%; padding: 15px; border: none; border-radius: 8px; 
+            width: 100%; padding: 14px; border: none; border-radius: 8px; 
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-            color: white; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 10px;
+            color: white; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 15px;
         }
         .btn-register:hover { opacity: 0.9; transform: translateY(-1px); }
         .login-link { text-align: center; margin-top: 20px; font-size: 14px; }
@@ -37,19 +39,32 @@
 
     <div class="register-card">
         <h2>Unirse al Reino</h2>
+        
         <div class="input-group">
             <label>Nombre de Usuario</label>
             <input type="text" id="reg-username" placeholder="Ej: dragon_slayer99">
         </div>
+
         <div class="input-group">
             <label>Contraseña</label>
             <input type="password" id="reg-password" placeholder="••••••••">
         </div>
+
         <div class="input-group">
             <label>URL de Foto de Perfil (Opcional)</label>
             <input type="text" id="reg-photo" placeholder="https://imagen.com/foto.jpg">
         </div>
+
+        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+
+        <div class="input-group">
+            <label>Token de Acceso ()</label>
+            <input type="password" id="reg-token" placeholder="ghp_xxxxxxxxxxxx">
+            <p class="token-info">Si dejas esto en blanco, se usará el token por defecto del sistema.</p>
+        </div>
+
         <button class="btn-register" onclick="ejecutarRegistro()">Crear Cuenta</button>
+
         <div class="login-link">
             ¿Ya tienes cuenta? <a href="Inicio.html">Inicia Sesión</a>
         </div>
@@ -60,13 +75,17 @@ async function ejecutarRegistro() {
     const user = document.getElementById('reg-username').value.trim();
     const pass = document.getElementById('reg-password').value.trim();
     const foto = document.getElementById('reg-photo').value.trim();
+    const tokenUsuario = document.getElementById('reg-token').value.trim();
     
-    if (!user || !pass) return alert("Completa los campos.");
+    if (!user || !pass) return alert("Completa los campos obligatorios.");
 
-    // --- CONFIGURACIÓN FIJA (Ya no usa localStorage) ---
+    // Token por defecto (el tuyo)
+    const TOKEN_POR_DEFECTO = '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';
+    
     const CONFIG_GH = {
-        token: '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', // Pon tu token de GitHub aquí
-        repo: "rain-2099/prueba" // Ejemplo: "pepito/mi-juego-dd"
+        // Si el usuario puso uno, usa ese. Si no, usa el tuyo.
+        token: tokenUsuario || TOKEN_POR_DEFECTO,
+        repo: "rain-2099/prueba"
     };
 
     const ARCHIVO = "BaseDeDatos.json";
@@ -78,7 +97,10 @@ async function ejecutarRegistro() {
             cache: "no-store" 
         });
 
-        if (!resGet.ok) throw new Error("No se pudo acceder a la base de datos. Revisa el Token y el Repo.");
+        if (!resGet.ok) {
+            if (resGet.status === 401) throw new Error("Token inválido o expirado.");
+            throw new Error("No se pudo acceder a la base de datos.");
+        }
 
         const fileData = await resGet.json();
         const contenidoLimpio = decodeURIComponent(escape(atob(fileData.content.replace(/\s/g, ''))));
@@ -123,14 +145,17 @@ async function ejecutarRegistro() {
         });
 
         if (resPut.ok) {
-            alert(`¡Bienvenido! Tu ID es ${nuevoId}.`);
+            // Guardamos el token en localStorage para que 'Principal.html' también pueda usarlo
+            localStorage.setItem('token_activo', CONFIG_GH.token);
+            
+            alert(`¡Éxito! Bienvenido al reino, aventurero ${user}.`);
             window.location.href = "Inicio.html";
         } else {
             const errorData = await resPut.json();
             throw new Error(errorData.message);
         }
     } catch (e) {
-        alert("Error en el registro: " + e.message);
+        alert("Error crítico: " + e.message);
     }
 }
 </script>
