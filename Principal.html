@@ -1,222 +1,217 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Red Social - Feed Dinámico</title>
-    <style>
-        /* Estilos base */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
-        .header { background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); padding: 15px 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 100; }
-        .search-bar { max-width: 600px; margin: 0 auto; }
-        .search-bar input { width: 100%; padding: 12px 20px; border: none; border-radius: 25px; font-size: 14px; background-color: rgba(255,255,255,0.95); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .container { display: flex; max-width: 1200px; margin: 20px auto; gap: 20px; padding: 0 20px; }
-        .sidebar { width: 250px; background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); height: fit-content; position: sticky; top: 80px; }
-        .sidebar h3 { color: #667eea; margin-bottom: 20px; font-size: 16px; text-transform: uppercase; }
-        
-        /* Botones y Menú */
-        .menu-item, .btn-crear { display: block; width: 100%; padding: 12px 15px; margin-bottom: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; font-size: 14px; font-weight: bold; transition: transform 0.2s; text-align: left; }
-        .btn-crear { background: #667eea; text-align: center; margin-top: 10px; }
-        .menu-item:hover, .btn-crear:hover { transform: translateX(5px); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); }
-        .menu-item.logout { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+    <meta charset="UTF-8">
+    <title>Red Social - Feed Dinámico</title>
+    <style>
+        /* Estilos base */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        .header { background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); padding: 15px 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 100; }
+        .search-bar { max-width: 600px; margin: 0 auto; }
+        .search-bar input { width: 100%; padding: 12px 20px; border: none; border-radius: 25px; font-size: 14px; background-color: rgba(255,255,255,0.95); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .container { display: flex; max-width: 1200px; margin: 20px auto; gap: 20px; padding: 0 20px; }
+        .sidebar { width: 250px; background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); height: fit-content; position: sticky; top: 80px; }
+        .sidebar h3 { color: #667eea; margin-bottom: 20px; font-size: 16px; text-transform: uppercase; }
+        
+        /* Botones y Menú */
+        .menu-item, .btn-crear { display: block; width: 100%; padding: 12px 15px; margin-bottom: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; font-size: 14px; font-weight: bold; transition: transform 0.2s; text-align: left; }
+        .btn-crear { background: #667eea; text-align: center; margin-top: 10px; }
+        .menu-item:hover, .btn-crear:hover { transform: translateX(5px); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); }
+        .menu-item.logout { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
 
-        /* Feed y Posts */
-        .feed { flex: 1; max-width: 600px; }
-        .post { background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .post-header { display: flex; align-items: center; margin-bottom: 15px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; }
-        .avatar { width: 45px; height: 45px; border-radius: 50%; margin-right: 12px; object-fit: cover; background: #eee; }
-        .post-info h4 { color: #333; }
-        .post-content { color: #444; line-height: 1.5; margin-bottom: 15px; font-style: italic; }
-        .post-actions { display: flex; gap: 10px; padding-top: 10px; border-top: 1px solid #f0f0f0; }
-        .btn-action { flex: 1; padding: 8px; border: none; background: #f0f0f0; border-radius: 6px; cursor: pointer; color: #667eea; font-weight: bold; }
-        
-        /* Modal */
-        #modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
-    </style>
+        /* Feed y Posts */
+        .feed { flex: 1; max-width: 600px; }
+        .post { background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .post-header { display: flex; align-items: center; margin-bottom: 15px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; }
+        .avatar { width: 45px; height: 45px; border-radius: 50%; margin-right: 12px; object-fit: cover; background: #eee; }
+        .post-info h4 { color: #333; }
+        .post-content { color: #444; line-height: 1.5; margin-bottom: 15px; font-style: italic; }
+        .post-actions { display: flex; gap: 10px; padding-top: 10px; border-top: 1px solid #f0f0f0; }
+        .btn-action { flex: 1; padding: 8px; border: none; background: #f0f0f0; border-radius: 6px; cursor: pointer; color: #667eea; font-weight: bold; }
+        
+        /* Modal */
+        #modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
+    </style>
 </head>
 <body>
 
-    <div class="header">
-        <div class="search-bar">
-            <input type="text" placeholder="🔍 Buscar usuarios, publicaciones...">
-        </div>
-    </div>
+    <div class="header">
+        <div class="search-bar">
+            <input type="text" placeholder="🔍 Buscar usuarios, publicaciones...">
+        </div>
+    </div>
 
-    <div class="container">
-        <div class="sidebar">
-            <h3>Menú</h3>
-            <a class="menu-item" href="./Principal.html">📱 Principal</a>
-            <button class="btn-crear" onclick="togglePublishBox()">➕ Crear publicación</button>
-            <a class="menu-item" href="./Usuario.html">👤 Usuario</a>
-            <a class="menu-item" href="./FichaPersonaje.html">Personaje</a>
-            <button class="menu-item logout" onclick="cerrarSesion()">🚪 Salir</button>
-        </div>
+    <div class="container">
+        <div class="sidebar">
+            <h3>Menú</h3>
+            <a class="menu-item" href="./Principal.html">📱 Principal</a>
+            <button class="btn-crear" onclick="togglePublishBox()">➕ Crear publicación</button>
+            <a class="menu-item" href="./Usuario.html">👤 Usuario</a>
+            <a class="menu-item" href="./FichaPersonaje.html">Personaje</a>
+            <button class="menu-item logout" onclick="cerrarSesion()">🚪 Salir</button>
+        </div>
 
-        <div id="modal-overlay">
-            <div style="background: white; padding: 25px; border-radius: 15px; width: 90%; max-width: 500px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
-                <h3 style="color: #764ba2; margin-bottom: 15px;">Nueva Publicación</h3>
-                <textarea id="post-text" placeholder="¿Qué aventuras compartirás hoy?" style="width: 100%; height: 120px; border: 1px solid #ddd; border-radius: 8px; padding: 12px; resize: none; margin-bottom: 15px;"></textarea>
-                <div style="display: flex; gap: 10px;">
-                    <button onclick="publicarAhora()" style="flex: 2; background: #764ba2; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold;">Publicar ahora</button>
-                    <button onclick="togglePublishBox()" style="flex: 1; background: #f0f0f0; color: #444; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">Cancelar</button>
-                </div>
-            </div>
-        </div>
+        <div id="modal-overlay">
+            <div style="background: white; padding: 25px; border-radius: 15px; width: 90%; max-width: 500px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                <h3 style="color: #764ba2; margin-bottom: 15px;">Nueva Publicación</h3>
+                <textarea id="post-text" placeholder="¿Qué aventuras compartirás hoy?" style="width: 100%; height: 120px; border: 1px solid #ddd; border-radius: 8px; padding: 12px; resize: none; margin-bottom: 15px;"></textarea>
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="publicarAhora()" style="flex: 2; background: #764ba2; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold;">Publicar ahora</button>
+                    <button onclick="togglePublishBox()" style="flex: 1; background: #f0f0f0; color: #444; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">Cancelar</button>
+                </div>
+            </div>
+        </div>
 
-        <div class="feed" id="main-feed"></div>
-    </div>
+        <div class="feed" id="main-feed"></div>
+    </div>
 
 <script>
-    const feed = document.getElementById('main-feed');
-    let usuariosGlobal = [];
-    
-    // 1. OBTENEMOS LOS DATOS GUARDADOS
-    const MI_USUARIO = localStorage.getItem('usuarioSesion') || "Invitado"; 
-    // Buscamos el token que se guardó en el registro. Si no existe, usamos el de respaldo.
-    const TOKEN_SISTEMA = localStorage.getItem('gh_token_activo') || "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";
+const feed = document.getElementById('main-feed');
+    let usuariosGlobal = [];
+    
+    // Obtenemos el nombre del usuario que inició sesión
+    const MI_USUARIO = localStorage.getItem('usuarioSesion') || "Invitado"; 
 
-    // 2. CONFIGURACIÓN DINÁMICA
-    const CONFIG_GH = {
-        token: TOKEN_SISTEMA, 
-        repo: "Rain-2099/prueba" 
-    };
+    // --- CONFIGURACIÓN FIJA (Igual que en el Registro) ---
+    const CONFIG_GH = {
+        token: "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", // Tu token real
+        repo: "Rain-2099/prueba" // Tu repositorio real
+    };
 
-    function togglePublishBox() {
-        const modal = document.getElementById('modal-overlay');
-        if (!modal) return;
-        modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
-    }
+    // Función para abrir y cerrar la ventana de publicación
+    function togglePublishBox() {
+        const modal = document.getElementById('modal-overlay');
+        if (!modal) return;
+        modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
+    }
 
-    async function cargarFeed() {
-        try {
-            feed.innerHTML = '<p style="text-align:center; color:white;">Actualizando pergaminos...</p>';
-            
-            // Usamos la URL de la API de GitHub para leer el archivo siempre fresco
-            const urlAPI = `https://api.github.com/repos/${CONFIG_GH.repo}/contents/BaseDeDatos.json`;
-            
-            const respuesta = await fetch(urlAPI, { 
-                headers: { "Authorization": `token ${CONFIG_GH.token}` },
-                cache: "no-store" 
-            });
-            
-            if (!respuesta.ok) throw new Error("No se pudo conectar con la base de datos.");
-            
-            const fileData = await respuesta.json();
-            const contenidoLimpio = decodeURIComponent(escape(atob(fileData.content.replace(/\s/g, ''))));
-            const data = JSON.parse(contenidoLimpio);
-            
-            usuariosGlobal = data.usuarios;
-            
-            let todosLosPosts = [];
-            usuariosGlobal.forEach(u => {
-                if(Array.isArray(u.publicaciones)){
-                    u.publicaciones.forEach(p => {
-                        todosLosPosts.push({
-                            ...p, 
-                            autor: u.nombre_usuario, 
-                            foto: u.foto_perfil 
-                        });
-                    });
-                }
-            });
+    async function cargarFeed() {
+        try {
+            feed.innerHTML = '<p style="text-align:center; color:white;">Actualizando pergaminos...</p>';
+            
+            // Bypass de caché para ver publicaciones nuevas al instante
+            const urlConCacheBuster = `BaseDeDatos.json?t=${Date.now()}`;
+            const respuesta = await fetch(urlConCacheBuster, { cache: "no-store" });
+            
+            if (!respuesta.ok) throw new Error("No se encontró BaseDeDatos.json");
+            
+            const data = await respuesta.json();
+            usuariosGlobal = data.usuarios;
+            
+            let todosLosPosts = [];
+            usuariosGlobal.forEach(u => {
+                if(Array.isArray(u.publicaciones)){
+                    u.publicaciones.forEach(p => {
+                        todosLosPosts.push({
+                            ...p, 
+                            autor: u.nombre_usuario, 
+                            foto: u.foto_perfil 
+                        });
+                    });
+                }
+            });
 
-            todosLosPosts.sort((a, b) => b.id - a.id);
-            feed.innerHTML = ''; 
+            // Ordenar: lo más nuevo primero
+            todosLosPosts.sort((a, b) => b.id - a.id);
+            feed.innerHTML = ''; 
 
-            if(todosLosPosts.length === 0) {
-                feed.innerHTML = '<p style="text-align:center; color:white;">El reino está en silencio...</p>';
-                return;
-            }
+            if(todosLosPosts.length === 0) {
+                feed.innerHTML = '<p style="text-align:center; color:white;">El reino está en silencio...</p>';
+                return;
+            }
 
-            todosLosPosts.forEach(post => {
-                feed.innerHTML += `
-                    <div class="post">
-                        <div class="post-header">
-                            <img src="${post.foto || 'https://via.placeholder.com/150'}" class="avatar">
-                            <div class="post-info">
-                                <h4>@${post.autor}</h4>
-                                <small>${post.fecha || 'Reciente'}</small>
-                            </div>
-                        </div>
-                        <div class="post-content">"${post.texto}"</div>
-                        <div class="post-actions">
-                            <button class="btn-action">❤️ Like (${post.likes || 0})</button>
-                        </div>
-                    </div>`;
-            });
-        } catch (error) {
-            console.error(error);
-            feed.innerHTML = `<p style="color:white; text-align:center;">Error: ${error.message}</p>`;
-        }
-    }
+            todosLosPosts.forEach(post => {
+                feed.innerHTML += `
+                    <div class="post">
+                        <div class="post-header">
+                            <img src="${post.foto || 'https://via.placeholder.com/150'}" class="avatar">
+                            <div class="post-info">
+                                <h4>@${post.autor}</h4>
+                                <small>${post.fecha || 'Reciente'}</small>
+                            </div>
+                        </div>
+                        <div class="post-content">"${post.texto}"</div>
+                        <div class="post-actions">
+                            <button class="btn-action">❤️ Like (${post.likes || 0})</button>
+                        </div>
+                    </div>`;
+            });
+        } catch (error) {
+            console.error(error);
+            feed.innerHTML = '<p style="color:white; text-align:center;">Error al sincronizar con la base de datos.</p>';
+        }
+    }
 
-    async function publicarAhora() {
-        const textoArea = document.getElementById('post-text');
-        const texto = textoArea.value.trim();
-        
-        if (!texto) return alert("¡Escribe algo primero!");
-        if (MI_USUARIO === "Invitado") return alert("Debes iniciar sesión para publicar.");
+    async function publicarAhora() {
+        const textoArea = document.getElementById('post-text');
+        const texto = textoArea.value.trim();
+        
+        if (!texto) return alert("¡Escribe algo primero!");
 
-        try {
-            const url = `https://api.github.com/repos/${CONFIG_GH.repo}/contents/BaseDeDatos.json`;
-            
-            const resGet = await fetch(url, { 
-                headers: { "Authorization": `token ${CONFIG_GH.token}` },
-                cache: "no-store" 
-            });
+        try {
+            // Usamos la CONFIG_GH fija para conectar con GitHub
+            const url = `https://api.github.com/repos/${CONFIG_GH.repo}/contents/BaseDeDatos.json`;
+            
+            const resGet = await fetch(url, { 
+                headers: { "Authorization": `token ${CONFIG_GH.token}` },
+                cache: "no-store" 
+            });
 
-            if (!resGet.ok) throw new Error("Error de permisos. Revisa tu token.");
+            if (!resGet.ok) throw new Error("No se pudo conectar con GitHub. Revisa el Token.");
 
-            const fileData = await resGet.json();
-            const db = JSON.parse(decodeURIComponent(escape(atob(fileData.content.replace(/\s/g, '')))));
-            
-            const userIndex = db.usuarios.findIndex(u => u.nombre_usuario === MI_USUARIO);
-            if (userIndex === -1) throw new Error("Usuario no encontrado en la base de datos.");
+            const fileData = await resGet.json();
+            const contenidoLimpio = decodeURIComponent(escape(atob(fileData.content.replace(/\s/g, ''))));
+            const db = JSON.parse(contenidoLimpio);
+            
+            // Buscamos al usuario actual para añadirle la publicación
+            const userIndex = db.usuarios.findIndex(u => u.nombre_usuario === MI_USUARIO);
+            if (userIndex === -1) throw new Error("Inicia sesión para poder publicar.");
 
-            const nuevoPost = {
-                id: Date.now(),
-                texto: texto,
-                fecha: new Date().toLocaleString(),
-                likes: 0
-            };
+            const nuevoPost = {
+                id: Date.now(),
+                texto: texto,
+                fecha: new Date().toLocaleString(),
+                likes: 0
+            };
 
-            if (!db.usuarios[userIndex].publicaciones) db.usuarios[userIndex].publicaciones = [];
-            db.usuarios[userIndex].publicaciones.unshift(nuevoPost);
+            if (!db.usuarios[userIndex].publicaciones) db.usuarios[userIndex].publicaciones = [];
+            db.usuarios[userIndex].publicaciones.unshift(nuevoPost);
 
-            const resPut = await fetch(url, {
-                method: "PUT",
-                headers: { 
-                    "Authorization": `token ${CONFIG_GH.token}`, 
-                    "Content-Type": "application/json" 
-                },
-                body: JSON.stringify({
-                    message: `Publicación de ${MI_USUARIO}`,
-                    content: btoa(unescape(encodeURIComponent(JSON.stringify(db, null, 2)))),
-                    sha: fileData.sha
-                })
-            });
+            const resPut = await fetch(url, {
+                method: "PUT",
+                headers: { 
+                    "Authorization": `token ${CONFIG_GH.token}`, 
+                    "Content-Type": "application/json" 
+                },
+                body: JSON.stringify({
+                    message: `Publicación de ${MI_USUARIO}`,
+                    content: btoa(unescape(encodeURIComponent(JSON.stringify(db, null, 2)))),
+                    sha: fileData.sha
+                })
+            });
 
-            if (resPut.ok) {
-                textoArea.value = "";
-                togglePublishBox();
-                setTimeout(cargarFeed, 1000);
-            } else {
-                throw new Error("No se pudo guardar la publicación.");
-            }
-        } catch (e) {
-            alert("Error: " + e.message);
-        }
-    }
+            if (resPut.ok) {
+                textoArea.value = "";
+                togglePublishBox();
+                // Recargamos el feed después de 1.5 segundos para dar tiempo a GitHub a actualizar
+                setTimeout(cargarFeed, 1500);
+            } else {
+                const errorInfo = await resPut.json();
+                throw new Error(errorInfo.message);
+            }
+        } catch (e) {
+            alert("Error al publicar: " + e.message);
+        }
+    }
 
-    function cerrarSesion() {
-        localStorage.removeItem('usuarioSesion');
-        localStorage.removeItem('gh_token_activo'); // Limpiamos el token al salir por seguridad
-        window.location.href = "Inicio.html";
-    }
+    function cerrarSesion() {
+        localStorage.removeItem('usuarioSesion');
+        window.location.href = "Inicio.html";
+    }
 
-    cargarFeed();
+    cargarFeed();
 </script>
-    
+    
 </body>
 </html>
