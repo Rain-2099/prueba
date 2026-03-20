@@ -1,38 +1,134 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Registro de Aventurero</title>
+    <title>Registro de Aventurero | El Reino</title>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@400;700&family=Work+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body { 
-            font-family: 'Segoe UI', Arial, sans-serif; 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            font-family: 'Work Sans', sans-serif; 
+            background: radial-gradient(circle at center, #4c0000 0%, #131313 70%); 
             display: flex; justify-content: center; align-items: center; 
-            min-height: 100vh; color: #333; padding: 20px;
+            min-height: 100vh; color: #e5e2e1; padding: 20px;
         }
+
         .register-card { 
-            background: white; padding: 30px; border-radius: 15px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2); width: 100%; max-width: 400px; 
+            background: #1c1b1b; 
+            padding: 40px; 
+            border-radius: 4px; 
+            border: 2px solid #554240;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6); 
+            width: 100%; 
+            max-width: 450px; 
+            position: relative;
         }
-        .register-card h2 { color: #764ba2; margin-bottom: 20px; text-align: center; }
-        .input-group { margin-bottom: 12px; }
-        .input-group label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 13px; color: #555; }
+
+        /* Adorno de esquina */
+        .register-card::after {
+            content: "📜";
+            position: absolute;
+            top: -20px;
+            right: -10px;
+            font-size: 30px;
+            transform: rotate(15deg);
+        }
+
+        .register-card h2 { 
+            font-family: 'Newsreader', serif;
+            color: #ffb4a8; 
+            margin-bottom: 25px; 
+            text-align: center; 
+            font-size: 32px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 1px solid #4c0000;
+            padding-bottom: 10px;
+        }
+
+        .input-group { margin-bottom: 18px; }
+
+        .input-group label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: 600; 
+            font-size: 11px; 
+            color: #a38b88; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
         .input-group input { 
-            width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; 
-            outline: none; transition: 0.3s; font-size: 14px;
+            width: 100%; 
+            padding: 12px; 
+            background: #131313;
+            border: 1px solid #554240; 
+            border-radius: 4px; 
+            outline: none; 
+            transition: 0.3s; 
+            font-size: 15px;
+            color: #e5e2e1;
         }
-        .input-group input:focus { border-color: #667eea; box-shadow: 0 0 8px rgba(102,126,234,0.3); }
-        .token-info { font-size: 11px; color: #888; margin-top: 4px; line-height: 1.2; }
+
+        .input-group input:focus { 
+            border-color: #ffb4a8; 
+            box-shadow: 0 0 10px rgba(255,180,168,0.2); 
+        }
+
+        .token-info { 
+            font-size: 10px; 
+            color: #666; 
+            margin-top: 6px; 
+            font-style: italic;
+        }
+
         .btn-register { 
-            width: 100%; padding: 14px; border: none; border-radius: 8px; 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-            color: white; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 15px;
+            width: 100%; 
+            padding: 16px; 
+            border: 1px solid #ffb4a8; 
+            border-radius: 4px; 
+            background: #4c0000; 
+            color: #ffb4a8; 
+            font-weight: bold; 
+            cursor: pointer; 
+            font-size: 16px; 
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: 0.4s;
         }
-        .btn-register:hover { opacity: 0.9; transform: translateY(-1px); }
-        .login-link { text-align: center; margin-top: 20px; font-size: 14px; }
-        .login-link a { color: #667eea; text-decoration: none; font-weight: bold; }
+
+        .btn-register:hover { 
+            background: #ffb4a8; 
+            color: #4c0000; 
+            box-shadow: 0 0 20px rgba(255, 180, 168, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .login-link { 
+            text-align: center; 
+            margin-top: 25px; 
+            font-size: 13px; 
+            color: #a38b88;
+        }
+
+        .login-link a { 
+            color: #ffb4a8; 
+            text-decoration: none; 
+            font-weight: bold; 
+            transition: 0.3s;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        hr {
+            margin: 25px 0;
+            border: 0;
+            border-top: 1px solid #333;
+        }
     </style>
 </head>
 <body>
@@ -41,32 +137,33 @@
         <h2>Unirse al Reino</h2>
         
         <div class="input-group">
-            <label>Nombre de Usuario</label>
-            <input type="text" id="reg-username" placeholder="Ej: dragon_slayer99">
+            <label>Nombre de Aventurero (Usuario)</label>
+            <input type="text" id="reg-username" placeholder="Ej: Grog_Strongjaw">
         </div>
 
         <div class="input-group">
-            <label>Contraseña</label>
+            <label>Palabra de Poder (Contraseña)</label>
             <input type="password" id="reg-password" placeholder="••••••••">
         </div>
 
         <div class="input-group">
-            <label>URL de Foto de Perfil (Opcional)</label>
-            <input type="text" id="reg-photo" placeholder="https://imagen.com/foto.jpg">
+            <label>Retrato de Perfil (URL)</label>
+            <input type="text" id="reg-photo" placeholder="https://imgur.com/tu-foto.jpg">
         </div>
 
-        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+        <hr>
 
         <div class="input-group">
-            <label>Token de Acceso: _jhW5kduAoqWa53DGBALCdEhqIZElfP1Dp9qM</label>
+            <label>Llave del Reino (GitHub Token)</label>
+            <p style="font-size: 9px; color: #ffb4a8; margin-bottom: 5px;">Pista: _jhW5kduAoqWa53DGBALCdEhqIZElfP1Dp9qM</p>
             <input type="password" id="reg-token" placeholder="ghp_xxxxxxxxxxxx">
-            <p class="token-info">Si dejas esto en blanco, se usará el token por defecto del sistema.</p>
+            <p class="token-info">Si dejas esto en blanco, se usará el token por defecto.</p>
         </div>
 
-        <button class="btn-register" onclick="ejecutarRegistro()">Crear Cuenta</button>
+        <button class="btn-register" onclick="ejecutarRegistro()">Inscribirse en la Crónica</button>
 
         <div class="login-link">
-            ¿Ya tienes cuenta? <a href="Inicio.html">Inicia Sesión</a>
+            ¿Ya eres parte de la historia? <a href="Inicio.html">Inicia Sesión</a>
         </div>
     </div>
 
@@ -77,11 +174,11 @@ async function ejecutarRegistro() {
     const foto = document.getElementById('reg-photo').value.trim();
     const tokenUsuario = document.getElementById('reg-token').value.trim();
     
-    if (!user || !pass) return alert("Completa los campos obligatorios.");
+    if (!user || !pass) return alert("⚠️ Todo aventurero necesita nombre y contraseña.");
  
     const CONFIG_GH = {
-        // Si el usuario puso uno, usa ese. Si no, usa el tuyo.
-        token: 'ghp'+tokenUsuario ,
+        // Concatenación del prefijo ghp para seguridad básica
+        token: 'ghp' + tokenUsuario ,
         repo: "rain-2099/prueba"
     };
 
@@ -95,8 +192,8 @@ async function ejecutarRegistro() {
         });
 
         if (!resGet.ok) {
-            if (resGet.status === 401) throw new Error("Token inválido o expirado.");
-            throw new Error("No se pudo acceder a la base de datos.");
+            if (resGet.status === 401) throw new Error("La Llave del Reino (Token) es inválida.");
+            throw new Error("No se pudo conectar con la biblioteca del Reino.");
         }
 
         const fileData = await resGet.json();
@@ -104,7 +201,7 @@ async function ejecutarRegistro() {
         const db = JSON.parse(contenidoLimpio);
 
         if (db.usuarios.find(u => u.nombre_usuario === user)) {
-            return alert("Este aventurero ya existe en el reino.");
+            return alert("❌ Ese nombre ya ha sido reclamado por otro héroe.");
         }
 
         const nuevoId = db.usuarios.length > 0 
@@ -115,8 +212,8 @@ async function ejecutarRegistro() {
             id: nuevoId,
             nombre_usuario: user,
             contrasena: pass, 
-            foto_perfil: foto || "https://via.placeholder.com/150",
-            descripcion: "¡Nuevo en la red!",
+            foto_perfil: foto || "https://img.freepik.com/vector-premium/icono-perfil-usuario-estilo-plano-ilustracion-vector-avatar-miembro-sobre-fondo-aislado-concepto-negocio-signo-permiso-humano_157943-15752.jpg",
+            descripcion: "Un nuevo aventurero acaba de cruzar las puertas del Reino.",
             personajes:[],
             xp:0,
             nivel:1,
@@ -138,24 +235,22 @@ async function ejecutarRegistro() {
                 "Content-Type": "application/json" 
             },
             body: JSON.stringify({
-                message: `Nuevo aventurero: ${user}`,
+                message: `Nueva Crónica: ${user}`,
                 content: contenidoBase64,
                 sha: fileData.sha
             })
         });
 
         if (resPut.ok) {
-            // Guardamos el token en localStorage para que 'Principal.html' también pueda usarlo
             localStorage.setItem('token_activo', CONFIG_GH.token);
-            
-            alert(`¡Éxito! Bienvenido al reino, aventurero ${user}.`);
+            alert(`✨ ¡Éxito! Tu nombre ha sido grabado en las crónicas, aventurero ${user}.`);
             window.location.href = "Inicio.html";
         } else {
             const errorData = await resPut.json();
             throw new Error(errorData.message);
         }
     } catch (e) {
-        alert("Error crítico: " + e.message);
+        alert("❌ Error Místico: " + e.message);
     }
 }
 </script>
