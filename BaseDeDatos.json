@@ -130,6 +130,12 @@
       "cuentas_seguidas": 0,
       "publicaciones": [
         {
+          "id": 1773972997712,
+          "texto": "hola, me llamo hose juan",
+          "fecha": "19/3/2026, 8:16:37 p.m.",
+          "likes": 0
+        },
+        {
           "id": 1773972949907,
           "texto": "Hola, estoy checando, si sirve lo de la xp",
           "fecha": "19/3/2026, 8:15:49 p.m.",
