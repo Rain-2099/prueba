@@ -2,56 +2,217 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Red Social - Perfil de Usuario</title>
+    <title>D&D Academy - Perfil de Aventurero</title>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@400;700;800&family=Work+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        /* ... Tu CSS se mantiene igual ... */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
-        .header { background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); padding: 15px 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
-        .header a { color: white; text-decoration: none; font-weight: bold; }
-        .container { display: flex; max-width: 1200px; margin: 20px auto; gap: 20px; padding: 0 20px; }
-        .sidebar { width: 250px; background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); height: fit-content; position: sticky; top: 80px; }
-        .sidebar h3 { color: #667eea; margin-bottom: 20px; font-size: 16px; text-transform: uppercase; }
-        .menu-item { display: block; width: 100%; padding: 12px 15px; margin-bottom: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; font-size: 14px; font-weight: bold; transition: transform 0.2s, box-shadow 0.2s; text-align: left; }
-        .menu-item:hover { transform: translateX(5px); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); }
-        .menu-item.logout { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: radial-gradient(circle at center, #4c0000 0%, #131313 70%);
+            color: #e5e2e1;
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+        .header { 
+            background: #1c1b1b;
+            padding: 15px 20px;
+            border-bottom: 1px solid #554240;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header a { color: #ffb4a8; text-decoration: none; font-weight: bold; font-size: 14px; }
+
+        /* LAYOUT */
+        .container {
+            display: flex;
+            max-width: 1200px;
+            margin: 20px auto;
+            gap: 20px;
+            padding: 0 20px;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 250px;
+            background: #1c1b1b;
+            padding: 20px;
+            border: 1px solid #554240;
+            height: fit-content;
+            position: sticky;
+            top: 80px;
+        }
+
+        .sidebar h3 {
+            color: #ffb4a8;
+            margin-bottom: 15px;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #554240;
+            padding-bottom: 5px;
+        }
+
+        .menu-item {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: #131313;
+            color: #a38b88;
+            border-left: 3px solid #554240;
+            border-top: 1px solid #554240;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+
+        .menu-item:hover {
+            background: #4c0000;
+            color: #ffb4a8;
+            transform: translateX(5px);
+        }
+
+        .menu-item.logout { color: #ffb4ab; }
+        .menu-item.logout:hover { background: #93000a; }
+
+        /* MAIN CONTENT */
         .main-content { flex: 1; max-width: 600px; }
-        .profile-header { background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 20px; text-align: center; }
-        .profile-banner { width: 100%; height: 150px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; margin-bottom: -50px; position: relative; }
-        .profile-avatar { width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; margin: 0 auto 15px; object-fit: cover; position: relative; background: #eee; }
-        .profile-name { color: #333; font-size: 24px; margin-bottom: 5px; }
-        .profile-username { color: #888; font-size: 14px; margin-bottom: 15px; }
-        .banned-badge { background: #ff4d4d; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; display: inline-block; margin-bottom: 15px; }
-        .profile-description { color: #444; font-size: 14px; line-height: 1.6; margin-bottom: 20px; font-style: italic; }
-        .profile-stats { display: flex; justify-content: space-around; background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+
+        /* PERFIL CARD */
+        .profile-header {
+            background: #1c1b1b;
+            border: 1px solid #554240;
+            padding: 0 0 30px 0;
+            margin-bottom: 20px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .profile-banner {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(to bottom, #690000, #1c1b1b);
+        }
+
+        .profile-avatar {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 4px solid #4c0000;
+            margin: -55px auto 15px;
+            object-fit: cover;
+            background: #131313;
+            display: block;
+        }
+
+        .profile-name { color: #ffb4a8; font-family: 'Newsreader', serif; font-size: 28px; }
+        .profile-username { color: #a38b88; font-size: 14px; margin-bottom: 15px; }
+
+        .banned-badge {
+            background: #93000a;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 2px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 15px;
+            border: 1px solid #ffb4ab;
+        }
+
+        .profile-description {
+            color: #e5e2e1;
+            padding: 0 30px;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        /* RPG STATS UI */
+        .profile-stats {
+            display: flex;
+            justify-content: space-around;
+            background: #131313;
+            padding: 15px;
+            border-top: 1px solid #554240;
+            border-bottom: 1px solid #554240;
+            margin-bottom: 20px;
+        }
+
         .stat-item { text-align: center; }
-        .stat-number { font-size: 20px; font-weight: bold; color: #667eea; }
-        .stat-label { font-size: 12px; color: #888; }
-        .profile-actions { display: flex; gap: 10px; }
-        .btn-action { flex: 1; padding: 12px; border: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        .other-profiles h3 { color: white; margin-bottom: 15px; font-size: 18px; }
-        .profile-card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: 0.3s; }
-        .profile-card:hover { transform: translateX(5px); }
-        .profile-card-info { display: flex; align-items: center; flex: 1; }
-        .profile-card-avatar { width: 50px; height: 50px; border-radius: 50%; margin-right: 15px; object-fit: cover; background: #eee; }
-        .profile-card-details h4 { color: #333; margin-bottom: 5px; }
-        .profile-card-details small { color: #888; }
-        .profile-card-btn { padding: 8px 15px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .stat-number { font-size: 18px; font-weight: bold; color: #ffb4a8; }
+        .stat-label { font-size: 10px; color: #a38b88; text-transform: uppercase; letter-spacing: 1px; }
+
+        .btn-action {
+            padding: 12px 25px;
+            border: 1px solid #554240;
+            background: #4c0000;
+            color: #ffb4a8;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+            margin: 0 5px;
+        }
+
+        .btn-action:hover { background: #690000; border-color: #ffb4a8; }
+
+        /* OTROS USUARIOS */
+        .other-profiles h3 {
+            color: #ffb4a8;
+            margin-bottom: 15px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .profile-card {
+            background: #1c1b1b;
+            border: 1px solid #554240;
+            padding: 15px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .profile-card:hover { border-color: #ffb4a8; background: #252424; }
+        .profile-card-info { display: flex; align-items: center; }
+        .profile-card-avatar { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #4c0000; margin-right: 15px; }
+        .profile-card-details h4 { color: #ffb4a8; font-size: 15px; }
+        .profile-card-details small { color: #a38b88; font-size: 12px; }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #131313; }
+        ::-webkit-scrollbar-thumb { background: #4c0000; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div style="flex: 1;"></div>
-        <a href="./Principal.html">← Volver al Feed</a>
+        <a href="./Principal.html">🏰 Regresar al Reino</a>
+        <div style="color: #a38b88; font-size: 12px; letter-spacing: 1px;">D&D ACADEMY - PERFIL</div>
     </div>
 
     <div class="container">
         <div class="sidebar">
-            <h3>Menú</h3>
-            <a class="menu-item" href="./Principal.html">📱 Principal</a>
-            <a class="menu-item" href="#">⚙️ Configuración</a> 
-            <button class="menu-item logout" onclick="cerrarSesion()">🚪 Salir</button>
+            <h3>Navegación</h3>
+            <a class="menu-item" href="./Principal.html">📱 Inicio</a>
+            <a class="menu-item" href="#">📜 Misiones</a> 
+            <a class="menu-item" href="#">⚙️ Ajustes</a>
+            <button class="menu-item logout" onclick="cerrarSesion()">🚪 Abandonar Reino</button>
         </div>
 
         <div class="main-content">
@@ -62,7 +223,15 @@
                     <h2 class="profile-name" id="main-name">Cargando...</h2>
                     <p class="profile-username" id="main-username"></p>
                     <div id="main-banned"></div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <span style="background: #4c0000; color: #ffb4a8; padding: 4px 10px; border: 1px solid #554240; font-weight: bold; font-size: 12px;">
+                            NIVEL <span id="main-level">1</span>
+                        </span>
+                    </div>
+
                     <p class="profile-description" id="main-description"></p>
+                    
                     <div class="profile-stats">
                         <div class="stat-item">
                             <div class="stat-number" id="main-followers">0</div>
@@ -70,51 +239,50 @@
                         </div>
                         <div class="stat-item">
                             <div class="stat-number" id="main-posts">0</div>
-                            <div class="stat-label">Publicaciones</div>
+                            <div class="stat-label">Crónicas</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-number" id="main-likes">0</div>
-                            <div class="stat-label">Likes</div>
+                            <div class="stat-number" id="main-xp">0</div>
+                            <div class="stat-label">Experiencia</div>
                         </div>
                     </div>
-                        <div class="profile-actions" id="main-actions">
-                            <button class="btn-action">❤️ Seguir</button>
-                            <button class="btn-action">💬 Mensaje</button>
-                        </div>
+
+                    <div class="profile-actions" id="main-actions"></div>
                 </div>
             </div>
 
             <div class="other-profiles">
-                <h3>Otros Usuarios</h3>
+                <h3>Aventureros en la Taberna</h3>
                 <div id="other-profiles-container"></div>
             </div>
         </div>
     </div>
 
-      <script>
+<script>
     let usuariosData = [];
-    const USUARIO_LOGUEADO_USERNAME = localStorage.getItem('usuarioSesion') || "Invitado"; 
-    
-    // Recuperamos la configuración de GitHub (Token y Repo)
-    const CONFIG_GH = JSON.parse(localStorage.getItem('gh_config'));
+    const MI_USUARIO = localStorage.getItem('usuarioSesion');
+    const MI_TOKEN = localStorage.getItem('gh_token_activo');
+    const REPO = "Rain-2099/prueba";
 
     async function cargarUsuarios() {
         try {
-            // Añadimos no-cache para ver siempre los datos más recientes del servidor
-            const respuesta = await fetch('BaseDeDatos.json', { cache: "no-store" });
+            const urlAPI = `https://api.github.com/repos/${REPO}/contents/BaseDeDatos.json`;
+            const respuesta = await fetch(urlAPI, { 
+                headers: { "Authorization": `token ${MI_TOKEN}` },
+                cache: "no-store" 
+            });
             const data = await respuesta.json();
-            usuariosData = data.usuarios;
+            const db = JSON.parse(decodeURIComponent(escape(atob(data.content.replace(/\s/g, '')))));
+            usuariosData = db.usuarios;
         
-            const miUsuario = usuariosData.find(u => u.nombre_usuario === USUARIO_LOGUEADO_USERNAME);
-            if (miUsuario) {
-                mostrarPerfilPrincipal(miUsuario);
-            }
+            const miUsuario = usuariosData.find(u => u.nombre_usuario === MI_USUARIO);
+            if (miUsuario) mostrarPerfilPrincipal(miUsuario);
         
-            const otros = usuariosData.filter(u => u.nombre_usuario !== USUARIO_LOGUEADO_USERNAME);
+            const otros = usuariosData.filter(u => u.nombre_usuario !== MI_USUARIO);
             mostrarListaOtros(otros);
         
         } catch (error) {
-            console.error("Error cargando el JSON:", error);
+            console.error("Error:", error);
         }
     }
 
@@ -122,112 +290,90 @@
         document.getElementById('main-avatar').src = user.foto_perfil || 'https://via.placeholder.com/150';
         document.getElementById('main-name').textContent = user.nombre_usuario;
         document.getElementById('main-username').textContent = '@' + user.nombre_usuario;
-        document.getElementById('main-description').textContent = user.descripcion ? `"${user.descripcion}"` : "Sin descripción.";
-
-        document.getElementById('main-followers').textContent = user.seguidores;
+        document.getElementById('main-description').textContent = user.descripcion || "Este aventurero aún no ha escrito su biografía.";
+        
+        // RPG DATA
+        document.getElementById('main-level').textContent = user.nivel || 1;
+        document.getElementById('main-xp').textContent = user.xp || 0;
+        document.getElementById('main-followers').textContent = user.seguidores || 0;
         document.getElementById('main-posts').textContent = Array.isArray(user.publicaciones) ? user.publicaciones.length : 0;
-        document.getElementById('main-likes').textContent = user.me_gustas_totales;
-    
+
         const bannedDiv = document.getElementById('main-banned');
-        bannedDiv.innerHTML = user.baneos?.esta_baneado ? '<div class="banned-badge">BANEADO</div>' : '';
+        bannedDiv.innerHTML = user.baneos?.esta_baneado ? '<div class="banned-badge">DESTERRADO (BANEADO)</div>' : '';
 
         const actionsDiv = document.getElementById('main-actions');
-        
-        if (user.nombre_usuario === USUARIO_LOGUEADO_USERNAME) {
-            actionsDiv.innerHTML = `<button class="btn-action" onclick="editarPerfil()" style="background: #444;">⚙️ Editar mi perfil (Global)</button>`;
+        if (user.nombre_usuario === MI_USUARIO) {
+            actionsDiv.innerHTML = `<button class="btn-action" onclick="editarPerfil()">📝 Editar Pergamino</button>`;
         } else {
             actionsDiv.innerHTML = `
-                <button class="btn-action" onclick="alert('Siguiendo...')">❤️ Seguir</button>
-                <button class="btn-action" onclick="abrirChat('${user.nombre_usuario}')">💬 Mensaje</button>
+                <button class="btn-action" onclick="alert('Seguido')">⚔️ Seguir</button>
+                <button class="btn-action">💬 Mensaje</button>
             `;
         }
     }
 
-    // --- FUNCIÓN CRÍTICA: EDITAR Y GUARDAR EN EL SERVIDOR ---
     async function editarPerfil() {
-        if (!CONFIG_GH) return alert("⚠️ Error: No has configurado el Token de GitHub en la página de Ficha.");
-
-        const nuevaFoto = prompt("Pega la URL de tu nueva foto de perfil:", document.getElementById('main-avatar').src);
-        const nuevaDesc = prompt("Escribe tu nueva descripción:", document.getElementById('main-description').textContent.replace(/"/g, ''));
-    
-        if (nuevaFoto === null || nuevaDesc === null) return;
+        const nuevaFoto = prompt("URL de nueva imagen de avatar:", "");
+        const nuevaDesc = prompt("Nueva descripción de aventurero:", "");
+        if (!nuevaFoto && !nuevaDesc) return;
 
         try {
-            // 1. Obtener la versión más reciente del JSON desde GitHub
-            const url = `https://api.github.com/repos/${CONFIG_GH.repo}/contents/BaseDeDatos.json`;
-            const resGet = await fetch(url, { headers: { "Authorization": `token ${CONFIG_GH.token}` } });
+            const urlAPI = `https://api.github.com/repos/${REPO}/contents/BaseDeDatos.json`;
+            const resGet = await fetch(urlAPI, { headers: { "Authorization": `token ${MI_TOKEN}` } });
             const fileData = await resGet.json();
-            const db = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
+            const db = JSON.parse(decodeURIComponent(escape(atob(fileData.content.replace(/\s/g, '')))));
 
-            // 2. Modificar los datos del usuario logueado
-            const index = db.usuarios.findIndex(u => u.nombre_usuario === USUARIO_LOGUEADO_USERNAME);
+            const index = db.usuarios.findIndex(u => u.nombre_usuario === MI_USUARIO);
             if (index !== -1) {
-                db.usuarios[index].foto_perfil = nuevaFoto;
-                db.usuarios[index].descripcion = nuevaDesc;
+                if(nuevaFoto) db.usuarios[index].foto_perfil = nuevaFoto;
+                if(nuevaDesc) db.usuarios[index].descripcion = nuevaDesc;
 
-                // 3. Subir el archivo actualizado a GitHub
-                const resPut = await fetch(url, {
+                const resPut = await fetch(urlAPI, {
                     method: "PUT",
-                    headers: { "Authorization": `token ${CONFIG_GH.token}`, "Content-Type": "application/json" },
+                    headers: { "Authorization": `token ${MI_TOKEN}`, "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        message: `Perfil actualizado: ${USUARIO_LOGUEADO_USERNAME}`,
+                        message: `Actualización de perfil: ${MI_USUARIO}`,
                         content: btoa(unescape(encodeURIComponent(JSON.stringify(db, null, 2)))),
                         sha: fileData.sha
                     })
                 });
 
-                if (resPut.ok) {
-                    alert("✅ ¡Perfil actualizado en el servidor con éxito!");
-                    location.reload(); // Recargamos para ver los cambios
-                } else {
-                    alert("❌ Error al guardar en GitHub. Revisa tu Token.");
-                }
+                if (resPut.ok) location.reload();
             }
-        } catch (error) {
-            console.error(error);
-            alert("❌ Error de conexión con el servidor.");
-        }
+        } catch (e) { alert("Error al conectar con el servidor."); }
     }
+
     function mostrarListaOtros(otros) {
         const container = document.getElementById('other-profiles-container');
-        container.innerHTML = ''; // Limpiar antes de cargar
-
-        if (otros.length === 0) {
-            container.innerHTML = '<p style="color: white; text-align: center;">No hay otros aventureros en el reino.</p>';
-            return;
-        }
-
+        container.innerHTML = '';
         otros.forEach(u => {
             const card = document.createElement('div');
             card.className = 'profile-card';
-            // Al hacer clic en la tarjeta, cargamos su perfil en la parte principal
             card.onclick = () => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 mostrarPerfilPrincipal(u);
             };
-
             card.innerHTML = `
                 <div class="profile-card-info">
                     <img src="${u.foto_perfil || 'https://via.placeholder.com/150'}" class="profile-card-avatar">
                     <div class="profile-card-details">
                         <h4>${u.nombre_usuario}</h4>
-                        <small>Publicaciones: ${Array.isArray(u.publicaciones) ? u.publicaciones.length : 0}</small>
+                        <small>Nivel ${u.nivel || 1} • ${Array.isArray(u.publicaciones) ? u.publicaciones.length : 0} Crónicas</small>
                     </div>
                 </div>
-                <button class="profile-card-btn">Ver Perfil</button>
+                <span style="color:#ffb4a8; font-size:12px;">Ver →</span>
             `;
             container.appendChild(card);
         });
     }
 
-    // ... El resto de tus funciones (mostrarListaOtros, cerrarSesion, etc.) se mantienen igual ...
-
     function cerrarSesion() {
         localStorage.removeItem('usuarioSesion');
+        localStorage.removeItem('gh_token_activo');
         window.location.href = "Inicio.html";
     }
 
     cargarUsuarios();
-</script> 
+</script>
 </body>
 </html>
