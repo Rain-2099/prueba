@@ -5,65 +5,38 @@
     <title>D&D Academy - Reino Principal</title>
     <link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@400;700;800&family=Work+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
+        /* ... Se mantiene tu CSS anterior ... */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Work Sans', sans-serif;
-            background: radial-gradient(circle at center, #4c0000 0%, #131313 70%);
-            color: #e5e2e1; min-height: 100vh;
-        }
-
-        /* HEADER */
-        .header { 
-            background: #1c1b1b; padding: 15px; border-bottom: 1px solid #554240;
-            position: sticky; top: 0; z-index: 100; display: flex; justify-content: center;
-        }
+        body { font-family: 'Work Sans', sans-serif; background: radial-gradient(circle at center, #4c0000 0%, #131313 70%); color: #e5e2e1; min-height: 100vh; }
+        .header { background: #1c1b1b; padding: 15px; border-bottom: 1px solid #554240; position: sticky; top: 0; z-index: 100; display: flex; justify-content: center; }
         .search-bar { width: 100%; max-width: 600px; }
-        .search-bar input { 
-            width: 100%; padding: 12px 20px; border: 1px solid #554240;
-            background: #131313; color: #e5e2e1; outline: none;
-        }
-
-        /* BARRA DE PROGRESO EN SIDEBAR */
+        .search-bar input { width: 100%; padding: 12px 20px; border: 1px solid #554240; background: #131313; color: #e5e2e1; outline: none; }
         .xp-container { margin: 15px 0; background: #131313; border: 1px solid #554240; padding: 10px; border-radius: 4px; }
         .xp-text { font-size: 11px; color: #ffb4a8; display: flex; justify-content: space-between; margin-bottom: 5px; }
         .xp-bar { width: 100%; height: 8px; background: #2c1a1a; border-radius: 4px; overflow: hidden; }
         #xp-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #ffb4a8, #4c0000); transition: width 0.5s ease; }
-
         .container { display: flex; max-width: 1200px; margin: 20px auto; gap: 20px; padding: 0 20px; }
         .sidebar { width: 250px; background: #1c1b1b; padding: 20px; border: 1px solid #554240; position: sticky; top: 80px; height: fit-content; }
         .sidebar h3 { color: #ffb4a8; margin-bottom: 10px; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid #554240; padding-bottom: 5px; }
-
-        .menu-item, .btn-crear {
-            display: block; width: 100%; padding: 12px; margin-bottom: 10px;
-            background: #131313; color: #a38b88; border-left: 3px solid #554240; border-top: 1px solid #554240;
-            text-decoration: none; font-size: 13px; font-weight: bold; cursor: pointer; transition: all 0.25s;
-        }
+        .menu-item, .btn-crear { display: block; width: 100%; padding: 12px; margin-bottom: 10px; background: #131313; color: #a38b88; border-left: 3px solid #554240; border-top: 1px solid #554240; text-decoration: none; font-size: 13px; font-weight: bold; cursor: pointer; transition: all 0.25s; text-align: left; }
         .menu-item:hover { background: #4c0000; color: #ffb4a8; transform: translateX(5px); }
         .btn-crear { background: #4c0000; color: #ffb4a8; text-align: center; border: none; }
-
-        /* FEED */
         .feed { flex: 1; max-width: 600px; }
-        .post { background: #1c1b1b; border: 1px solid #554240; padding: 20px; margin-bottom: 20px; animation: fadeIn 0.5s; }
-        .post-header { display: flex; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #554240; padding-bottom: 10px; }
+        .post { background: #1c1b1b; border: 1px solid #554240; padding: 20px; margin-bottom: 20px; animation: fadeIn 0.5s; position: relative; }
+        .post-header { display: flex; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #554240; padding-bottom: 10px; justify-content: space-between; }
+        .avatar-group { display: flex; align-items: center; }
         .avatar { width: 45px; height: 45px; border-radius: 50%; margin-right: 12px; border: 2px solid #4c0000; object-fit: cover; }
         .post-info h4 { color: #ffb4a8; }
         .post-content { color: #e5e2e1; margin: 15px 0; line-height: 1.5; }
-        .btn-action { width: 100%; padding: 10px; border: none; background: #131313; color: #ffb4a8; cursor: pointer; font-weight: bold; }
+        .post-footer { display: flex; gap: 5px; }
+        .btn-action { flex: 1; padding: 10px; border: none; background: #131313; color: #ffb4a8; cursor: pointer; font-weight: bold; font-size: 12px; transition: 0.2s; }
         .btn-action:hover { background: #4c0000; }
-
-        /* MODAL */
-        #modal-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center;
-        }
+        .btn-follow { background: transparent; border: 1px solid #554240; color: #a38b88; padding: 5px 10px; font-size: 11px; cursor: pointer; border-radius: 4px; }
+        .btn-follow.active { border-color: #ffb4a8; color: #ffb4a8; }
+        #modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; }
         #modal-content { background: #1c1b1b; padding: 25px; border: 1px solid #554240; width: 90%; max-width: 500px; }
-
+        textarea { width: 100%; background: #131313; color: white; border: 1px solid #554240; padding: 10px; height: 100px; margin-bottom: 10px; outline: none; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeUp { 
-            0% { opacity: 0; transform: translate(-50%, -40%); } 
-            50% { opacity: 1; transform: translate(-50%, -50%); } 
-            100% { opacity: 0; transform: translate(-50%, -60%); } 
-        }
     </style>
 </head>
 <body>
@@ -75,7 +48,6 @@
     <div class="container">
         <div class="sidebar">
             <h3 id="nombre-perfil">Cargando...</h3>
-            
             <div class="xp-container">
                 <div class="xp-text">
                     <span>NIVEL <b id="nivel-num">1</b></span>
@@ -83,11 +55,9 @@
                 </div>
                 <div class="xp-bar"><div id="xp-fill"></div></div>
             </div>
-
             <a class="menu-item" href="./Principal.html">📱 Inicio</a>
             <button class="btn-crear" onclick="togglePublishBox()">➕ Publicar (+20 XP)</button>
             <a class="menu-item" href="./Usuario.html">👤 Mi Perfil</a>
-            <a class="menu-item" href="./FichaPersonaje.html">⚔️ Personaje</a>
             <button class="menu-item logout" onclick="cerrarSesion()" style="color:#ffb4ab">🚪 Salir</button>
         </div>
 
@@ -96,8 +66,8 @@
                 <h3 style="color: #ffb4a8; margin-bottom: 15px;">Nueva Publicación</h3>
                 <textarea id="post-text" placeholder="¿Qué aventuras compartirás hoy?"></textarea>
                 <div style="display: flex; gap: 10px;">
-                    <button onclick="publicarAhora()" style="flex: 2; background: #4c0000; color: #ffb4a8; border: none; padding: 12px; font-weight: bold;">Publicar</button>
-                    <button onclick="togglePublishBox()" style="flex: 1; background: #333; color: #ccc; border: none;">Cancelar</button>
+                    <button onclick="publicarAhora()" style="flex: 2; background: #4c0000; color: #ffb4a8; border: none; padding: 12px; font-weight: bold; cursor: pointer;">Publicar</button>
+                    <button onclick="togglePublishBox()" style="flex: 1; background: #333; color: #ccc; border: none; cursor: pointer;">Cancelar</button>
                 </div>
             </div>
         </div>
@@ -111,52 +81,11 @@
     const REPO = "Rain-2099/prueba";
     const XP_MAX = 100;
 
+    let listaSiguiendo = []; // Guardaremos a quién seguimos localmente para la UI
+
     if (!MI_USUARIO || !MI_TOKEN) window.location.href = "Inicio.html";
 
-    // --- SISTEMA RPG Y GUARDADO ---
-    
-    async function subirProgresoAGithub(nuevaXp, nuevoNivel) {
-        try {
-            const urlAPI = `https://api.github.com/repos/${REPO}/contents/BaseDeDatos.json`;
-            const resGet = await fetch(urlAPI, { headers: { "Authorization": `token ${MI_TOKEN}` }, cache: "no-store" });
-            const fileData = await resGet.json();
-            const db = JSON.parse(decodeURIComponent(escape(atob(fileData.content.replace(/\s/g, '')))));
-            
-            const userIndex = db.usuarios.findIndex(u => u.nombre_usuario === MI_USUARIO);
-            if(userIndex !== -1) {
-                db.usuarios[userIndex].xp = nuevaXp;
-                db.usuarios[userIndex].nivel = nuevoNivel;
-                
-                await fetch(urlAPI, {
-                    method: "PUT",
-                    headers: { "Authorization": `token ${MI_TOKEN}`, "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        message: `Subida de nivel/xp: ${MI_USUARIO}`,
-                        content: btoa(unescape(encodeURIComponent(JSON.stringify(db, null, 2)))),
-                        sha: fileData.sha
-                    })
-                });
-            }
-        } catch (e) { console.error("Error guardando progreso:", e); }
-    }
-
-    function ganarXP(cantidad) {
-        let xp = parseInt(localStorage.getItem("xp")) || 0;
-        let nivel = parseInt(localStorage.getItem("nivel")) || 1;
-        
-        xp += cantidad;
-        while (xp >= XP_MAX) {
-            xp -= XP_MAX;
-            nivel++;
-            mostrarNivelUp();
-        }
-        
-        localStorage.setItem("xp", xp);
-        localStorage.setItem("nivel", nivel);
-        actualizarUI();
-        subirProgresoAGithub(xp, nivel); // Sincroniza con GitHub
-    }
-
+    // Actualiza la UI de XP
     function actualizarUI() {
         const xp = localStorage.getItem("xp") || 0;
         const nivel = localStorage.getItem("nivel") || 1;
@@ -166,107 +95,171 @@
         document.getElementById('nombre-perfil').textContent = `⚔️ ${MI_USUARIO}`;
     }
 
-    function mostrarNivelUp() {
-        const div = document.createElement("div");
-        div.textContent = "⚔️ ¡NIVEL ALCANZADO! ⚔️";
-        div.style = "position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#4c0000; color:#ffb4a8; padding:20px; border:2px solid #ffb4a8; z-index:9999; animation:fadeUp 1.5s forwards; font-weight:bold;";
-        document.body.appendChild(div);
-        setTimeout(() => div.remove(), 1500);
-    }
-
-    // --- FUNCIONES DE FEED ---
-
     function togglePublishBox() {
         const modal = document.getElementById('modal-overlay');
         modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
     }
 
-    async function cargarFeed() {
-        const feed = document.getElementById('main-feed');
-        feed.innerHTML = '<p style="text-align:center; color:#a38b88;">Consultando oráculo...</p>';
-        
-        try {
-            const urlAPI = `https://api.github.com/repos/${REPO}/contents/BaseDeDatos.json`;
-            const respuesta = await fetch(urlAPI, { headers: { "Authorization": `token ${MI_TOKEN}` }, cache: "no-store" });
-            const fileData = await respuesta.json();
-            const db = JSON.parse(decodeURIComponent(escape(atob(fileData.content.replace(/\s/g, '')))));
-            
-            // Cargar XP del usuario desde la DB si no está en LocalStorage
-            const yo = db.usuarios.find(u => u.nombre_usuario === MI_USUARIO);
-            if(yo && !localStorage.getItem("xp")) {
-                localStorage.setItem("xp", yo.xp || 0);
-                localStorage.setItem("nivel", yo.nivel || 1);
-                actualizarUI();
-            }
-
-            let posts = [];
-            db.usuarios.forEach(u => {
-                if(u.publicaciones) u.publicaciones.forEach(p => posts.push({...p, autor: u.nombre_usuario, foto: u.foto_perfil}));
-            });
-            posts.sort((a,b) => b.id - a.id);
-            feed.innerHTML = "";
-            
-            posts.forEach(p => {
-                feed.innerHTML += `
-                    <div class="post">
-                        <div class="post-header">
-                            <img src="${p.foto || 'https://via.placeholder.com/150'}" class="avatar">
-                            <div class="post-info"><h4>@${p.autor}</h4><small>${p.fecha}</small></div>
-                        </div>
-                        <div class="post-content">${p.texto}</div>
-                        <button class="btn-action" onclick="darLike()">❤️ Me gusta (+5 XP)</button>
-                    </div>`;
-            });
-        } catch(e) { feed.innerHTML = "Error al cargar el reino."; }
-    }
-
-    async function publicarAhora() {
-        const texto = document.getElementById('post-text').value.trim();
-        if(!texto) return;
+    // --- FUNCIÓN PARA SEGUIR (ACTUALIZA GITHUB) ---
+    async function toggleSeguir(targetUser) {
+        if (targetUser === MI_USUARIO) return;
 
         try {
             const urlAPI = `https://api.github.com/repos/${REPO}/contents/BaseDeDatos.json`;
             const resGet = await fetch(urlAPI, { headers: { "Authorization": `token ${MI_TOKEN}` }, cache: "no-store" });
             const fileData = await resGet.json();
             const db = JSON.parse(decodeURIComponent(escape(atob(fileData.content.replace(/\s/g, '')))));
-            
-            const userIndex = db.usuarios.findIndex(u => u.nombre_usuario === MI_USUARIO);
-            const nuevoPost = { id: Date.now(), texto: texto, fecha: new Date().toLocaleString(), likes: 0 };
-            
-            db.usuarios[userIndex].publicaciones = db.usuarios[userIndex].publicaciones || [];
-            db.usuarios[userIndex].publicaciones.unshift(nuevoPost);
 
-            const resPut = await fetch(urlAPI, {
+            const yo = db.usuarios.find(u => u.nombre_usuario === MI_USUARIO);
+            const objetivo = db.usuarios.find(u => u.nombre_usuario === targetUser);
+
+            if (!yo.siguiendo) yo.siguiendo = [];
+            if (!objetivo.seguidores_nombres) objetivo.seguidores_nombres = [];
+
+            const index = yo.siguiendo.indexOf(targetUser);
+            
+            if (index === -1) {
+                // SEGUIR
+                yo.siguiendo.push(targetUser);
+                objetivo.seguidores = (objetivo.seguidores || 0) + 1;
+                objetivo.seguidores_nombres.push(MI_USUARIO);
+                alert(`¡Ahora sigues a ${targetUser}! (+10 XP)`);
+                ganarXP(10); 
+            } else {
+                // DEJAR DE SEGUIR
+                yo.siguiendo.splice(index, 1);
+                objetivo.seguidores = Math.max(0, (objetivo.seguidores || 1) - 1);
+                const idxNombre = objetivo.seguidores_nombres.indexOf(MI_USUARIO);
+                if(idxNombre > -1) objetivo.seguidores_nombres.splice(idxNombre, 1);
+            }
+
+            // Subir cambios
+            await fetch(urlAPI, {
                 method: "PUT",
                 headers: { "Authorization": `token ${MI_TOKEN}`, "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    message: `Nueva post de ${MI_USUARIO}`,
+                    message: `Siguiendo/Unfollow: ${MI_USUARIO} -> ${targetUser}`,
                     content: btoa(unescape(encodeURIComponent(JSON.stringify(db, null, 2)))),
                     sha: fileData.sha
                 })
             });
 
-            if(resPut.ok) {
-                ganarXP(20); // Gana XP por publicar
-                document.getElementById('post-text').value = "";
-                togglePublishBox();
-                setTimeout(cargarFeed, 1000);
+            cargarFeed(); // Recargar para actualizar botones
+
+        } catch (e) { console.error(e); }
+    }
+
+    async function cargarFeed() {
+        const feed = document.getElementById('main-feed');
+        try {
+            const urlAPI = `https://api.github.com/repos/${REPO}/contents/BaseDeDatos.json`;
+            const respuesta = await fetch(urlAPI, { headers: { "Authorization": `token ${MI_TOKEN}` }, cache: "no-store" });
+            const data = await respuesta.json();
+            const db = JSON.parse(decodeURIComponent(escape(atob(data.content.replace(/\s/g, '')))));
+
+            const yo = db.usuarios.find(u => u.nombre_usuario === MI_USUARIO);
+            listaSiguiendo = yo.siguiendo || [];
+
+            // Guardar XP localmente por si acaso
+            localStorage.setItem("xp", yo.xp || 0);
+            localStorage.setItem("nivel", yo.nivel || 1);
+            actualizarUI();
+
+            let posts = [];
+            db.usuarios.forEach(u => {
+                if(u.publicaciones) u.publicaciones.forEach(p => posts.push({...p, autor: u.nombre_usuario, foto: u.foto_perfil}));
+            });
+            posts.sort((a,b) => b.id - a.id);
+            
+            feed.innerHTML = "";
+            posts.forEach(p => {
+                const esMiPost = p.autor === MI_USUARIO;
+                const loSigo = listaSiguiendo.includes(p.autor);
+                
+                feed.innerHTML += `
+                    <div class="post">
+                        <div class="post-header">
+                            <div class="avatar-group">
+                                <img src="${p.foto || 'https://via.placeholder.com/150'}" class="avatar">
+                                <div class="post-info"><h4>@${p.autor}</h4><small>${p.fecha}</small></div>
+                            </div>
+                            ${!esMiPost ? `<button class="btn-follow ${loSigo?'active':''}" onclick="toggleSeguir('${p.autor}')">${loSigo?'✅ Siguiendo':'⚔️ Seguir'}</button>` : ''}
+                        </div>
+                        <div class="post-content">${p.texto}</div>
+                        <div class="post-footer">
+                            <button class="btn-action" onclick="darLike()">❤️ Me gusta (+5 XP)</button>
+                            <button class="btn-action">💬 Comentar</button>
+                        </div>
+                    </div>`;
+            });
+        } catch(e) { feed.innerHTML = "Error al cargar el reino."; }
+    }
+
+    // --- REUTILIZAR TUS FUNCIONES DE XP ---
+    async function subirProgresoAGithub(nuevaXp, nuevoNivel) {
+        try {
+            const urlAPI = `https://api.github.com/repos/${REPO}/contents/BaseDeDatos.json`;
+            const resGet = await fetch(urlAPI, { headers: { "Authorization": `token ${MI_TOKEN}` }, cache: "no-store" });
+            const fileData = await resGet.json();
+            const db = JSON.parse(decodeURIComponent(escape(atob(fileData.content.replace(/\s/g, '')))));
+            const userIndex = db.usuarios.findIndex(u => u.nombre_usuario === MI_USUARIO);
+            if(userIndex !== -1) {
+                db.usuarios[userIndex].xp = nuevaXp;
+                db.usuarios[userIndex].nivel = nuevoNivel;
+                await fetch(urlAPI, {
+                    method: "PUT",
+                    headers: { "Authorization": `token ${MI_TOKEN}`, "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        message: `Log: XP Update ${MI_USUARIO}`,
+                        content: btoa(unescape(encodeURIComponent(JSON.stringify(db, null, 2)))),
+                        sha: fileData.sha
+                    })
+                });
             }
+        } catch (e) { console.error(e); }
+    }
+
+    function ganarXP(cantidad) {
+        let xp = parseInt(localStorage.getItem("xp")) || 0;
+        let nivel = parseInt(localStorage.getItem("nivel")) || 1;
+        xp += cantidad;
+        while (xp >= XP_MAX) { xp -= XP_MAX; nivel++; }
+        localStorage.setItem("xp", xp);
+        localStorage.setItem("nivel", nivel);
+        actualizarUI();
+        subirProgresoAGithub(xp, nivel);
+    }
+
+    async function publicarAhora() {
+        const texto = document.getElementById('post-text').value.trim();
+        if(!texto) return;
+        try {
+            const urlAPI = `https://api.github.com/repos/${REPO}/contents/BaseDeDatos.json`;
+            const resGet = await fetch(urlAPI, { headers: { "Authorization": `token ${MI_TOKEN}` }, cache: "no-store" });
+            const fileData = await resGet.json();
+            const db = JSON.parse(decodeURIComponent(escape(atob(fileData.content.replace(/\s/g, '')))));
+            const userIndex = db.usuarios.findIndex(u => u.nombre_usuario === MI_USUARIO);
+            const nuevoPost = { id: Date.now(), texto: texto, fecha: new Date().toLocaleString(), likes: 0 };
+            db.usuarios[userIndex].publicaciones = db.usuarios[userIndex].publicaciones || [];
+            db.usuarios[userIndex].publicaciones.unshift(nuevoPost);
+            await fetch(urlAPI, {
+                method: "PUT",
+                headers: { "Authorization": `token ${MI_TOKEN}`, "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    message: `Post: ${MI_USUARIO}`,
+                    content: btoa(unescape(encodeURIComponent(JSON.stringify(db, null, 2)))),
+                    sha: fileData.sha
+                })
+            });
+            ganarXP(20);
+            document.getElementById('post-text').value = "";
+            togglePublishBox();
+            setTimeout(cargarFeed, 1500);
         } catch(e) { alert("Error al publicar."); }
     }
 
-    let likeCooldown = false;
-    function darLike() {
-        if(likeCooldown) return;
-        ganarXP(5);
-        likeCooldown = true;
-        setTimeout(() => likeCooldown = false, 1000);
-    }
-
-    function cerrarSesion() {
-        localStorage.clear();
-        window.location.href = "Inicio.html";
-    }
+    function darLike() { ganarXP(5); }
+    function cerrarSesion() { localStorage.clear(); window.location.href = "Inicio.html"; }
 
     actualizarUI();
     cargarFeed();
