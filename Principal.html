@@ -1,405 +1,149 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>D&D Academy - Reino Principal</title>
-     <link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@400;700;800&family=Work+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<title>Test RPG XP</title>
 
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+<style>
+body {
+    background: #131313;
+    color: white;
+    font-family: Arial;
+    text-align: center;
+    padding: 50px;
+}
 
-        body {
-            font-family: 'Work Sans', sans-serif;
-            background: radial-gradient(circle at center, #4c0000 0%, #131313 70%);
-            color: #e5e2e1;
-            min-height: 100vh;
-        }
+.box {
+    max-width: 400px;
+    margin: auto;
+    background: #1c1b1b;
+    padding: 20px;
+    border: 1px solid #554240;
+}
 
-        /* HEADER */
-        .header { 
-            background: #1c1b1b;
-            padding: 15px;
-            border-bottom: 1px solid #554240;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            display: flex;
-            justify-content: center;
-        }
+.xp-bar {
+    width: 100%;
+    height: 20px;
+    background: #000;
+    border: 1px solid #555;
+    margin: 10px 0;
+}
 
-        .search-bar {
-            width: 100%;
-            max-width: 600px;
-        }
+.xp-fill {
+    height: 100%;
+    width: 0%;
+    background: red;
+}
 
-        .search-bar input { 
-            width: 100%;
-            padding: 12px 20px;
-            border: 1px solid #554240;
-            background: #131313;
-            color: #e5e2e1;
-            outline: none;
-        }
-
-        .search-bar input:focus {
-            border-color: #ffb4a8;
-            box-shadow: 0 0 10px rgba(255,180,168,0.3);
-        }
-
-        /* LAYOUT */
-        .container {
-            display: flex;
-            max-width: 1200px;
-            margin: 20px auto;
-            gap: 20px;
-            padding: 0 20px;
-        }
-
-        /* SIDEBAR */
-        .sidebar {
-            width: 250px;
-            background: #1c1b1b;
-            padding: 20px;
-            border: 1px solid #554240;
-            position: sticky;
-            top: 80px;
-        }
-
-        .sidebar h3 {
-            color: #ffb4a8;
-            margin-bottom: 20px;
-            font-size: 14px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            border-bottom: 1px solid #554240;
-            padding-bottom: 5px;
-        }
-
-        .menu-item, .btn-crear {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 10px;
-
-            background: #131313;
-            color: #a38b88;
-            border-left: 3px solid #554240;
-            border-top: 1px solid #554240;
-
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: bold;
-            letter-spacing: 1px;
-            cursor: pointer;
-
-            transition: all 0.25s;
-        }
-
-        .menu-item:hover {
-            background: #4c0000;
-            color: #ffb4a8;
-            transform: translateX(5px);
-        }
-
-        .btn-crear {
-            background: #4c0000;
-            color: #ffb4a8;
-            text-align: center;
-        }
-
-        .btn-crear:hover {
-            background: #690000;
-        }
-
-        .logout {
-            color: #ffb4ab;
-        }
-
-        .logout:hover {
-            background: #93000a;
-        }
-
-        /* FEED */
-        .feed {
-            flex: 1;
-            max-width: 600px;
-        }
-
-        .post {
-            background: #1c1b1b;
-            border: 1px solid #554240;
-            padding: 20px;
-            margin-bottom: 20px;
-            animation: fadeIn 0.5s;
-        }
-
-        .post-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-            border-bottom: 1px solid #554240;
-            padding-bottom: 10px;
-        }
-
-        .avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            margin-right: 12px;
-            border: 2px solid #4c0000;
-        }
-
-        .post-info h4 {
-            color: #ffb4a8;
-        }
-
-        .post-info small {
-            color: #a38b88;
-        }
-
-        .post-content {
-            color: #e5e2e1;
-            margin: 15px 0;
-        }
-
-        .post-actions {
-            display: flex;
-            gap: 10px;
-            border-top: 1px solid #554240;
-            padding-top: 10px;
-        }
-
-        .btn-action {
-            flex: 1;
-            padding: 8px;
-            border: none;
-            background: #131313;
-            color: #ffb4a8;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .btn-action:hover {
-            background: #4c0000;
-        }
-
-        /* MODAL */
-        #modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #modal-overlay > div {
-            background: #1c1b1b;
-            padding: 25px;
-            border: 1px solid #554240;
-            width: 90%;
-            max-width: 500px;
-        }
-
-        textarea {
-            width: 100%;
-            height: 120px;
-            background: #131313;
-            border: 1px solid #554240;
-            color: #e5e2e1;
-            padding: 12px;
-            margin-bottom: 15px;
-            resize: none;
-        }
-
-        textarea:focus {
-            border-color: #ffb4a8;
-        }
-
-        button {
-            cursor: pointer;
-        }
-
-        /* ANIMACIÓN */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* SCROLL */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #131313; }
-        ::-webkit-scrollbar-thumb { background: #4c0000; }
-    </style>
+button {
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+}
+</style>
 </head>
+
 <body>
 
-    <div class="header">
-        <div class="search-bar">
-            <input type="text" placeholder="🔍 Buscar en el Reino...">
-        </div>
+<div class="box">
+    <h2 id="user">Usuario</h2>
+
+    <h3>Nivel: <span id="nivel">1</span></h3>
+
+    <div class="xp-bar">
+        <div class="xp-fill" id="xp-fill"></div>
     </div>
 
-    <div class="container">
-        <div class="sidebar">
-            <h3 id="nombre-perfil">Cargando...</h3>
-            <a class="menu-item" href="./Principal.html">📱 Inicio</a>
-            <button class="btn-crear" onclick="togglePublishBox()">➕ Publicar</button>
-            <a class="menu-item" href="./Usuario.html">👤 Mi Perfil</a>
-            <a class="menu-item" href="./FichaPersonaje.html">⚔️ Personaje</a>
-            <button class="menu-item logout" onclick="cerrarSesion()">🚪 Salir</button>
-        </div>
+    <p><span id="xp">0</span> / 100 XP</p>
 
-        <div id="modal-overlay">
-            <div style="background: white; padding: 25px; border-radius: 15px; width: 90%; max-width: 500px;">
-                <h3 style="color: #764ba2; margin-bottom: 15px;">¿Qué hay de nuevo, aventurero?</h3>
-                <textarea id="post-text" placeholder="Escribe tu mensaje aquí..." style="width: 100%; height: 120px; border: 1px solid #ddd; border-radius: 8px; padding: 12px; resize: none; margin-bottom: 15px; font-family: inherit;"></textarea>
-                <div style="display: flex; gap: 10px;">
-                    <button onclick="publicarAhora()" style="flex: 2; background: #764ba2; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold;">Publicar</button>
-                    <button onclick="togglePublishBox()" style="flex: 1; background: #eee; color: #444; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">Cancelar</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="feed" id="main-feed"></div>
-    </div>
+    <button onclick="ganarXP(20)">⚔️ Ganar 20 XP</button>
+    <button onclick="ganarXP(5)">❤️ Ganar 5 XP</button>
+</div>
 
 <script>
-    const feed = document.getElementById('main-feed');
-    
-    // OBTENCIÓN DE DATOS DE SESIÓN
-    const MI_USUARIO = localStorage.getItem('usuarioSesion');
-    const MI_TOKEN = localStorage.getItem('gh_token_activo');
-    const REPO = "Rain-2099/prueba";
+// ===== CONFIG =====
+const REPO = "TU_USUARIO/TU_REPO"; // 🔴 CAMBIA ESTO
+const TOKEN = "TU_TOKEN_AQUI";     // 🔴 CAMBIA ESTO
+const USUARIO = "testUser";        // 🔴 usuario que exista en JSON
 
-    // Seguridad: Si no hay token o usuario, devolver al login
-    if (!MI_USUARIO || !MI_TOKEN) {
-        window.location.href = "IniciarSesion.html";
-    } else {
-        document.getElementById('nombre-perfil').textContent = `⚔️ ${MI_USUARIO}`;
+let xp = 0;
+let nivel = 1;
+const XP_MAX = 100;
+
+// ===== UI =====
+function actualizarUI() {
+    document.getElementById("nivel").textContent = nivel;
+    document.getElementById("xp").textContent = xp;
+    document.getElementById("xp-fill").style.width = (xp / XP_MAX * 100) + "%";
+    document.getElementById("user").textContent = "@" + USUARIO;
+}
+
+// ===== CARGAR DESDE GITHUB =====
+async function cargarXP() {
+    const url = `https://api.github.com/repos/${REPO}/contents/BaseDeDatos.json`;
+
+    const res = await fetch(url, {
+        headers: { Authorization: `token ${TOKEN}` }
+    });
+
+    const file = await res.json();
+    const db = JSON.parse(atob(file.content));
+
+    const user = db.usuarios.find(u => u.nombre_usuario === USUARIO);
+
+    xp = user.xp || 0;
+    nivel = user.nivel || 1;
+
+    actualizarUI();
+}
+
+// ===== GUARDAR EN GITHUB =====
+async function guardarXP() {
+    const url = `https://api.github.com/repos/${REPO}/contents/BaseDeDatos.json`;
+
+    const res = await fetch(url, {
+        headers: { Authorization: `token ${TOKEN}` }
+    });
+
+    const file = await res.json();
+    const db = JSON.parse(atob(file.content));
+
+    const index = db.usuarios.findIndex(u => u.nombre_usuario === USUARIO);
+
+    db.usuarios[index].xp = xp;
+    db.usuarios[index].nivel = nivel;
+
+    await fetch(url, {
+        method: "PUT",
+        headers: {
+            Authorization: `token ${TOKEN}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            message: "Update XP",
+            content: btoa(JSON.stringify(db, null, 2)),
+            sha: file.sha
+        })
+    });
+}
+
+// ===== GANAR XP =====
+async function ganarXP(cantidad) {
+    xp += cantidad;
+
+    if (xp >= XP_MAX) {
+        xp -= XP_MAX;
+        nivel++;
+        alert("⚔️ SUBISTE A NIVEL " + nivel);
     }
 
-    function togglePublishBox() {
-        const modal = document.getElementById('modal-overlay');
-        modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
-    }
+    actualizarUI();
+    await guardarXP();
+}
 
-    async function cargarFeed() {
-        try {
-            feed.innerHTML = '<p style="text-align:center; color:white; padding:20px;">Abriendo pergaminos mágicos...</p>';
-            
-            // Acceso a GitHub vía API con Token
-            const urlAPI = `https://api.github.com/repos/${REPO}/contents/BaseDeDatos.json`;
-            const respuesta = await fetch(urlAPI, {
-                headers: { "Authorization": `token ${MI_TOKEN}` },
-                cache: "no-store"
-            });
-
-            if (!respuesta.ok) throw new Error("Error al conectar con la base de datos.");
-
-            const fileData = await respuesta.json();
-            const db = JSON.parse(decodeURIComponent(escape(atob(fileData.content.replace(/\s/g, '')))));
-            
-            let todosLosPosts = [];
-            db.usuarios.forEach(u => {
-                if(Array.isArray(u.publicaciones)){
-                    u.publicaciones.forEach(p => {
-                        todosLosPosts.push({ ...p, autor: u.nombre_usuario, foto: u.foto_perfil });
-                    });
-                }
-            });
-
-            todosLosPosts.sort((a, b) => b.id - a.id);
-            feed.innerHTML = ''; 
-
-            if(todosLosPosts.length === 0) {
-                feed.innerHTML = '<p style="text-align:center; color:white;">Nadie ha escrito nada aún.</p>';
-                return;
-            }
-
-            todosLosPosts.forEach(post => {
-                feed.innerHTML += `
-                    <div class="post">
-                        <div class="post-header">
-                            <img src="${post.foto || 'https://via.placeholder.com/150'}" class="avatar">
-                            <div class="post-info">
-                                <h4>@${post.autor}</h4>
-                                <small>${post.fecha}</small>
-                            </div>
-                        </div>
-                        <div class="post-content">${post.texto}</div>
-                        <div class="post-actions">
-                            <button class="btn-action">❤️ Me gusta (${post.likes || 0})</button>
-                            <button class="btn-action">💬 Comentar</button>
-                        </div>
-                    </div>`;
-            });
-        } catch (error) {
-            feed.innerHTML = `<p style="color:white; text-align:center; background:rgba(0,0,0,0.3); padding:15px; border-radius:10px;">${error.message}</p>`;
-        }
-    }
-
-    async function publicarAhora() {
-        const textoArea = document.getElementById('post-text');
-        const texto = textoArea.value.trim();
-        if (!texto) return alert("¡Escribe algo aventurero!");
-
-        try {
-            const urlAPI = `https://api.github.com/repos/${REPO}/contents/BaseDeDatos.json`;
-            const resGet = await fetch(urlAPI, { 
-                headers: { "Authorization": `token ${MI_TOKEN}` },
-                cache: "no-store" 
-            });
-
-            const fileData = await resGet.json();
-            const db = JSON.parse(decodeURIComponent(escape(atob(fileData.content.replace(/\s/g, '')))));
-            
-            const userIndex = db.usuarios.findIndex(u => u.nombre_usuario === MI_USUARIO);
-            
-            const nuevoPost = {
-                id: Date.now(),
-                texto: texto,
-                fecha: new Date().toLocaleString(),
-                likes: 0
-            };
-
-            if (!db.usuarios[userIndex].publicaciones) db.usuarios[userIndex].publicaciones = [];
-            db.usuarios[userIndex].publicaciones.unshift(nuevoPost);
-
-            const resPut = await fetch(urlAPI, {
-                method: "PUT",
-                headers: { 
-                    "Authorization": `token ${MI_TOKEN}`,
-                    "Content-Type": "application/json" 
-                },
-                body: JSON.stringify({
-                    message: `Nueva publicación de ${MI_USUARIO}`,
-                    content: btoa(unescape(encodeURIComponent(JSON.stringify(db, null, 2)))),
-                    sha: fileData.sha
-                })
-            });
-
-            if (resPut.ok) {
-                textoArea.value = "";
-                togglePublishBox();
-                setTimeout(cargarFeed, 1000); // Recarga tras 1 segundo
-            }
-        } catch (e) {
-            alert("Error al conectar: " + e.message);
-        }
-    }
-
-    function cerrarSesion() {
-        localStorage.removeItem('usuarioSesion');
-        localStorage.removeItem('gh_token_activo');
-        window.location.href = "Inicio.html";
-    }
-
-    cargarFeed();
+// INIT
+cargarXP();
 </script>
+
 </body>
 </html>
