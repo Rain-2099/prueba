@@ -413,6 +413,12 @@
       "me_gustas_totales": 0,
       "publicaciones": [
         {
+          "id": 1773970220212,
+          "texto": "Estoy en el celular",
+          "fecha": "3/19/2026, 7:30:20 PM",
+          "likes": 0
+        },
+        {
           "id": 1773969095015,
           "texto": "Creo que ya funciono",
           "fecha": "19/3/2026, 7:11:35 p.m.",
