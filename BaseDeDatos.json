@@ -268,7 +268,9 @@
         "esta_baneado": false,
         "historial_baneos": 0,
         "motivo_ultimo": null
-      }
+      },
+      "xp": 20,
+      "nivel": 1
     },
     {
       "id": 7,
