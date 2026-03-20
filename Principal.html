@@ -59,37 +59,42 @@ button {
     <button onclick="ganarXP(20)">⚔️ Ganar 20 XP</button>
     <button onclick="ganarXP(5)">❤️ Ganar 5 XP</button>
 </div>
-
+    
 <script>
-// ===== CONFIG =====
-const REPO = "TU_USUARIO/TU_REPO"; // 🔴 CAMBIA ESTO
-const TOKEN = "TU_TOKEN_AQUI";     // 🔴 CAMBIA ESTO
-const USUARIO = "testUser";        // 🔴 usuario que exista en JSON
+const feed = document.getElementById('main-feed');
+
+const MI_USUARIO = localStorage.getItem('usuarioSesion');
+const MI_TOKEN = localStorage.getItem('gh_token_activo');
+const REPO = "Rain-2099/prueba";
 
 let xp = 0;
 let nivel = 1;
 const XP_MAX = 100;
 
-// ===== UI =====
-function actualizarUI() {
-    document.getElementById("nivel").textContent = nivel;
-    document.getElementById("xp").textContent = xp;
-    document.getElementById("xp-fill").style.width = (xp / XP_MAX * 100) + "%";
-    document.getElementById("user").textContent = "@" + USUARIO;
+if (!MI_USUARIO || !MI_TOKEN) {
+    window.location.href = "IniciarSesion.html";
+} else {
+    document.getElementById('nombre-perfil').textContent = `⚔️ ${MI_USUARIO}`;
 }
 
-// ===== CARGAR DESDE GITHUB =====
+// ===== RPG =====
+function actualizarUI() {
+    document.getElementById("nivel-num").textContent = nivel;
+    document.getElementById("xp-actual").textContent = xp;
+    document.getElementById("xp-fill").style.width = (xp / XP_MAX * 100) + "%";
+}
+
 async function cargarXP() {
     const url = `https://api.github.com/repos/${REPO}/contents/BaseDeDatos.json`;
 
     const res = await fetch(url, {
-        headers: { Authorization: `token ${TOKEN}` }
+        headers: { Authorization: `token ${MI_TOKEN}` }
     });
 
     const file = await res.json();
-    const db = JSON.parse(atob(file.content));
+    const db = JSON.parse(decodeURIComponent(escape(atob(file.content.replace(/\s/g,'')))));
 
-    const user = db.usuarios.find(u => u.nombre_usuario === USUARIO);
+    const user = db.usuarios.find(u => u.nombre_usuario === MI_USUARIO);
 
     xp = user.xp || 0;
     nivel = user.nivel || 1;
@@ -97,52 +102,166 @@ async function cargarXP() {
     actualizarUI();
 }
 
-// ===== GUARDAR EN GITHUB =====
-async function guardarXP() {
+async function guardarXP(db, sha) {
     const url = `https://api.github.com/repos/${REPO}/contents/BaseDeDatos.json`;
-
-    const res = await fetch(url, {
-        headers: { Authorization: `token ${TOKEN}` }
-    });
-
-    const file = await res.json();
-    const db = JSON.parse(atob(file.content));
-
-    const index = db.usuarios.findIndex(u => u.nombre_usuario === USUARIO);
-
-    db.usuarios[index].xp = xp;
-    db.usuarios[index].nivel = nivel;
 
     await fetch(url, {
         method: "PUT",
         headers: {
-            Authorization: `token ${TOKEN}`,
+            Authorization: `token ${MI_TOKEN}`,
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
             message: "Update XP",
-            content: btoa(JSON.stringify(db, null, 2)),
-            sha: file.sha
+            content: btoa(unescape(encodeURIComponent(JSON.stringify(db, null, 2)))),
+            sha: sha
         })
     });
 }
 
-// ===== GANAR XP =====
 async function ganarXP(cantidad) {
+    const url = `https://api.github.com/repos/${REPO}/contents/BaseDeDatos.json`;
+
+    const res = await fetch(url, {
+        headers: { Authorization: `token ${MI_TOKEN}` }
+    });
+
+    const file = await res.json();
+    const db = JSON.parse(decodeURIComponent(escape(atob(file.content.replace(/\s/g,'')))));
+
+    const index = db.usuarios.findIndex(u => u.nombre_usuario === MI_USUARIO);
+
+    xp = db.usuarios[index].xp || 0;
+    nivel = db.usuarios[index].nivel || 1;
+
     xp += cantidad;
 
     if (xp >= XP_MAX) {
         xp -= XP_MAX;
         nivel++;
-        alert("⚔️ SUBISTE A NIVEL " + nivel);
+        alert("⚔️ Subiste a nivel " + nivel);
     }
 
+    db.usuarios[index].xp = xp;
+    db.usuarios[index].nivel = nivel;
+
+    await guardarXP(db, file.sha);
+
     actualizarUI();
-    await guardarXP();
+}
+
+// ===== UI =====
+function togglePublishBox() {
+    const modal = document.getElementById('modal-overlay');
+    modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
+}
+
+// ===== FEED =====
+async function cargarFeed() {
+    const urlAPI = `https://api.github.com/repos/${REPO}/contents/BaseDeDatos.json`;
+
+    const respuesta = await fetch(urlAPI, {
+        headers: { "Authorization": `token ${MI_TOKEN}` }
+    });
+
+    const fileData = await respuesta.json();
+    const db = JSON.parse(decodeURIComponent(escape(atob(fileData.content.replace(/\s/g,'')))));
+
+    let posts = [];
+
+    db.usuarios.forEach(u => {
+        if(u.publicaciones){
+            u.publicaciones.forEach(p => {
+                posts.push({...p, autor: u.nombre_usuario});
+            });
+        }
+    });
+
+    posts.sort((a,b)=>b.id-a.id);
+
+    feed.innerHTML = "";
+
+    posts.forEach(post=>{
+        feed.innerHTML += `
+        <div class="post">
+            <div class="post-header">
+                <div>
+                    <h4>@${post.autor}</h4>
+                    <small>${post.fecha}</small>
+                </div>
+            </div>
+            <div class="post-content">${post.texto}</div>
+            <button onclick="likePost(${post.id})">❤️ (${post.likes || 0})</button>
+        </div>`;
+    });
+}
+
+// ===== LIKE =====
+async function likePost(postId) {
+    const url = `https://api.github.com/repos/${REPO}/contents/BaseDeDatos.json`;
+
+    const res = await fetch(url, {
+        headers: { Authorization: `token ${MI_TOKEN}` }
+    });
+
+    const file = await res.json();
+    const db = JSON.parse(decodeURIComponent(escape(atob(file.content.replace(/\s/g,'')))));
+
+    db.usuarios.forEach(u=>{
+        if(u.publicaciones){
+            u.publicaciones.forEach(p=>{
+                if(p.id === postId){
+                    p.likes = (p.likes || 0) + 1;
+                }
+            });
+        }
+    });
+
+    await guardarXP(db, file.sha);
+
+    await ganarXP(5); // 💥 XP POR LIKE
+
+    cargarFeed();
+}
+
+// ===== PUBLICAR =====
+async function publicarAhora() {
+    const texto = document.getElementById('post-text').value.trim();
+    if (!texto) return;
+
+    const url = `https://api.github.com/repos/${REPO}/contents/BaseDeDatos.json`;
+
+    const res = await fetch(url, {
+        headers: { Authorization: `token ${MI_TOKEN}` }
+    });
+
+    const file = await res.json();
+    const db = JSON.parse(decodeURIComponent(escape(atob(file.content.replace(/\s/g,'')))));
+
+    const index = db.usuarios.findIndex(u => u.nombre_usuario === MI_USUARIO);
+
+    const nuevo = {
+        id: Date.now(),
+        texto: texto,
+        fecha: new Date().toLocaleString(),
+        likes: 0
+    };
+
+    if(!db.usuarios[index].publicaciones) db.usuarios[index].publicaciones=[];
+
+    db.usuarios[index].publicaciones.unshift(nuevo);
+
+    await guardarXP(db, file.sha);
+
+    await ganarXP(20); // 💥 XP POR PUBLICAR
+
+    togglePublishBox();
+    cargarFeed();
 }
 
 // INIT
 cargarXP();
+cargarFeed();
 </script>
 
 </body>
