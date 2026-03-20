@@ -5,77 +5,143 @@
     <title>DYD</title>
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+      /* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+/* BODY */
+body {
+    font-family: 'Work Sans', sans-serif;
+    background: radial-gradient(circle at center, #4c0000 0%, #131313 70%);
+    color: #e5e2e1;
+    min-height: 100vh;
 
-        .container {
-            max-width: 400px;
-            width: 100%;
-            padding: 40px;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            text-align: center;
-        }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-        h1 {
-            font-size: 3.5rem;
-            margin-bottom: 10px;
-            color: #667eea;
-            letter-spacing: 4px;
-        }
+/* CONTENEDOR */
+.container {
+    max-width: 420px;
+    width: 100%;
+    padding: 50px 40px;
+    background: #1c1b1b;
+    border: 1px solid #554240;
+    box-shadow: 0 0 40px rgba(0,0,0,0.8);
+    text-align: center;
+    position: relative;
+}
 
-        h2 {
-            font-size: 1.2rem;
-            color: #666;
-            margin-bottom: 30px;
-        }
+/* ESQUINAS ESTILO “MANUSCRITO” */
+.container::before,
+.container::after {
+    content: "";
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border: 2px solid #ffb4a8;
+}
 
-        .button-group {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+.container::before {
+    top: 0;
+    left: 0;
+    border-right: none;
+    border-bottom: none;
+}
 
-        .boton {
-            display: block;
-            padding: 12px;
-            text-decoration: none;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 8px;
-            color: white;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
+.container::after {
+    bottom: 0;
+    right: 0;
+    border-left: none;
+    border-top: none;
+}
 
-        .boton:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-        }
+/* TITULOS */
+h1 {
+    font-family: 'Newsreader', serif;
+    font-size: 5rem;
+    margin-bottom: 5px;
+    color: #ffb4a8;
+    letter-spacing: 6px;
+}
 
-        .login-btn {
-            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-        }
+h2 {
+    font-size: 0.9rem;
+    color: #a38b88;
+    margin-bottom: 35px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
 
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
-        ::-webkit-scrollbar-thumb { background: #764ba2; border-radius: 10px; }
+/* BOTONES */
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
 
+/* BOTON BASE */
+.boton {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 15px 20px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+
+    color: #f0513e;
+    background: #4c0000;
+    border-left: 3px solid #554240;
+    border-top: 1px solid #554240;
+
+    transition: all 0.25s ease;
+    position: relative;
+}
+
+/* EFECTO HOVER */
+.boton:hover {
+    background: #690000;
+    transform: translateX(5px);
+    box-shadow: 0 0 15px rgba(240, 81, 62, 0.4);
+}
+
+/* BOTON LOGIN (más destacado) */
+.login-btn {
+    background: #5a0000;
+    color: #ffb4a8;
+}
+
+/* EFECTO BRILLO */
+.boton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    background: linear-gradient(
+        to right,
+        transparent,
+        rgba(255, 180, 168, 0.2),
+        transparent
+    );
+    transition: opacity 0.3s;
+}
+
+.boton:hover::after {
+    opacity: 1;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #131313; }
+::-webkit-scrollbar-thumb { background: #4c0000; }
     </style>
 </head>
 
