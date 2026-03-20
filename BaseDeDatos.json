@@ -12,7 +12,14 @@
         {
           "texto": "¡Hoy derrotamos al dragón de las cumbres!",
           "fecha": "2026-03-10",
-          "likes": 150
+          "likes": 150,
+          "comentarios": [
+            {
+              "usuario": "hola",
+              "texto": "Apoco si??",
+              "fecha": "19/3/2026, 8:46:38 p.m."
+            }
+          ]
         },
         {
           "texto": "¿Alguien para una partida de D&D esta noche?",
