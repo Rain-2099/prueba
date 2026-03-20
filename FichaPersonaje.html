@@ -2,93 +2,225 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Ficha de Personaje - D&D (Auto-Config)</title>
+    <title>Ficha de Personaje - D&D Academy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@400;700;800&family=Work+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f1ea; margin: 20px; }
-        .container { max-width: 900px; margin: auto; background: white; padding: 25px; border: 2px solid #333; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .section { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px dashed #ccc; }
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-        label { font-weight: bold; display: block; margin-top: 10px; color: #444; }
-        input, textarea { width: 100%; padding: 10px; margin-top: 5px; box-sizing: border-box; border: 1px solid #ddd; border-radius: 5px; }
+        /* ESTILO GENERAL - TEMÁTICA D&D */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
+        body { 
+            font-family: 'Work Sans', sans-serif; 
+            background: radial-gradient(circle at center, #4c0000 0%, #131313 70%); 
+            color: #e5e2e1; 
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container { 
+            max-width: 850px; 
+            margin: auto; 
+            background: #1c1b1b; 
+            padding: 40px; 
+            border: 2px solid #554240; 
+            border-radius: 4px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        /* Decoración de esquinas */
+        .container::before {
+            content: "⚔️"; position: absolute; top: 10px; left: 10px; color: #554240; font-size: 20px;
+        }
+
+        h1 { 
+            font-family: 'Newsreader', serif; 
+            text-align: center; 
+            color: #ffb4a8; 
+            font-size: 42px; 
+            margin-bottom: 30px; 
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            border-bottom: 2px solid #4c0000;
+            padding-bottom: 10px;
+        }
+
+        h2 { 
+            font-family: 'Newsreader', serif;
+            color: #ffb4a8; 
+            font-size: 20px; 
+            margin-top: 25px; 
+            margin-bottom: 15px; 
+            border-left: 4px solid #4c0000;
+            padding-left: 15px;
+            text-transform: uppercase;
+        }
+
+        .section { 
+            margin-bottom: 30px; 
+            background: rgba(255, 255, 255, 0.03);
+            padding: 20px;
+            border-radius: 4px;
+        }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; }
+
+        label { 
+            font-size: 11px; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            color: #a38b88; 
+            display: block; 
+            margin-bottom: 5px; 
+        }
+
+        input, textarea { 
+            width: 100%; 
+            padding: 12px; 
+            background: #131313; 
+            border: 1px solid #554240; 
+            color: #e5e2e1; 
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+
+        input:focus, textarea:focus { 
+            outline: none; 
+            border-color: #ffb4a8; 
+            box-shadow: 0 0 8px rgba(255, 180, 168, 0.2);
+        }
+
+        /* Atributos Especiales */
+        .attr-box {
+            text-align: center;
+            background: #2c1a1a;
+            border: 1px solid #4c0000;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .attr-box input {
+            text-align: center;
+            font-size: 24px;
+            font-family: 'Newsreader', serif;
+            font-weight: bold;
+            color: #ffb4a8;
+            background: transparent;
+            border: none;
+        }
+
         /* Botones */
-        .btn-guardar { width: 100%; padding: 15px; background-color: #8b0000; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 18px; font-weight: bold; transition: 0.3s; }
-        .btn-guardar:hover { background-color: #a00000; transform: translateY(-2px); }
+        .btn-guardar { 
+            width: 100%; 
+            padding: 20px; 
+            background: #4c0000; 
+            color: #ffb4a8; 
+            border: 1px solid #ffb4a8; 
+            cursor: pointer; 
+            font-size: 18px; 
+            font-weight: bold; 
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            transition: 0.4s; 
+            margin-top: 20px;
+        }
+
+        .btn-guardar:hover { 
+            background: #ffb4a8; 
+            color: #4c0000; 
+            box-shadow: 0 0 20px rgba(255, 180, 168, 0.4);
+        }
         
-        /* Sección de Configuración */
-        #config-panel { background: #f9f9f9; padding: 20px; border-radius: 8px; border: 1px solid #eee; margin-top: 20px; }
+        /* Configuración */
+        #config-panel { 
+            background: #131313; 
+            padding: 20px; 
+            border: 1px dashed #554240; 
+            margin-bottom: 20px; 
+        }
         .hidden { display: none; }
-        .config-toggle { background: none; border: 1px solid #ccc; color: #666; padding: 5px 10px; cursor: pointer; font-size: 12px; margin-bottom: 10px; border-radius: 4px; }
+        .config-toggle { 
+            background: transparent; 
+            border: 1px solid #554240; 
+            color: #a38b88; 
+            padding: 8px 15px; 
+            cursor: pointer; 
+            font-size: 11px; 
+            margin-bottom: 20px; 
+            text-transform: uppercase;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <button class="config-toggle" onclick="toggleConfig()">⚙️ Mostrar/Ocultar Configuración</button>
+    <button class="config-toggle" onclick="toggleConfig()">⚙️ Ajustes de Sincronización</button>
     
     <div id="config-panel" class="section">
-        <h3>Configuración de GitHub</h3>
-        <p style="font-size: 0.8em; color: #666;">Los datos se guardan solo en tu navegador.</p>
-        <label>Personal Access Token:</label>
+        <h3 style="color: #ffb4a8; margin-bottom: 10px;">Configuración de GitHub</h3>
+        <label>Token Secreto:</label>
         <input type="password" id="gh_token" placeholder="ghp_xxxxxxxxxxxx">
-        <label>Repositorio (usuario/repo):</label>
-        <input type="text" id="gh_repo" placeholder="rain-2099/prueba">
-        <label>Archivo JSON:</label>
-        <input type="text" id="gh_path" value="personajes.json">
+        <div class="grid" style="margin-top:10px;">
+            <div><label>Repositorio:</label><input type="text" id="gh_repo" placeholder="usuario/repo"></div>
+            <div><label>Ruta Archivo:</label><input type="text" id="gh_path" value="personajes.json"></div>
+        </div>
     </div>
 
     <h1>Ficha de Personaje</h1>
 
     <div class="section">
-        <label>Dueño del Personaje (usuario_owner):</label>
-        <input type="text" id="usuario_owner" placeholder="Tu nombre de usuario">
+        <label>Dueño de la Crónica:</label>
+        <input type="text" id="usuario_owner" placeholder="Nombre del Jugador">
     </div>
 
     <div class="section">
-        <h2>Información Básica</h2>
+        <h2>Identidad del Héroe</h2>
         <div class="grid">
             <div><label>Nombre</label><input type="text" id="nombre"></div>
             <div><label>Clase</label><input type="text" id="clase"></div>
             <div><label>Raza</label><input type="text" id="raza"></div>
         </div>
-        <div class="grid">
-            <div><label>Nivel</label><input type="number" id="nivel"></div>
-            <div><label>Alineación</label><input type="text" id="alineacion"></div>
+        <div class="grid" style="margin-top: 15px;">
+            <div><label>Nivel</label><input type="number" id="nivel" value="1"></div>
+            <div><label>Alineación</label><input type="text" id="alineacion" placeholder="Legal Bueno..."></div>
         </div>
     </div>
 
     <div class="section">
-        <h2>Atributos</h2>
+        <h2>Atributos Primordiales</h2>
         <div class="grid">
-            <div><label>Fuerza</label><input type="number" id="fuerza"></div>
-            <div><label>Destreza</label><input type="number" id="destreza"></div>
-            <div><label>Constitución</label><input type="number" id="constitucion"></div>
-            <div><label>Inteligencia</label><input type="number" id="inteligencia"></div>
-            <div><label>Sabiduría</label><input type="number" id="sabiduria"></div>
-            <div><label>Carisma</label><input type="number" id="carisma"></div>
+            <div class="attr-box"><label>Fuerza</label><input type="number" id="fuerza" value="10"></div>
+            <div class="attr-box"><label>Destreza</label><input type="number" id="destreza" value="10"></div>
+            <div class="attr-box"><label>Constitución</label><input type="number" id="constitucion" value="10"></div>
+            <div class="attr-box"><label>Inteligencia</label><input type="number" id="inteligencia" value="10"></div>
+            <div class="attr-box"><label>Sabiduría</label><input type="number" id="sabiduria" value="10"></div>
+            <div class="attr-box"><label>Carisma</label><input type="number" id="carisma" value="10"></div>
         </div>
     </div>
 
     <div class="section">
-        <h2>Combate y Extras</h2>
+        <h2>Capacidades de Combate</h2>
         <div class="grid">
-            <div><label>Vida (HP)</label><input type="number" id="hp"></div>
-            <div><label>Armadura (CA)</label><input type="number" id="ca"></div>
-            <div><label>Iniciativa</label><input type="number" id="iniciativa"></div>
+            <div><label>Vida Máxima (HP)</label><input type="number" id="hp" placeholder="0"></div>
+            <div><label>Clase de Armadura (CA)</label><input type="number" id="ca" placeholder="10"></div>
+            <div><label>Bono Iniciativa</label><input type="number" id="iniciativa" placeholder="+0"></div>
         </div>
-        <label>Habilidades (separadas por líneas):</label>
-        <textarea id="habilidades" rows="3"></textarea>
-        <label>Equipo:</label>
-        <textarea id="equipo" rows="3"></textarea>
-        <label>Historia:</label>
-        <textarea id="historia" rows="4"></textarea>
+        
+        <div style="margin-top: 20px;">
+            <label>Habilidades y Conjuros:</label>
+            <textarea id="habilidades" rows="3" placeholder="Ataque furtivo, Bola de fuego..."></textarea>
+            
+            <label style="margin-top: 15px;">Inventario de Equipo:</label>
+            <textarea id="equipo" rows="3" placeholder="Espada larga, Cota de malla..."></textarea>
+            
+            <label style="margin-top: 15px;">Trasfondo e Historia:</label>
+            <textarea id="historia" rows="5" placeholder="Nacido en las tierras del norte..."></textarea>
+        </div>
     </div>
 
-    <button class="btn-guardar" onclick="guardarFicha()">ENVIAR A GITHUB</button>
+    <button class="btn-guardar" onclick="guardarFicha()">📜 Sellar y Guardar Ficha</button>
 </div>
 
 <script>
-    // Al cargar la página
+    // Se mantiene tu lógica original de guardado para que siga funcionando igual
     window.onload = function() {
         const savedConfig = localStorage.getItem('gh_config');
         if (savedConfig) {
@@ -96,15 +228,12 @@
             document.getElementById('gh_token').value = config.token;
             document.getElementById('gh_repo').value = config.repo;
             document.getElementById('gh_path').value = config.path;
-            
-            // Si ya hay datos, ocultamos el panel automáticamente
             document.getElementById('config-panel').classList.add('hidden');
         }
     };
 
     function toggleConfig() {
-        const panel = document.getElementById('config-panel');
-        panel.classList.toggle('hidden');
+        document.getElementById('config-panel').classList.toggle('hidden');
     }
 
     async function guardarFicha() {
@@ -113,34 +242,33 @@
         const PATH = document.getElementById('gh_path').value;
 
         if (!TOKEN || !REPO) {
-            alert("⚠️ Por favor, configura tus datos de GitHub primero.");
+            alert("⚠️ Debes configurar el Reino (GitHub) para guardar.");
             document.getElementById('config-panel').classList.remove('hidden');
             return;
         }
 
-        // Guardar configuración para siempre
         localStorage.setItem('gh_config', JSON.stringify({ token: TOKEN, repo: REPO, path: PATH }));
 
         const nuevoPersonaje = {
             "id": Date.now(),
-            "usuario_owner": document.getElementById('usuario_owner').value || "Invitado",
+            "usuario_owner": document.getElementById('usuario_owner').value || "Explorador",
             "datos": {
                 "nombre": document.getElementById('nombre').value,
                 "clase": document.getElementById('clase').value,
                 "raza": document.getElementById('raza').value,
-                "nivel": parseInt(document.getElementById('nivel').value) || 0,
+                "nivel": parseInt(document.getElementById('nivel').value) || 1,
                 "alineacion": document.getElementById('alineacion').value,
                 "atributos": {
-                    "fuerza": parseInt(document.getElementById('fuerza').value) || 0,
-                    "destreza": parseInt(document.getElementById('destreza').value) || 0,
-                    "constitucion": parseInt(document.getElementById('constitucion').value) || 0,
-                    "inteligencia": parseInt(document.getElementById('inteligencia').value) || 0,
-                    "sabiduria": parseInt(document.getElementById('sabiduria').value) || 0,
-                    "carisma": parseInt(document.getElementById('carisma').value) || 0
+                    "fuerza": parseInt(document.getElementById('fuerza').value) || 10,
+                    "destreza": parseInt(document.getElementById('destreza').value) || 10,
+                    "constitucion": parseInt(document.getElementById('constitucion').value) || 10,
+                    "inteligencia": parseInt(document.getElementById('inteligencia').value) || 10,
+                    "sabiduria": parseInt(document.getElementById('sabiduria').value) || 10,
+                    "carisma": parseInt(document.getElementById('carisma').value) || 10
                 },
                 "combate": {
                     "puntos_de_vida": parseInt(document.getElementById('hp').value) || 0,
-                    "clase_armadura": parseInt(document.getElementById('ca').value) || 0,
+                    "clase_armadura": parseInt(document.getElementById('ca').value) || 10,
                     "iniciativa": parseInt(document.getElementById('iniciativa').value) || 0,
                     "velocidad": "30 ft"
                 },
@@ -170,19 +298,16 @@
                 method: "PUT",
                 headers: { "Authorization": `token ${TOKEN}`, "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    message: `Añadido: ${nuevoPersonaje.datos.nombre}`,
+                    message: `Nueva Ficha: ${nuevoPersonaje.datos.nombre}`,
                     content: btoa(unescape(encodeURIComponent(finalJSON))),
                     sha: sha
                 })
             });
 
-            if (resPut.ok) {
-                alert("✅ ¡Personaje guardado con éxito!");
-            } else {
-                alert("❌ Error al subir. Verifica los permisos del Token.");
-            }
+            if (resPut.ok) alert("✅ ¡La crónica de tu héroe ha sido guardada!");
+            else alert("❌ Los dioses han rechazado tu ofrenda (Error al subir).");
         } catch (e) {
-            alert("❌ Error de red.");
+            alert("❌ El cuervo no pudo llegar al destino (Error de red).");
         }
     }
 </script>
