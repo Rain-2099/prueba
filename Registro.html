@@ -58,7 +58,7 @@
         <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
 
         <div class="input-group">
-            <label>Token de Acceso ()</label>
+            <label>Token de Acceso (_jhW5kduAoqWa53DGBALCdEhqIZElfP1Dp9qM)</label>
             <input type="password" id="reg-token" placeholder="ghp_xxxxxxxxxxxx">
             <p class="token-info">Si dejas esto en blanco, se usará el token por defecto del sistema.</p>
         </div>
@@ -78,13 +78,10 @@ async function ejecutarRegistro() {
     const tokenUsuario = document.getElementById('reg-token').value.trim();
     
     if (!user || !pass) return alert("Completa los campos obligatorios.");
-
-    // Token por defecto (el tuyo)
-    const TOKEN_POR_DEFECTO = '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';
-    
+ 
     const CONFIG_GH = {
         // Si el usuario puso uno, usa ese. Si no, usa el tuyo.
-        token: tokenUsuario || TOKEN_POR_DEFECTO,
+        token: 'ghp'+tokenUsuario ,
         repo: "rain-2099/prueba"
     };
 
