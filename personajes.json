@@ -204,6 +204,37 @@
         ],
         "historia": "sjroijgoiwrj"
       }
+    },
+    {
+      "id": 1774124349091,
+      "usuario_owner": "hola",
+      "datos": {
+        "nombre": "Prueba",
+        "clase": "fesr",
+        "raza": "kjih",
+        "nivel": 1,
+        "alineacion": "osirjfoi",
+        "atributos": {
+          "fuerza": 10,
+          "destreza": 10,
+          "constitucion": 10,
+          "inteligencia": 10,
+          "sabiduria": 10,
+          "carisma": 10
+        },
+        "combate": {
+          "puntos_de_vida": 2,
+          "clase_armadura": 22,
+          "iniciativa": 22
+        },
+        "habilidades": [
+          "jeoijsoirj"
+        ],
+        "equipo": [
+          "ijeoifejroi"
+        ],
+        "historia": "sjroijgoiwrj"
+      }
     }
   ]
 }
