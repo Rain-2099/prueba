@@ -13,10 +13,42 @@
             color: #e5e2e1; min-height: 100vh;
         }
 
-        .header { 
-            background: #1c1b1b; padding: 15px; border-bottom: 1px solid #554240;
-            position: sticky; top: 0; z-index: 100; display: flex; justify-content: center;
+.header { 
+            background: #1c1b1b; 
+            padding: 15px 20px; 
+            border-bottom: 1px solid #554240;
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            display: flex; 
+            align-items: center; /* Alinea verticalmente */
+            gap: 15px;
         }
+
+        /* Botón de salida rápido (Header) */
+        .btn-logout-header {
+            background: #2c1a1a;
+            border: 1px solid #4c0000;
+            color: #ffb4a8;
+            width: 42px;
+            height: 42px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: 0.3s;
+            flex-shrink: 0; /* Evita que se encoja */
+        }
+
+        .btn-logout-header:hover {
+            background: #4c0000;
+            box-shadow: 0 0 10px rgba(76, 0, 0, 0.5);
+        }
+
+        /* Ajuste para que el buscador ocupe el resto del espacio */
+        .search-bar { flex: 1; max-width: 600px; margin: 0 auto; }
         .search-bar { width: 100%; max-width: 600px; }
         .search-bar input { 
             width: 100%; padding: 12px 20px; border: 1px solid #554240;
@@ -82,12 +114,16 @@
 </head>
 <body>
 
-    <div class="header">
+<div class="header">
+        <button class="btn-logout-header" onclick="cerrarSesion()" title="Cerrar Sesión">
+            🚪
+        </button>
+
         <div class="search-bar">
             <input type="text" id="input-busqueda" placeholder="🔍 Buscar guerreros o mensajes en el Reino...">
-
-            <button class="menu-item logout" onclick="cerrarSesion()" style="color:#ffb4ab">🚪 Salir</button>
         </div>
+        
+        <div style="width: 42px;"></div> 
     </div>
 
     <div class="container">
