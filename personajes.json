@@ -173,6 +173,37 @@
         ],
         "historia": "Nacido en las heladas tierras del norte, este guerrero creció entre clanes que valoran la fuerza, el honor y la gloria en batalla. Desde joven aprendió a sobrevivir en condiciones extremas y a empuñar el hacha como extensión de su propio brazo. Busca fama y riqueza en tierras lejanas, con la esperanza de que su nombre sea recordado en canciones de guerra."
       }
+    },
+    {
+      "id": 1774124344064,
+      "usuario_owner": "hola",
+      "datos": {
+        "nombre": "Prueba",
+        "clase": "fesr",
+        "raza": "kjih",
+        "nivel": 1,
+        "alineacion": "osirjfoi",
+        "atributos": {
+          "fuerza": 10,
+          "destreza": 10,
+          "constitucion": 10,
+          "inteligencia": 10,
+          "sabiduria": 10,
+          "carisma": 10
+        },
+        "combate": {
+          "puntos_de_vida": 2,
+          "clase_armadura": 22,
+          "iniciativa": 22
+        },
+        "habilidades": [
+          "jeoijsoirj"
+        ],
+        "equipo": [
+          "ijeoifejroi"
+        ],
+        "historia": "sjroijgoiwrj"
+      }
     }
   ]
 }
