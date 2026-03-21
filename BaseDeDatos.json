@@ -198,7 +198,14 @@
           "id": 1773937101221,
           "texto": "Quien se rifa a un lunes de lechita",
           "fecha": "19/3/2026, 10:18:21 a.m.",
-          "likes": 0
+          "likes": 0,
+          "comentarios": [
+            {
+              "usuario": "satankitty",
+              "texto": "wtf bro consigue laburo",
+              "fecha": "20/3/2026, 6:45:21 p.m."
+            }
+          ]
         },
         {
           "id": 1773936957003,
