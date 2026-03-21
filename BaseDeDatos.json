@@ -224,7 +224,14 @@
           "id": 1773936903231,
           "texto": "un fulvito?",
           "fecha": "19/3/2026, 10:15:03 a.m.",
-          "likes": 0
+          "likes": 0,
+          "comentarios": [
+            {
+              "usuario": "satankitty",
+              "texto": "fulbo",
+              "fecha": "20/3/2026, 6:46:07 p.m."
+            }
+          ]
         },
         {
           "id": 1773936889598,
