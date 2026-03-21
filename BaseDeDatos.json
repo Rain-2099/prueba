@@ -8,8 +8,7 @@
       "descripcion": "Amante de los juegos de rol y la fantasía épica. Siempre en busca de una nueva aventura.",
       "seguidores": 1251,
       "cuentas_seguidas": 450,
-      "publicaciones": [
-      ],
+      "publicaciones": [],
       "total_publicaciones": 0,
       "me_gustas_totales": 5600,
       "baneos": {
@@ -29,8 +28,7 @@
       "descripcion": "Dibujando el mundo pixel a pixel. Comisiones abiertas por DM.",
       "seguidores": 15400,
       "cuentas_seguidas": 120,
-      "publicaciones": [
-      ],
+      "publicaciones": [],
       "total_publicaciones": 0,
       "me_gustas_totales": 89200,
       "baneos": {
@@ -47,8 +45,7 @@
       "descripcion": "Solo estoy aquí para decir la verdad que nadie quiere escuchar.",
       "seguidores": 5,
       "cuentas_seguidas": 2,
-      "publicaciones": [
-      ],
+      "publicaciones": [],
       "total_publicaciones": 0,
       "me_gustas_totales": 2,
       "baneos": {
@@ -65,8 +62,7 @@
       "descripcion": "Cocinando en los rincones más remotos del planeta. 🌍🥘",
       "seguidores": 890,
       "cuentas_seguidas": 900,
-      "publicaciones": [
-      ],
+      "publicaciones": [],
       "total_publicaciones": 0,
       "me_gustas_totales": 1200,
       "baneos": {
@@ -83,8 +79,7 @@
       "descripcion": "Menos es más. Hablo sobre código limpio y setups minimalistas.",
       "seguidores": 3200,
       "cuentas_seguidas": 50,
-      "publicaciones": [
-      ],
+      "publicaciones": [],
       "total_publicaciones": 0,
       "me_gustas_totales": 15600,
       "baneos": {
@@ -102,6 +97,13 @@
       "seguidores": 0,
       "cuentas_seguidas": 0,
       "publicaciones": [
+        {
+          "id": 1774132418375,
+          "texto": "Ya limpiea a los bots",
+          "fecha": "21/3/2026, 4:33:38 p.m.",
+          "likes": 0,
+          "comentarios": []
+        },
         {
           "id": 1774023945038,
           "texto": "Derrota al dragon",
