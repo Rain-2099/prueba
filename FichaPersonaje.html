@@ -220,14 +220,34 @@
 </div>
 
 <script>
-    // Se mantiene tu lógica original de guardado para que siga funcionando igual
     window.onload = function() {
+        // 1. Intentamos obtener el token y el usuario desde el inicio de sesión
+        const tokenActivo = localStorage.getItem('token_activo');
+        const usuarioLogueado = localStorage.getItem('usuario_logueado'); // Asegúrate de guardar esto en Inicio.html
+        
+        // 2. Intentamos obtener configuración previa del repo
         const savedConfig = localStorage.getItem('gh_config');
-        if (savedConfig) {
-            const config = JSON.parse(savedConfig);
-            document.getElementById('gh_token').value = config.token;
-            document.getElementById('gh_repo').value = config.repo;
-            document.getElementById('gh_path').value = config.path;
+        
+        if (tokenActivo) {
+            // Ponemos el token que viene del login
+            document.getElementById('gh_token').value = tokenActivo;
+            
+            // Si sabemos quién es el usuario, lo ponemos como dueño
+            if (usuarioLogueado) {
+                document.getElementById('usuario_owner').value = usuarioLogueado;
+            }
+
+            // Si ya hay repo y ruta guardados, los cargamos
+            if (savedConfig) {
+                const config = JSON.parse(savedConfig);
+                document.getElementById('gh_repo').value = config.repo || "rain-2099/prueba";
+                document.getElementById('gh_path').value = config.path || "personajes.json";
+            } else {
+                // Valores por defecto si es la primera vez
+                document.getElementById('gh_repo').value = "rain-2099/prueba";
+            }
+            
+            // Ocultamos el panel para que no moleste
             document.getElementById('config-panel').classList.add('hidden');
         }
     };
@@ -242,18 +262,19 @@
         const PATH = document.getElementById('gh_path').value;
 
         if (!TOKEN || !REPO) {
-            alert("⚠️ Debes configurar el Reino (GitHub) para guardar.");
+            alert("⚠️ La Llave del Reino (Token) no está presente.");
             document.getElementById('config-panel').classList.remove('hidden');
             return;
         }
 
+        // Guardamos la config del repo para la próxima vez
         localStorage.setItem('gh_config', JSON.stringify({ token: TOKEN, repo: REPO, path: PATH }));
 
         const nuevoPersonaje = {
             "id": Date.now(),
             "usuario_owner": document.getElementById('usuario_owner').value || "Explorador",
             "datos": {
-                "nombre": document.getElementById('nombre').value,
+                "nombre": document.getElementById('nombre').value || "Sin nombre",
                 "clase": document.getElementById('clase').value,
                 "raza": document.getElementById('raza').value,
                 "nivel": parseInt(document.getElementById('nivel').value) || 1,
@@ -269,8 +290,7 @@
                 "combate": {
                     "puntos_de_vida": parseInt(document.getElementById('hp').value) || 0,
                     "clase_armadura": parseInt(document.getElementById('ca').value) || 10,
-                    "iniciativa": parseInt(document.getElementById('iniciativa').value) || 0,
-                    "velocidad": "30 ft"
+                    "iniciativa": parseInt(document.getElementById('iniciativa').value) || 0
                 },
                 "habilidades": document.getElementById('habilidades').value.split('\n').filter(h => h.trim() !== ""),
                 "equipo": document.getElementById('equipo').value.split('\n').filter(e => e.trim() !== ""),
@@ -280,7 +300,12 @@
 
         try {
             const url = `https://api.github.com/repos/${REPO}/contents/${PATH}`;
-            const resGet = await fetch(url, { headers: { "Authorization": `token ${TOKEN}` } });
+            
+            // GET para obtener el archivo actual y su SHA
+            const resGet = await fetch(url, { 
+                headers: { "Authorization": `token ${TOKEN}` },
+                cache: "no-store"
+            });
 
             let content = { personajes: [] };
             let sha = "";
@@ -288,26 +313,37 @@
             if (resGet.ok) {
                 const data = await resGet.json();
                 sha = data.sha;
-                content = JSON.parse(decodeURIComponent(escape(atob(data.content))));
+                const decodedContent = decodeURIComponent(escape(atob(data.content.replace(/\s/g, ''))));
+                content = JSON.parse(decodedContent);
             }
 
+            // Añadimos el nuevo personaje a la lista
             content.personajes.push(nuevoPersonaje);
+            
             const finalJSON = JSON.stringify(content, null, 2);
+            const contenidoBase64 = btoa(unescape(encodeURIComponent(finalJSON)));
 
             const resPut = await fetch(url, {
                 method: "PUT",
-                headers: { "Authorization": `token ${TOKEN}`, "Content-Type": "application/json" },
+                headers: { 
+                    "Authorization": `token ${TOKEN}`, 
+                    "Content-Type": "application/json" 
+                },
                 body: JSON.stringify({
-                    message: `Nueva Ficha: ${nuevoPersonaje.datos.nombre}`,
-                    content: btoa(unescape(encodeURIComponent(finalJSON))),
+                    message: `📜 Nueva Crónica: ${nuevoPersonaje.datos.nombre}`,
+                    content: contenidoBase64,
                     sha: sha
                 })
             });
 
-            if (resPut.ok) alert("✅ ¡La crónica de tu héroe ha sido guardada!");
-            else alert("❌ Los dioses han rechazado tu ofrenda (Error al subir).");
+            if (resPut.ok) {
+                alert("✨ ¡La crónica de tu héroe ha sido grabada en el archivo real!");
+            } else {
+                const error = await resPut.json();
+                alert("❌ Error de los escribas: " + error.message);
+            }
         } catch (e) {
-            alert("❌ El cuervo no pudo llegar al destino (Error de red).");
+            alert("❌ Error Místico: " + e.message);
         }
     }
 </script>
