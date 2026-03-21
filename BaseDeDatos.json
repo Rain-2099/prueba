@@ -14,20 +14,8 @@
           "fecha": "2026-03-10",
           "likes": 150,
           "comentarios": [
-            {
-              "usuario": "hola",
-              "texto": "Apoco si??",
-              "fecha": "19/3/2026, 8:46:38 p.m."
-            }
-          ]
-        },
-        {
-          "texto": "¿Alguien para una partida de D&D esta noche?",
-          "fecha": "2026-03-15",
-          "likes": 45
-        }
       ],
-      "total_publicaciones": 2,
+      "total_publicaciones": 0,
       "me_gustas_totales": 5600,
       "baneos": {
         "esta_baneado": false,
@@ -47,13 +35,8 @@
       "seguidores": 15400,
       "cuentas_seguidas": 120,
       "publicaciones": [
-        {
-          "texto": "Nuevo diseño de espada mágica terminado.",
-          "fecha": "2026-03-16",
-          "likes": 1200
-        }
       ],
-      "total_publicaciones": 1,
+      "total_publicaciones": 0,
       "me_gustas_totales": 89200,
       "baneos": {
         "esta_baneado": false,
@@ -70,13 +53,8 @@
       "seguidores": 5,
       "cuentas_seguidas": 2,
       "publicaciones": [
-        {
-          "texto": "Los elfos están sobrevalorados.",
-          "fecha": "2026-01-01",
-          "likes": 0
-        }
       ],
-      "total_publicaciones": 1,
+      "total_publicaciones": 0,
       "me_gustas_totales": 2,
       "baneos": {
         "esta_baneado": true,
@@ -93,13 +71,8 @@
       "seguidores": 890,
       "cuentas_seguidas": 900,
       "publicaciones": [
-        {
-          "texto": "Cocinando estofado de jabalí en las montañas.",
-          "fecha": "2026-03-05",
-          "likes": 300
-        }
       ],
-      "total_publicaciones": 1,
+      "total_publicaciones": 0,
       "me_gustas_totales": 1200,
       "baneos": {
         "esta_baneado": false,
@@ -116,13 +89,8 @@
       "seguidores": 3200,
       "cuentas_seguidas": 50,
       "publicaciones": [
-        {
-          "texto": "Mi setup minimalista para 2026.",
-          "fecha": "2026-02-28",
-          "likes": 850
-        }
       ],
-      "total_publicaciones": 1,
+      "total_publicaciones": 0,
       "me_gustas_totales": 15600,
       "baneos": {
         "esta_baneado": false,
