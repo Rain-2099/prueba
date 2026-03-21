@@ -404,7 +404,14 @@
           "id": 1773943934977,
           "texto": "67",
           "fecha": "19/3/2026, 12:12:14 p.m.",
-          "likes": 0
+          "likes": 0,
+          "comentarios": [
+            {
+              "usuario": "satankitty",
+              "texto": "SIX SEVEEEN",
+              "fecha": "20/3/2026, 6:44:33 p.m."
+            }
+          ]
         },
         {
           "id": 1773943923025,
