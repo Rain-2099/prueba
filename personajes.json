@@ -235,6 +235,37 @@
         ],
         "historia": "sjroijgoiwrj"
       }
+    },
+    {
+      "id": 1774124452820,
+      "usuario_owner": "hola",
+      "datos": {
+        "nombre": "  srfsv",
+        "clase": "jeojoij",
+        "raza": "ioejoij",
+        "nivel": 1,
+        "alineacion": "iejoiej",
+        "atributos": {
+          "fuerza": 10,
+          "destreza": 10,
+          "constitucion": 10,
+          "inteligencia": 10,
+          "sabiduria": 10,
+          "carisma": 10
+        },
+        "combate": {
+          "puntos_de_vida": 87,
+          "clase_armadura": 677,
+          "iniciativa": 76
+        },
+        "habilidades": [
+          "jejfksrj"
+        ],
+        "equipo": [
+          "kejflkrj"
+        ],
+        "historia": "kfejlksjf"
+      }
     }
   ]
 }
