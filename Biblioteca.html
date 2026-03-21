@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mis Crónicas - D&D Academy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@400;700;800&family=Work+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Work Sans', sans-serif; 
+            background: radial-gradient(circle at center, #4c0000 0%, #131313 70%); 
+            color: #e5e2e1; 
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container { 
+            max-width: 1000px; 
+            margin: auto; 
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 { 
+            font-family: 'Newsreader', serif; 
+            color: #ffb4a8; 
+            font-size: 42px; 
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            border-bottom: 2px solid #4c0000;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background: rgba(76, 0, 0, 0.6);
+            border: 1px solid #554240;
+            color: #ffb4a8;
+            padding: 10px 20px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 1px;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #ffb4a8;
+            color: #4c0000;
+        }
+
+        /* GRID DE TARJETAS */
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: #1c1b1b;
+            border: 2px solid #554240;
+            padding: 25px;
+            border-radius: 4px;
+            position: relative;
+            transition: 0.4s;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #ffb4a8;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        .card::before {
+            content: "📜";
+            position: absolute;
+            top: -10px;
+            right: -5px;
+            font-size: 40px;
+            opacity: 0.1;
+        }
+
+        .card-name {
+            font-family: 'Newsreader', serif;
+            font-size: 24px;
+            color: #ffb4a8;
+            margin-bottom: 5px;
+        }
+
+        .card-meta {
+            font-size: 12px;
+            color: #a38b88;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 5px;
+        }
+
+        .stats-mini {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .stat-item {
+            background: #131313;
+            padding: 5px;
+            text-align: center;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+
+        .stat-val {
+            display: block;
+            font-weight: bold;
+            color: #ffb4a8;
+            font-size: 14px;
+        }
+
+        .history-preview {
+            font-size: 13px;
+            color: #ccc;
+            font-style: italic;
+            line-height: 1.4;
+            height: 55px;
+            overflow: hidden;
+            mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+        }
+
+        .loading-msg {
+            text-align: center;
+            font-size: 20px;
+            color: #ffb4a8;
+            margin-top: 50px;
+        }
+
+        .empty-msg {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px;
+            background: rgba(255,255,255,0.05);
+            border: 1px dashed #554240;
+        }
+
+      .btn-eliminar {
+        background: transparent;
+        border: 1px solid #4c0000;
+        color: #8b0000;
+        padding: 5px 10px;
+        font-size: 10px;
+        cursor: pointer;
+        text-transform: uppercase;
+        border-radius: 3px;
+        margin-top: 15px;
+        transition: 0.3s;
+        display: block;
+        width: 100%;
+    }
+
+    .btn-eliminar:hover {
+        background: #4c0000;
+        color: #ffb4a8;
+    }
+
+    /* Estado de carga al borrar */
+    .deleting {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="nav-buttons">
+        <a href="Usuario.html" class="btn">🏰 Mi Perfil</a>
+        <a href="Ficha.html" class="btn">⚔️ Crear Nuevo Héroe</a>
+    </div>
+
+    <div class="header">
+        <h1>Mis Crónicas de Aventurero</h1>
+        <p style="color: #a38b88; margin-top: 10px;">Personajes guardados en el Reino</p>
+    </div>
+
+    <div id="loading" class="loading-msg">Consultando los archivos reales...</div>
+    <div id="grid" class="character-grid"></div>
+</div>
+
+<script>
+    // Variables globales para facilitar el acceso
+    const TOKEN = localStorage.getItem('gh_token_activo');
+    const USUARIO_SESION = localStorage.getItem('usuarioSesion');
+    const savedConfig = JSON.parse(localStorage.getItem('gh_config') || '{}');
+    const REPO = savedConfig.repo || "rain-2099/prueba";
+    const PATH = savedConfig.path || "personajes.json";
+
+    async function cargarBiblioteca() {
+        const gridElement = document.getElementById('grid');
+        const loadingElement = document.getElementById('loading');
+
+        if (!TOKEN || !USUARIO_SESION) {
+            alert("No hay sesión activa.");
+            window.location.href = "Inicio.html";
+            return;
+        }
+
+        try {
+            const url = `https://api.github.com/repos/${REPO}/contents/${PATH}`;
+            const res = await fetch(url, { 
+                headers: { "Authorization": `token ${TOKEN}` },
+                cache: "no-store"
+            });
+
+            if (!res.ok) throw new Error("Aún no tienes personajes guardados.");
+
+            const data = await res.json();
+            // Guardamos el SHA para futuras actualizaciones si fuera necesario
+            const content = JSON.parse(decodeURIComponent(escape(atob(data.content.replace(/\s/g, '')))));
+            
+            const misPersonajes = content.personajes.filter(p => p.usuario_owner === USUARIO_SESION);
+
+            loadingElement.style.display = "none";
+            gridElement.innerHTML = ""; // Limpiar antes de recargar
+
+            if (misPersonajes.length === 0) {
+                gridElement.innerHTML = `<div class="empty-msg">No hay crónicas para <b>${USUARIO_SESION}</b>.</div>`;
+                return;
+            }
+
+            misPersonajes.forEach(pj => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.id = `card-${pj.id}`;
+                card.innerHTML = `
+                    <div class="card-name">${pj.datos.nombre}</div>
+                    <div class="card-meta">${pj.datos.raza} ${pj.datos.clase} | Nivel ${pj.datos.nivel}</div>
+                    
+                    <div class="stats-mini">
+                        <div class="stat-item">❤️ HP <span class="stat-val">${pj.datos.combate.puntos_de_vida}</span></div>
+                        <div class="stat-item">🛡️ AC <span class="stat-val">${pj.datos.combate.clase_armadura}</span></div>
+                        <div class="stat-item">🎲 INT <span class="stat-val">${pj.datos.atributos.inteligencia}</span></div>
+                    </div>
+
+                    <button class="btn-eliminar" onclick="eliminarPersonaje(${pj.id}, '${pj.datos.nombre}')">💀 Eliminar Crónica</button>
+                `;
+                gridElement.appendChild(card);
+            });
+
+        } catch (e) {
+            loadingElement.innerHTML = "❌ " + e.message;
+        }
+    }
+
+    async function eliminarPersonaje(id, nombre) {
+        if (!confirm(`¿Estás seguro de que quieres borrar a ${nombre}? Esta acción no se puede deshacer.`)) return;
+
+        const card = document.getElementById(`card-${id}`);
+        card.classList.add('deleting');
+
+        try {
+            const url = `https://api.github.com/repos/${REPO}/contents/${PATH}`;
+            
+            // 1. Obtener el archivo actual para tener el SHA y la lista completa
+            const resGet = await fetch(url, { 
+                headers: { "Authorization": `token ${TOKEN}` },
+                cache: "no-store"
+            });
+
+            if (!resGet.ok) throw new Error("No se pudo acceder al archivo.");
+            
+            const data = await resGet.json();
+            const sha = data.sha;
+            let content = JSON.parse(decodeURIComponent(escape(atob(data.content.replace(/\s/g, '')))));
+
+            // 2. Filtrar para QUITAR el personaje con ese ID
+            content.personajes = content.personajes.filter(p => p.id !== id);
+
+            // 3. Subir el archivo actualizado
+            const finalJSON = JSON.stringify(content, null, 2);
+            const resPut = await fetch(url, {
+                method: "PUT",
+                headers: { 
+                    "Authorization": `token ${TOKEN}`, 
+                    "Content-Type": "application/json" 
+                },
+                body: JSON.stringify({
+                    message: `💀 Crónica eliminada: ${nombre}`,
+                    content: btoa(unescape(encodeURIComponent(finalJSON))),
+                    sha: sha
+                })
+            });
+
+            if (resPut.ok) {
+                alert("✨ La crónica ha sido borrada de los registros.");
+                card.remove(); // Quitar de la vista
+                if (document.querySelectorAll('.card').length === 0) cargarBiblioteca();
+            } else {
+                alert("❌ Los dioses impidieron el borrado.");
+                card.classList.remove('deleting');
+            }
+
+        } catch (e) {
+            alert("❌ Error Místico: " + e.message);
+            card.classList.remove('deleting');
+        }
+    }
+
+    cargarBiblioteca();
+</script>
+
+</body>
+</html>
