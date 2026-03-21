@@ -220,37 +220,41 @@
 </div>
 
 <script>
-    window.onload = function() {
-        // 1. Intentamos obtener el token y el usuario desde el inicio de sesión
-        const tokenActivo = localStorage.getItem('token_activo');
-        const usuarioLogueado = localStorage.getItem('usuario_logueado'); // Asegúrate de guardar esto en Inicio.html
+window.onload = function() {
+    // 1. Leemos lo que guardaste en el Inicio.html
+    const tokenDesdeLogin = localStorage.getItem('gh_token_activo');
+    const nombreDesdeLogin = localStorage.getItem('usuarioSesion');
+    
+    // 2. Cargamos la configuración del repositorio (si existe)
+    const savedConfig = localStorage.getItem('gh_config');
+    
+    if (tokenDesdeLogin) {
+        // Ponemos el token automáticamente en el campo oculto
+        document.getElementById('gh_token').value = tokenDesdeLogin;
         
-        // 2. Intentamos obtener configuración previa del repo
-        const savedConfig = localStorage.getItem('gh_config');
-        
-        if (tokenActivo) {
-            // Ponemos el token que viene del login
-            document.getElementById('gh_token').value = tokenActivo;
-            
-            // Si sabemos quién es el usuario, lo ponemos como dueño
-            if (usuarioLogueado) {
-                document.getElementById('usuario_owner').value = usuarioLogueado;
-            }
-
-            // Si ya hay repo y ruta guardados, los cargamos
-            if (savedConfig) {
-                const config = JSON.parse(savedConfig);
-                document.getElementById('gh_repo').value = config.repo || "rain-2099/prueba";
-                document.getElementById('gh_path').value = config.path || "personajes.json";
-            } else {
-                // Valores por defecto si es la primera vez
-                document.getElementById('gh_repo').value = "rain-2099/prueba";
-            }
-            
-            // Ocultamos el panel para que no moleste
-            document.getElementById('config-panel').classList.add('hidden');
+        // Rellenamos el nombre del dueño automáticamente
+        if (nombreDesdeLogin) {
+            document.getElementById('usuario_owner').value = nombreDesdeLogin;
         }
-    };
+
+        // Si ya tenías guardado el repo (usuario/repo), lo ponemos
+        if (savedConfig) {
+            const config = JSON.parse(savedConfig);
+            document.getElementById('gh_repo').value = config.repo;
+            document.getElementById('gh_path').value = config.path;
+        } else {
+            // Valor por defecto si es la primera vez que entra
+            document.getElementById('gh_repo').value = "rain-2099/prueba";
+            document.getElementById('gh_path').value = "personajes.json";
+        }
+        
+        // Ocultamos el panel de ajustes para que la ficha se vea limpia
+        document.getElementById('config-panel').classList.add('hidden');
+    } else {
+        alert("⚠️ No se detectó una sesión activa. Por favor, inicia sesión de nuevo.");
+        window.location.href = "Inicio.html";
+    }
+};
 
     function toggleConfig() {
         document.getElementById('config-panel').classList.toggle('hidden');
