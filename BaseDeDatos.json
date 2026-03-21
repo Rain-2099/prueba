@@ -254,7 +254,14 @@
           "id": 1773936849518,
           "texto": "goku",
           "fecha": "19/3/2026, 10:14:09 a.m.",
-          "likes": 0
+          "likes": 0,
+          "comentarios": [
+            {
+              "usuario": "satankitty",
+              "texto": "goku? te refieres a magaly chavez?",
+              "fecha": "20/3/2026, 6:46:30 p.m."
+            }
+          ]
         },
         {
           "id": 1773936716607,
