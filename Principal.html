@@ -12,45 +12,50 @@
             background: radial-gradient(circle at center, #4c0000 0%, #131313 70%);
             color: #e5e2e1; min-height: 100vh;
         }
-        .header { 
+.header { 
             background: #1c1b1b; 
-            padding: 15px 20px; 
+            padding: 15px 25px; 
             border-bottom: 1px solid #554240;
             position: sticky; 
             top: 0; 
             z-index: 100; 
             
-            /* ESTO ES LA CLAVE: Alinea los hijos en fila */
+            /* Alineación a los extremos */
             display: flex; 
             align-items: center; 
-            justify-content: center; /* Centra el grupo en la pantalla */
-            gap: 15px; /* Espacio entre el botón y el buscador */
+            justify-content: space-between; 
+            gap: 20px;
         }
 
         .search-bar { 
-            flex: 1; /* Hace que el buscador use el espacio restante */
-            max-width: 600px; 
+            /* Esto hará que el buscador crezca y se alinee a la derecha */
+            flex: 1; 
+            max-width: 500px; /* Controla qué tan largo quieres el buscador */
+            display: flex;
+            justify-content: flex-end; 
         }
 
-        /* Estilo para el botón de salida circular/cuadrado en el header */
+        .search-bar input {
+            width: 100%;
+        }
+
         .btn-logout-header {
             background: #2c1a1a;
             border: 1px solid #4c0000;
             color: #ffb4a8;
-            padding: 10px 15px;
+            padding: 8px 12px;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 20px; /* Tamaño del emoji */
+            transition: 0.3s;
             display: flex;
             align-items: center;
-            gap: 8px;
-            transition: 0.3s;
-            white-space: nowrap; /* Evita que el texto se parta */
+            justify-content: center;
         }
 
         .btn-logout-header:hover {
             background: #4c0000;
-            box-shadow: 0 0 10px rgba(255,180,168,0.2);
+            transform: scale(1.05);
         }
 
         .search-bar { width: 100%; max-width: 600px; }
