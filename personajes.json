@@ -134,6 +134,45 @@
         ],
         "historia": "Nacido en las heladas tierras del norte, este guerrero creció entre clanes que valoran la fuerza, el honor y la gloria en batalla. Desde joven aprendió a sobrevivir en condiciones extremas y a empuñar el hacha como extensión de su propio brazo. Busca fama y riqueza en tierras lejanas, con la esperanza de que su nombre sea recordado en canciones de guerra."
       }
+    },
+    {
+      "id": 1774124078282,
+      "usuario_owner": "hola",
+      "datos": {
+        "nombre": "Ubbe the Dream-seer",
+        "clase": "Barbaro",
+        "raza": "Humano",
+        "nivel": 1,
+        "alineacion": "Caotico Bueno",
+        "atributos": {
+          "fuerza": 18,
+          "destreza": 14,
+          "constitucion": 16,
+          "inteligencia": 10,
+          "sabiduria": 12,
+          "carisma": 12
+        },
+        "combate": {
+          "puntos_de_vida": 15,
+          "clase_armadura": 15,
+          "iniciativa": 2
+        },
+        "habilidades": [
+          "Ira (Rage) (2 veces por descanso largo): +2 daño, resistencia a daño físico",
+          "Defensa sin armadura",
+          "Ataque imprudente (ventaja al atacar, pero te golpean con ventaja)",
+          "Sentido del peligro (ventaja en tiradas de DEX contra efectos visibles)"
+        ],
+        "equipo": [
+          "Hacha grande (Greataxe) 🪓",
+          "2 hachas de mano",
+          "4 jabalinas",
+          "Kit de explorador",
+          "Escudo (opcional)",
+          "Pieles o armadura ligera"
+        ],
+        "historia": "Nacido en las heladas tierras del norte, este guerrero creció entre clanes que valoran la fuerza, el honor y la gloria en batalla. Desde joven aprendió a sobrevivir en condiciones extremas y a empuñar el hacha como extensión de su propio brazo. Busca fama y riqueza en tierras lejanas, con la esperanza de que su nombre sea recordado en canciones de guerra."
+      }
     }
   ]
 }
