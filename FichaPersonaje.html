@@ -342,6 +342,7 @@ window.onload = function() {
 
             if (resPut.ok) {
                 alert("✨ ¡La crónica de tu héroe ha sido grabada en el archivo real!");
+                window.location.href = "Usuario.html";
             } else {
                 const error = await resPut.json();
                 alert("❌ Error de los escribas: " + error.message);
