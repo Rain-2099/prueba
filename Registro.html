@@ -155,8 +155,8 @@
 
         <div class="input-group">
             <label>Llave del Reino (GitHub Token)</label>
-            <p style="font-size: 9px; color: #ffb4a8; margin-bottom: 5px;">Pista: _jhW5kduAoqWa53DGBALCdEhqIZElfP1Dp9qM</p>
-            <input type="password" id="reg-token" placeholder="ghp_xxxxxxxxxxxx">
+            <p style="font-size: 9px; color: #ffb4a8; margin-bottom: 5px;">Pista: jhW5kduAoqWa53DGBALCdEhqIZElfP1Dp9qM</p>
+            <input type="password" id="reg-token" placeholder="xxxxxxxxxxxx">
             <p class="token-info">Si dejas esto en blanco, se usará el token por defecto.</p>
         </div>
 
@@ -178,7 +178,7 @@ async function ejecutarRegistro() {
  
     const CONFIG_GH = {
         // Concatenación del prefijo ghp para seguridad básica
-        token: 'ghp' + tokenUsuario ,
+        token: 'ghp_' + tokenUsuario ,
         repo: "rain-2099/prueba"
     };
 
