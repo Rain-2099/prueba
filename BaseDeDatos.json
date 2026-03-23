@@ -94,7 +94,7 @@
       "contrasena": "123456",
       "foto_perfil": "https://i.redd.it/uij8rqarqsde1.png",
       "descripcion": "The man who sold the word",
-      "seguidores": 0,
+      "seguidores": 1,
       "cuentas_seguidas": 0,
       "publicaciones": [
         {
@@ -635,7 +635,10 @@
       "baneos": {
         "esta_baneado": false,
         "razon": ""
-      }
+      },
+      "siguiendo": [
+        "hola"
+      ]
     }
   ]
 }
