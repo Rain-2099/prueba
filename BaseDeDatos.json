@@ -98,6 +98,13 @@
       "cuentas_seguidas": 0,
       "publicaciones": [
         {
+          "id": 1774282305039,
+          "texto": "setso",
+          "fecha": "23/3/2026, 10:11:45 a.m.",
+          "likes": 0,
+          "comentarios": []
+        },
+        {
           "id": 1774282297743,
           "texto": "Me mie en el metro",
           "fecha": "23/3/2026, 10:11:37 a.m.",
