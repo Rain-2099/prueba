@@ -181,7 +181,14 @@
           "id": 1773972949907,
           "texto": "Hola, estoy checando, si sirve lo de la xp",
           "fecha": "19/3/2026, 8:15:49 p.m.",
-          "likes": 0
+          "likes": 0,
+          "comentarios": [
+            {
+              "usuario": "TheSleepless",
+              "texto": "Si sirve papa",
+              "fecha": "23/3/2026, 10:29:29 a.m."
+            }
+          ]
         },
         {
           "id": 1773937101221,
