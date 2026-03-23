@@ -559,7 +559,14 @@
           "id": 1773973563805,
           "texto": "Derrotar a ese dragon magico fue espectacular, tambien el pelear con las sombras magicas con el huron que me habla fue maravilloso 20/20",
           "fecha": "19/3/2026, 8:26:03 p.m.",
-          "likes": 0
+          "likes": 0,
+          "comentarios": [
+            {
+              "usuario": "TheSleepless",
+              "texto": "Puras mariconadas",
+              "fecha": "23/3/2026, 10:29:01 a.m."
+            }
+          ]
         }
       ],
       "baneos": {
